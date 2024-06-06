@@ -4,7 +4,27 @@
 		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<Title>Fluxera.Queries</Title>
+		<Description>An OData v4 query parser and runtime for ASP.NET Core controllers and minimal APIs.</Description>
+		<PackageTags>fluxera;library;queries;odata;aspnet</PackageTags>
+	</PropertyGroup>
+
 	<ItemGroup>
+		<None Include="..\..\README.md" Link="Properties\README.md">
+			<Pack>true</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\icon.png" Link="Properties\icon.png">
+			<Pack>true</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Fluxera.Enumeration" Version="8.1.1" />
+		<PackageReference Include="Fluxera.StronglyTypedId" Version="8.1.1" />
+		<PackageReference Include="Fluxera.ValueObject" Version="8.1.1" />
 		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" PrivateAssets="All" />
 	</ItemGroup>
 

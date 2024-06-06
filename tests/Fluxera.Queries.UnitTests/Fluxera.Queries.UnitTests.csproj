@@ -21,4 +21,8 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Fluxera.Queries\Fluxera.Queries.csproj" />
+	</ItemGroup>
+
 </Project>
