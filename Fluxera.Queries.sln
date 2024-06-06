@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".items", ".items", "{3FA916F7-CC12-42FE-8ABC-A3FB4C373F21}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		azure-pipelines.yml = azure-pipelines.yml
+		GitVersion.yml = GitVersion.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{660FF601-6EFC-4A38-B356-A7B77CFEF5F6}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0DE8426E-57B6-40A8-8CF0-87C23D40B6E3}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluxera.Queries", "src\Fluxera.Queries\Fluxera.Queries.csproj", "{69661153-2A48-47D5-B608-3CD8E0892AA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluxera.Queries.UnitTests", "tests\Fluxera.Queries.UnitTests\Fluxera.Queries.UnitTests.csproj", "{76F670C9-7818-4014-A876-C8692DA9AC01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69661153-2A48-47D5-B608-3CD8E0892AA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69661153-2A48-47D5-B608-3CD8E0892AA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69661153-2A48-47D5-B608-3CD8E0892AA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69661153-2A48-47D5-B608-3CD8E0892AA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76F670C9-7818-4014-A876-C8692DA9AC01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76F670C9-7818-4014-A876-C8692DA9AC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76F670C9-7818-4014-A876-C8692DA9AC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76F670C9-7818-4014-A876-C8692DA9AC01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{69661153-2A48-47D5-B608-3CD8E0892AA3} = {660FF601-6EFC-4A38-B356-A7B77CFEF5F6}
+		{76F670C9-7818-4014-A876-C8692DA9AC01} = {0DE8426E-57B6-40A8-8CF0-87C23D40B6E3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {461F9C7F-2B18-4722-9CB4-ABB14C655FBE}
+	EndGlobalSection
+EndGlobal
