@@ -161,7 +161,9 @@
 				: null;
 
 			IOrderedEnumerable<PropertyInfo> clrTypeProperties =
-				clrType.GetProperties(BindingFlags.Public | BindingFlags.Instance).OrderBy(p => p.Name);
+				clrType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+					   .Where(x => x.CanRead && x.CanWrite)
+					   .OrderBy(x => x.Name);
 
 			List<EdmProperty> edmProperties = new List<EdmProperty>();
 			EdmComplexType edmComplexType = new EdmComplexType(clrType, baseType, edmProperties);

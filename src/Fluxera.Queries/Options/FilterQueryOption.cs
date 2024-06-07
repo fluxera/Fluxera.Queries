@@ -1,7 +1,7 @@
 ﻿namespace Fluxera.Queries.Options
 {
-	using Fluxera.Queries.Expressions;
 	using Fluxera.Queries.Model;
+	using Fluxera.Queries.Nodes;
 	using Fluxera.Queries.Parsers;
 	using JetBrains.Annotations;
 
@@ -11,10 +11,10 @@
 	[PublicAPI]
 	public sealed class FilterQueryOption : QueryOption
 	{
-		internal FilterQueryOption(string stringExpression, EdmComplexType edmType, EdmTypeProvider typeProvider) 
-			: base(stringExpression)
+		internal FilterQueryOption(string expression, EdmComplexType edmType, EdmTypeProvider typeProvider)
+			: base(expression)
 		{
-			this.Expression = FilterExpressionParser.Parse(stringExpression, edmType, typeProvider);
+			this.Expression = FilterExpressionParser.Parse(expression, edmType, typeProvider);
 		}
 
 		/// <summary>

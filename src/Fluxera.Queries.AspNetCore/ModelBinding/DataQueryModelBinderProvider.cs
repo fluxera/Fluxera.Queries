@@ -10,8 +10,8 @@
 		{
 			Guard.Against.Null(context);
 
-			return context.Metadata.ModelType.IsDataQuery() 
-				? new BinderTypeModelBinder(typeof(DataQueryModelBinder)) 
+			return context.Metadata.ModelType.IsDataQuery()
+				? new BinderTypeModelBinder(typeof(DataQueryModelBinder))
 				: null;
 		}
 	}

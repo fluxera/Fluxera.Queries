@@ -1,4 +1,4 @@
-﻿namespace Fluxera.Queries.Expressions
+﻿namespace Fluxera.Queries.Nodes
 {
 	using System;
 	using System.Collections.Generic;
@@ -26,7 +26,7 @@
 		{
 			this.elements = elements.ToList();
 
-			if (this.elements.Select(t => t.EdmType).Distinct().Count() > 1)
+			if(this.elements.Select(t => t.EdmType).Distinct().Count() > 1)
 			{
 				throw new InvalidOperationException("Unable to create an array node of distinct constant values.");
 			}
@@ -63,7 +63,7 @@
 			get
 			{
 				Array instance = Array.CreateInstance(this.EdmValueType.ClrType, this.elements.Count);
-				for (int i = 0; i < this.elements.Count; i++)
+				for(int i = 0; i < this.elements.Count; i++)
 				{
 					ConstantNode element = this.elements[i];
 					instance.SetValue(element.Value, i);
@@ -80,7 +80,7 @@
 		/// <exception cref="InvalidOperationException"></exception>
 		public void AddElement(ConstantNode element)
 		{
-			if (element.EdmType != this.EdmValueType)
+			if(element.EdmType != this.EdmValueType)
 			{
 				throw new InvalidOperationException(
 					$"Unable to add element of type {element.EdmValueType} to array of type {this.EdmValueType.Name}");

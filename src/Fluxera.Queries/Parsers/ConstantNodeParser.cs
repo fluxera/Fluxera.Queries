@@ -2,8 +2,8 @@ namespace Fluxera.Queries.Parsers
 {
 	using System;
 	using System.Globalization;
-	using Fluxera.Queries.Expressions;
 	using Fluxera.Queries.Model;
+	using Fluxera.Queries.Nodes;
 
 	internal static class ConstantNodeParser
 	{

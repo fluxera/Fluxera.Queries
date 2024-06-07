@@ -2,15 +2,15 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using Fluxera.Queries.Expressions;
 	using Fluxera.Queries.Model;
+	using Fluxera.Queries.Nodes;
 
 	internal static class FilterExpressionParser
 	{
-		public static QueryNode Parse(string filterValue, EdmComplexType model, EdmTypeProvider typeProvider)
+		public static QueryNode Parse(string expression, EdmComplexType model, EdmTypeProvider typeProvider)
 		{
 			FilterExpressionParserImpl parserImpl = new FilterExpressionParserImpl(model, typeProvider);
-			QueryNode queryNode = parserImpl.Parse(new FilterExpressionLexer(filterValue));
+			QueryNode queryNode = parserImpl.Parse(new FilterExpressionLexer(expression));
 
 			return queryNode;
 		}
@@ -32,11 +32,11 @@
 
 			internal QueryNode Parse(FilterExpressionLexer filterExpressionLexer)
 			{
-				while (filterExpressionLexer.MoveNext())
+				while(filterExpressionLexer.MoveNext())
 				{
 					Token token = filterExpressionLexer.Current;
 
-					switch (token.TokenType)
+					switch(token.TokenType)
 					{
 						case TokenType.And:
 							this.nextBinaryOperatorKind = BinaryOperatorKind.And;
@@ -57,14 +57,14 @@
 				this.nextBinaryOperatorKind = BinaryOperatorKind.None;
 				this.UpdateExpressionTree();
 
-				if (this.groupingDepth != 0 || this.nodeStack.Count != 1)
+				if(this.groupingDepth != 0 || this.nodeStack.Count != 1)
 				{
 					throw new QueryException(Messages.UnableToParseFilter);
 				}
 
 				QueryNode node = this.nodeStack.Pop();
 
-				if (node is BinaryOperatorNode binaryNode && (binaryNode.Left == null || binaryNode.Right == null))
+				if(node is BinaryOperatorNode binaryNode && (binaryNode.Left == null || binaryNode.Right == null))
 				{
 					throw new QueryException(Messages.UnableToParseFilter);
 				}
@@ -79,14 +79,14 @@
 
 				Stack<FunctionCallNode> stack = new Stack<FunctionCallNode>();
 
-				while (this.tokens.Count > 0)
+				while(this.tokens.Count > 0)
 				{
 					Token token = this.tokens.Dequeue();
 
-					switch (token.TokenType)
+					switch(token.TokenType)
 					{
 						case TokenType.OpenParentheses:
-							if (this.tokens.Peek().TokenType == TokenType.CloseParentheses)
+							if(this.tokens.Peek().TokenType == TokenType.CloseParentheses)
 							{
 								// All OData functions have at least 1 or 2 parameters
 								throw new QueryException(Messages.UnableToParseFilter);
@@ -97,24 +97,24 @@
 							break;
 
 						case TokenType.CloseParentheses:
-							if (this.groupingDepth == 0)
+							if(this.groupingDepth == 0)
 							{
 								throw new QueryException(Messages.UnableToParseFilter);
 							}
 
 							this.groupingDepth--;
 
-							if (stack.Count > 0)
+							if(stack.Count > 0)
 							{
 								FunctionCallNode lastNode = stack.Pop();
 
-								if (stack.Count > 0)
+								if(stack.Count > 0)
 								{
 									stack.Peek().AddParameter(lastNode);
 								}
 								else
 								{
-									if (binaryNode != null)
+									if(binaryNode != null)
 									{
 										binaryNode.Right = lastNode;
 									}
@@ -139,13 +139,13 @@
 
 							PropertyAccessNode propertyAccessNode = CreatePropertyAccessNode(token.Value, this.model);
 
-							if (stack.Count > 0)
+							if(stack.Count > 0)
 							{
 								stack.Peek().AddParameter(propertyAccessNode);
 							}
 							else
 							{
-								if (binaryNode == null)
+								if(binaryNode == null)
 								{
 									throw new InvalidOperationException("binaryNode is null in TokenType.PropertyName");
 								}
@@ -171,13 +171,13 @@
 						case TokenType.True:
 							ConstantNode constantNode = ConstantNodeParser.ParseConstantNode(token, this.typeProvider);
 
-							if (stack.Count > 0)
+							if(stack.Count > 0)
 							{
 								stack.Peek().AddParameter(constantNode);
 							}
 							else
 							{
-								if (binaryNode == null)
+								if(binaryNode == null)
 								{
 									throw new InvalidOperationException("binaryNode is null in TokenType.True");
 								}
@@ -188,7 +188,7 @@
 							break;
 
 						case TokenType.Comma:
-							if (this.tokens.Count < 2)
+							if(this.tokens.Count < 2)
 							{
 								// If there is a comma in a function call, there should be another argument followed by a closing comma
 								throw new QueryException(Messages.UnableToParseFilter);
@@ -198,7 +198,7 @@
 					}
 				}
 
-				if (binaryNode != null)
+				if(binaryNode != null)
 				{
 					return binaryNode;
 				}
@@ -214,14 +214,14 @@
 				BinaryOperatorKind operatorKind = BinaryOperatorKind.None;
 				QueryNode rightNode = null;
 
-				while (this.tokens.Count > 0)
+				while(this.tokens.Count > 0)
 				{
 					Token token = this.tokens.Dequeue();
 
-					switch (token.TokenType)
+					switch(token.TokenType)
 					{
 						case TokenType.BinaryOperator:
-							if (operatorKind != BinaryOperatorKind.None)
+							if(operatorKind != BinaryOperatorKind.None)
 							{
 								result = new BinaryOperatorNode(leftNode, operatorKind, rightNode);
 								leftNode = null;
@@ -241,11 +241,11 @@
 
 						case TokenType.FunctionName:
 
-							if (leftNode == null)
+							if(leftNode == null)
 							{
 								leftNode = new FunctionCallNode(token.Value);
 							}
-							else if (rightNode == null)
+							else if(rightNode == null)
 							{
 								rightNode = new FunctionCallNode(token.Value);
 							}
@@ -255,11 +255,11 @@
 						case TokenType.PropertyName:
 							PropertyAccessNode propertyAccessNode = CreatePropertyAccessNode(token.Value, this.model);
 
-							if (leftNode == null)
+							if(leftNode == null)
 							{
 								leftNode = propertyAccessNode;
 							}
-							else if (rightNode == null)
+							else if(rightNode == null)
 							{
 								rightNode = propertyAccessNode;
 							}
@@ -282,13 +282,13 @@
 						case TokenType.True:
 							ConstantNode constantNode = ConstantNodeParser.ParseConstantNode(token, this.typeProvider);
 
-							if (rightNode is ConstantNode existingConstant)
+							if(rightNode is ConstantNode existingConstant)
 							{
 								ArrayNode arrayNode = ConstantNode.Array(existingConstant);
 								arrayNode.AddElement(constantNode);
 								rightNode = arrayNode;
 							}
-							else if (rightNode is ArrayNode arrayNode)
+							else if(rightNode is ArrayNode arrayNode)
 							{
 								arrayNode.AddElement(constantNode);
 							}
@@ -321,12 +321,12 @@
 			{
 				QueryNode node = null;
 
-				if (this.tokens.Count == 0)
+				if(this.tokens.Count == 0)
 				{
 					throw new QueryException(Messages.UnableToParseFilter);
 				}
 
-				switch (this.tokens.Peek().TokenType)
+				switch(this.tokens.Peek().TokenType)
 				{
 					case TokenType.FunctionName:
 						node = this.ParseFunctionCallNode();
@@ -369,11 +369,11 @@
 
 				QueryNode node = this.ParseQueryNode();
 
-				if (this.groupingDepth == initialGroupingDepth)
+				if(this.groupingDepth == initialGroupingDepth)
 				{
-					if (this.nodeStack.Count == 0)
+					if(this.nodeStack.Count == 0)
 					{
-						if (this.nextBinaryOperatorKind == BinaryOperatorKind.None)
+						if(this.nextBinaryOperatorKind == BinaryOperatorKind.None)
 						{
 							this.nodeStack.Push(node);
 						}
@@ -386,11 +386,11 @@
 					{
 						QueryNode leftNode = this.nodeStack.Pop();
 
-						if (leftNode is BinaryOperatorNode binaryNode && binaryNode.Right == null)
+						if(leftNode is BinaryOperatorNode binaryNode && binaryNode.Right == null)
 						{
 							binaryNode.Right = node;
 
-							if (this.nextBinaryOperatorKind != BinaryOperatorKind.None)
+							if(this.nextBinaryOperatorKind != BinaryOperatorKind.None)
 							{
 								binaryNode = new BinaryOperatorNode(binaryNode, this.nextBinaryOperatorKind, null);
 							}
@@ -403,20 +403,20 @@
 						this.nodeStack.Push(binaryNode);
 					}
 				}
-				else if (this.groupingDepth > initialGroupingDepth)
+				else if(this.groupingDepth > initialGroupingDepth)
 				{
 					this.nodeStack.Push(new BinaryOperatorNode(node, this.nextBinaryOperatorKind, null));
 				}
-				else if (this.groupingDepth < initialGroupingDepth)
+				else if(this.groupingDepth < initialGroupingDepth)
 				{
 					BinaryOperatorNode binaryNode = (BinaryOperatorNode)this.nodeStack.Pop();
 					binaryNode.Right = node;
 
-					if (this.nextBinaryOperatorKind == BinaryOperatorKind.None)
+					if(this.nextBinaryOperatorKind == BinaryOperatorKind.None)
 					{
 						this.nodeStack.Push(binaryNode);
 
-						while (this.nodeStack.Count > 1)
+						while(this.nodeStack.Count > 1)
 						{
 							QueryNode rightNode = this.nodeStack.Pop();
 
@@ -428,7 +428,7 @@
 					}
 					else
 					{
-						if (this.groupingDepth == 0 && this.nodeStack.Count > 0)
+						if(this.groupingDepth == 0 && this.nodeStack.Count > 0)
 						{
 							BinaryOperatorNode binaryParent = (BinaryOperatorNode)this.nodeStack.Pop();
 							binaryParent.Right = binaryNode;

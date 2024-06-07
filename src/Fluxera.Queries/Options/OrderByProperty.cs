@@ -37,7 +37,7 @@
 
 			this.Properties = new ReadOnlyCollection<EdmProperty>(properties.ToList());
 
-			if (this.Properties.Count == 0)
+			if(this.Properties.Count == 0)
 			{
 				throw new InvalidOperationException("At least one order by property must be selected.");
 			}

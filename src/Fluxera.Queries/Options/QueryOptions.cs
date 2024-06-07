@@ -13,6 +13,9 @@
 	{
 		private FilterQueryOption filter;
 		private OrderByQueryOption orderBy;
+		private SkipQueryOption skip;
+		private TopQueryOption top;
+		private CountQueryOption count;
 
 		private readonly EdmTypeProvider typeProvider;
 		private readonly QueryStringParameters parameters;
@@ -68,6 +71,54 @@
 			}
 		}
 
+		/// <summary>
+		///     Gets the skip query option.
+		/// </summary>
+		public SkipQueryOption Skip
+		{
+			get
+			{
+				if(this.skip == null && this.parameters.Skip != null)
+				{
+					this.skip = new SkipQueryOption(this.parameters.Skip);
+				}
+
+				return this.skip;
+			}
+		}
+
+		/// <summary>
+		///     Gets the top query option.
+		/// </summary>
+		public TopQueryOption Top
+		{
+			get
+			{
+				if(this.top == null && this.parameters.Top != null)
+				{
+					this.top = new TopQueryOption(this.parameters.Top);
+				}
+
+				return this.top;
+			}
+		}
+
+		/// <summary>
+		///     Gets the count query option.
+		/// </summary>
+		public CountQueryOption Count
+		{
+			get
+			{
+				if(this.count == null && this.parameters.Count != null)
+				{
+					this.count = new CountQueryOption(this.parameters.Count);
+				}
+
+				return this.count;
+			}
+		}
+
 		/// <inheritdoc />
 		public override string ToString()
 		{
@@ -83,19 +134,24 @@
 				builder.Append($"{this.OrderBy}; ");
 			}
 
+			if(this.Skip is not null)
+			{
+				builder.Append($"{this.Skip}; ");
+			}
+
+			if(this.Top is not null)
+			{
+				builder.Append($"{this.Top}; ");
+			}
+
+			if(this.Count is not null)
+			{
+				builder.Append($"{this.Count}; ");
+			}
+
 			//if(this.Search is not null)
 			//{
 			//	builder.Append($"Search={this.Search}; ");
-			//}
-
-			//if(this.Skip is not null)
-			//{
-			//	builder.Append($"Skip={this.Skip}; ");
-			//}
-
-			//if(this.Top is not null)
-			//{
-			//	builder.Append($"Top={this.Top}; ");
 			//}
 
 			//if(this.SkipToken is not null)
@@ -103,9 +159,7 @@
 			//	builder.Append($"SkipToken={this.SkipToken}; ");
 			//}
 
-			//builder.Append($"ShowCount={this.ShowCount}");
-
-			return builder.ToString();
+			return builder.ToString().TrimEnd();
 		}
 	}
 }

@@ -5,14 +5,33 @@
 	/// </summary>
 	public static class ParameterNames
 	{
+		/// <summary>
+		///		The filter parameter name.
+		/// </summary>
 		public const string Filter = "$filter";
+
+		/// <summary>
+		///		The orderby parameter name.
+		/// </summary>
 		public const string OrderBy = "$orderby";
 
-		//public const string SkipParameterName = "$skip";
-		//public const string TopParameterName = "$top";
+		/// <summary>
+		///		The skip parameter name.
+		/// </summary>
+		public const string Skip = "$skip";
+
+		/// <summary>
+		///		The top parameter name.
+		/// </summary>
+		public const string Top = "$top";
+
+		/// <summary>
+		///		The count parameter name.
+		/// </summary>
+		public const string Count = "$count";
+
 		//public const string SearchParameterName = "$search";
 		//public const string SkipTokenParameterName = "$skiptoken";
-		//public const string CountParameterName = "$count";
 		//public const string SelectParameterName = "$select";
 	}
 }
