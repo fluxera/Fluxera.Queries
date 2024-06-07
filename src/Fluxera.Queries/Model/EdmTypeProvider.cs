@@ -14,7 +14,7 @@
 	///		Creates EDM types or provides access to cached types.
 	/// </summary>
 	[PublicAPI]
-	public sealed class EdmTypeProvider
+	internal sealed class EdmTypeProvider
 	{
 		private static readonly Dictionary<Type, EdmType> PrimitiveTypes = new Dictionary<Type, EdmType>
 		{

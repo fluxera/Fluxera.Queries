@@ -9,7 +9,7 @@
 	///     An object which contains the parsed query options.
 	/// </summary>
 	[PublicAPI]
-	public class QueryOptions
+	public sealed class QueryOptions
 	{
 		private FilterQueryOption filter;
 		private OrderByQueryOption orderBy;

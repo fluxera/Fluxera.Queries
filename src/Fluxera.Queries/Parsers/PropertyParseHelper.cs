@@ -1,5 +1,6 @@
 ﻿namespace Fluxera.Queries.Parsers
 {
+	using System;
 	using System.Collections.Generic;
 	using Fluxera.Queries.Model;
 
@@ -13,12 +14,19 @@
 			{
 				if (edmComplexType is null)
 				{
-					throw new QueryParserException($"Property {propertyName} not found.");
+					throw new QueryException($"Property {propertyName} not found.");
 				}
 
-				EdmProperty currentProperty = edmComplexType.GetProperty(propertyName);
-				properties.Add(currentProperty);
-				edmComplexType = currentProperty.PropertyType as EdmComplexType;
+				try
+				{
+					EdmProperty currentProperty = edmComplexType.GetProperty(propertyName);
+					properties.Add(currentProperty);
+					edmComplexType = currentProperty.PropertyType as EdmComplexType;
+				}
+				catch(ArgumentException ex)
+				{
+					throw new QueryException(ex.Message);
+				}
 			}
 
 			return properties;

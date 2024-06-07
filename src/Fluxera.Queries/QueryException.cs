@@ -1,4 +1,4 @@
-﻿namespace Fluxera.Queries.Parsers
+﻿namespace Fluxera.Queries
 {
 	using System;
 	using JetBrains.Annotations;
@@ -8,13 +8,13 @@
 	/// </summary>
 	[PublicAPI]
 	[Serializable]
-	public sealed class QueryParserException : Exception
+	public sealed class QueryException : Exception
 	{
 		/// <summary>
-		///     Initializes a new instance of the <see cref="QueryParserException" /> type.
+		///     Initializes a new instance of the <see cref="QueryException" /> type.
 		/// </summary>
 		/// <param name="message">The message that describes the error.</param>
-		public QueryParserException(string message) : base(message)
+		public QueryException(string message) : base(message)
 		{
 		}
 	}

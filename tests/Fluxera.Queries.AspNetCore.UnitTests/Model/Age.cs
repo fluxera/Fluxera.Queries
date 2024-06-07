@@ -1,4 +1,4 @@
-﻿namespace Fluxera.Queries.UnitTests
+﻿namespace Fluxera.Queries.AspNetCore.UnitTests.Model
 {
 	using Fluxera.ValueObject;
 

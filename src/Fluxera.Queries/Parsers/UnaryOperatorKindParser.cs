@@ -9,7 +9,7 @@ namespace Fluxera.Queries.Parsers
 			return operatorType switch
 			{
 				"not" => UnaryOperatorKind.Not,
-				_     => throw new QueryParserException(string.Format(Messages.UnknownOperator, operatorType))
+				_     => throw new QueryException(string.Format(Messages.UnknownOperator, operatorType))
 			};
 		}
 	}

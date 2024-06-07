@@ -59,14 +59,14 @@
 
 				if (this.groupingDepth != 0 || this.nodeStack.Count != 1)
 				{
-					throw new QueryParserException(Messages.UnableToParseFilter);
+					throw new QueryException(Messages.UnableToParseFilter);
 				}
 
 				QueryNode node = this.nodeStack.Pop();
 
 				if (node is BinaryOperatorNode binaryNode && (binaryNode.Left == null || binaryNode.Right == null))
 				{
-					throw new QueryParserException(Messages.UnableToParseFilter);
+					throw new QueryException(Messages.UnableToParseFilter);
 				}
 
 				return node;
@@ -89,7 +89,7 @@
 							if (this.tokens.Peek().TokenType == TokenType.CloseParentheses)
 							{
 								// All OData functions have at least 1 or 2 parameters
-								throw new QueryParserException(Messages.UnableToParseFilter);
+								throw new QueryException(Messages.UnableToParseFilter);
 							}
 
 							this.groupingDepth++;
@@ -99,7 +99,7 @@
 						case TokenType.CloseParentheses:
 							if (this.groupingDepth == 0)
 							{
-								throw new QueryParserException(Messages.UnableToParseFilter);
+								throw new QueryException(Messages.UnableToParseFilter);
 							}
 
 							this.groupingDepth--;
@@ -191,7 +191,7 @@
 							if (this.tokens.Count < 2)
 							{
 								// If there is a comma in a function call, there should be another argument followed by a closing comma
-								throw new QueryParserException(Messages.UnableToParseFilter);
+								throw new QueryException(Messages.UnableToParseFilter);
 							}
 
 							break;
@@ -323,7 +323,7 @@
 
 				if (this.tokens.Count == 0)
 				{
-					throw new QueryParserException(Messages.UnableToParseFilter);
+					throw new QueryException(Messages.UnableToParseFilter);
 				}
 
 				switch (this.tokens.Peek().TokenType)
@@ -357,7 +357,7 @@
 						break;
 
 					default:
-						throw new QueryParserException(this.tokens.Peek().TokenType.ToString());
+						throw new QueryException(this.tokens.Peek().TokenType.ToString());
 				}
 
 				return node;

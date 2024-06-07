@@ -67,7 +67,7 @@
 				return property;
 			}
 
-			throw new ArgumentException($"The type '{this.FullName}' does not contain a property named '{name}'");
+			throw new ArgumentException($"The type '{this.FullName}' does not contain a property named '{name}'.");
 		}
 	}
 }

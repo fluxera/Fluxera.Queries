@@ -49,7 +49,7 @@
 				{
 					"asc"  => OrderByDirection.Ascending,
 					"desc" => OrderByDirection.Descending,
-					_      => throw new QueryParserException(Messages.OrderByPropertyRawValueInvalid)
+					_      => throw new QueryException(Messages.OrderByPropertyRawValueInvalid)
 				};
 			}
 

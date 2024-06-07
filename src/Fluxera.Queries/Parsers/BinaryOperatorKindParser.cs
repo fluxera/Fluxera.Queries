@@ -31,7 +31,7 @@
 				return binaryOperatorKind;
 			}
 
-			throw new QueryParserException(string.Format(Messages.UnknownOperator, operatorType));
+			throw new QueryException(string.Format(Messages.UnknownOperator, operatorType));
 		}
 	}
 }
