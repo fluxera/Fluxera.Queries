@@ -22,10 +22,32 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="Fluxera.Queries.UnitTests" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Fluxera.Enumeration" Version="8.1.1" />
+		<PackageReference Include="Fluxera.Guards" Version="8.1.1" />
 		<PackageReference Include="Fluxera.StronglyTypedId" Version="8.1.1" />
+		<PackageReference Include="Fluxera.Utilities" Version="8.1.0" />
 		<PackageReference Include="Fluxera.ValueObject" Version="8.1.1" />
 		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Parsers\Messages.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Messages.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Parsers\Messages.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Messages.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 	</ItemGroup>
 
 </Project>
