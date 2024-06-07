@@ -1,6 +1,6 @@
 namespace Fluxera.Queries.Parsers
 {
-	using Fluxera.Queries.Expressions;
+	using Fluxera.Queries.Nodes;
 
 	internal static class UnaryOperatorKindParser
 	{

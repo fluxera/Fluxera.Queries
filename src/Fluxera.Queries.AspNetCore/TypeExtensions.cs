@@ -6,7 +6,7 @@
 	{
 		public static bool IsDataQuery(this Type bindingContextModelType)
 		{
-			if (bindingContextModelType is null)
+			if(bindingContextModelType is null)
 			{
 				return false;
 			}

@@ -9,13 +9,13 @@
 
 	internal static class OrderByExpressionParser
 	{
-		public static OrderByProperty[] Parse(string oderByValue, EdmComplexType model)
+		public static OrderByProperty[] Parse(string expression, EdmComplexType model)
 		{
 			OrderByProperty[] properties;
 
-			if(oderByValue.Contains(','))
+			if(expression.Contains(','))
 			{
-				properties = oderByValue.Split(SplitCharacter.Comma, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+				properties = expression.Split(SplitCharacter.Comma, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
 										.Select(propertyString => ParseOrderByProperty(propertyString, model))
 										.ToArray();
 			}
@@ -23,7 +23,7 @@
 			{
 				properties =
 				[
-					ParseOrderByProperty(oderByValue, model)
+					ParseOrderByProperty(expression, model)
 				];
 			}
 

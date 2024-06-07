@@ -10,9 +10,9 @@
 		{
 			List<EdmProperty> properties = new List<EdmProperty>();
 
-			foreach (string propertyName in tokenValue.Split('/'))
+			foreach(string propertyName in tokenValue.Split('/'))
 			{
-				if (edmComplexType is null)
+				if(edmComplexType is null)
 				{
 					throw new QueryException($"Property {propertyName} not found.");
 				}

@@ -26,6 +26,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Fluxera.Queries.AspNetCore\Fluxera.Queries.AspNetCore.csproj" />
+		<ProjectReference Include="..\..\src\Fluxera.Queries.Repository\Fluxera.Queries.Repository.csproj" />
+		<ProjectReference Include="..\..\src\Fluxera.Queries\Fluxera.Queries.csproj" />
 	</ItemGroup>
 
 </Project>

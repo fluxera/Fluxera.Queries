@@ -1,4 +1,3 @@
-
 [*.{appxmanifest,axml,build,config,cs,csproj,css,dbml,discomap,dtd,jsproj,lsproj,njsproj,nuspec,proj,props,resw,resx,StyleCop,targets,tasks,vbproj,xml,xsd}]
 indent_style = tab
 indent_size = tab

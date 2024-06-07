@@ -47,8 +47,8 @@
 				});
 
 			builder.WebHost
-				.UseShutdownTimeout(TimeSpan.FromSeconds(5))
-				.UseTestServer();
+				   .UseShutdownTimeout(TimeSpan.FromSeconds(5))
+				   .UseTestServer();
 
 			await this.ConfigureServices(builder);
 
@@ -64,7 +64,7 @@
 		[OneTimeTearDown]
 		public async Task OneTimeTearDown()
 		{
-			foreach (HttpClient client in this.clients)
+			foreach(HttpClient client in this.clients)
 			{
 				client.Dispose();
 			}
@@ -77,7 +77,7 @@
 #endif
 			this.cancellationTokenSource.Dispose();
 
-			if (this.app is not null)
+			if(this.app is not null)
 			{
 				await this.app.StopAsync(TimeSpan.FromSeconds(30));
 				await this.app.DisposeAsync();
@@ -88,20 +88,20 @@
 
 		private HttpClient CreateClientInternal(params DelegatingHandler[] handlers)
 		{
-			if (this.server is null)
+			if(this.server is null)
 			{
 				throw new InvalidOperationException("The TestServer is not initialized.");
 			}
 
 			HttpClient client;
 
-			if (handlers.Length == 0)
+			if(handlers.Length == 0)
 			{
 				client = this.server.CreateClient();
 			}
 			else
 			{
-				for (int i = handlers.Length - 1; i > 0; i--)
+				for(int i = handlers.Length - 1; i > 0; i--)
 				{
 					handlers[i - 1].InnerHandler = handlers[i];
 				}

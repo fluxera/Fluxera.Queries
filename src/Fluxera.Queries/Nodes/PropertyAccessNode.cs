@@ -1,4 +1,4 @@
-﻿namespace Fluxera.Queries.Expressions
+﻿namespace Fluxera.Queries.Nodes
 {
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;

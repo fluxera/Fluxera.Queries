@@ -53,20 +53,20 @@ namespace Fluxera.Queries.Parsers
 
 		public bool MoveNext()
 		{
-			if (this.content.Length == this.position)
+			if(this.content.Length == this.position)
 			{
 				return false;
 			}
 
-			for (int i = 0; i < TokenDefinitions.Length; i++)
+			for(int i = 0; i < TokenDefinitions.Length; i++)
 			{
 				TokenDefinition tokenDefinition = TokenDefinitions[i];
 
 				Match match = tokenDefinition.Regex.Match(this.content, this.position);
 
-				if (match.Success)
+				if(match.Success)
 				{
-					if (tokenDefinition.Ignore)
+					if(tokenDefinition.Ignore)
 					{
 						this.position += match.Length;
 						i = -1;
@@ -80,7 +80,7 @@ namespace Fluxera.Queries.Parsers
 				}
 			}
 
-			if (this.content.Length != this.position)
+			if(this.content.Length != this.position)
 			{
 				throw new QueryException(Messages.UnableToParseFilter);
 			}

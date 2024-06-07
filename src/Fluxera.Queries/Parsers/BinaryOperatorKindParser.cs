@@ -1,7 +1,7 @@
 ﻿namespace Fluxera.Queries.Parsers
 {
 	using System.Collections.Generic;
-	using Fluxera.Queries.Expressions;
+	using Fluxera.Queries.Nodes;
 
 	internal static class BinaryOperatorKindParser
 	{
@@ -26,7 +26,7 @@
 
 		public static BinaryOperatorKind ToBinaryOperatorKind(this string operatorType)
 		{
-			if (OperatorTypeMap.TryGetValue(operatorType, out BinaryOperatorKind binaryOperatorKind))
+			if(OperatorTypeMap.TryGetValue(operatorType, out BinaryOperatorKind binaryOperatorKind))
 			{
 				return binaryOperatorKind;
 			}

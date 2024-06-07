@@ -45,12 +45,12 @@
 		/// <inheritdoc />
 		public bool Equals(EdmType other)
 		{
-			if (other == null)
+			if(other == null)
 			{
 				return false;
 			}
 
-			if (ReferenceEquals(this, other))
+			if(ReferenceEquals(this, other))
 			{
 				return true;
 			}
@@ -72,17 +72,17 @@
 		/// <returns></returns>
 		public static bool operator ==(EdmType a, EdmType b)
 		{
-			if (a is null)
+			if(a is null)
 			{
 				return b is null;
 			}
 
-			if (b is null)
+			if(b is null)
 			{
 				return false;
 			}
 
-			if (a.GetType() != b.GetType())
+			if(a.GetType() != b.GetType())
 			{
 				return false;
 			}
@@ -98,17 +98,17 @@
 		/// <returns></returns>
 		public static bool operator !=(EdmType a, EdmType b)
 		{
-			if (a is null)
+			if(a is null)
 			{
 				return b is not null;
 			}
 
-			if (b is null)
+			if(b is null)
 			{
 				return true;
 			}
 
-			if (a.GetType() != b.GetType())
+			if(a.GetType() != b.GetType())
 			{
 				return true;
 			}

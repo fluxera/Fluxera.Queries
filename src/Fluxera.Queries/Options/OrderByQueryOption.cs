@@ -15,10 +15,10 @@
 		/// <summary>
 		///     Initializes a new instance of the <see cref="OrderByQueryOption" /> type.
 		/// </summary>
-		internal OrderByQueryOption(string stringExpression, EdmComplexType edmType)
-			: base(stringExpression)
+		internal OrderByQueryOption(string expression, EdmComplexType edmType)
+			: base(expression)
 		{
-			OrderByProperty[] properties = OrderByExpressionParser.Parse(stringExpression, edmType);
+			OrderByProperty[] properties = OrderByExpressionParser.Parse(expression, edmType);
 			this.Properties = new ReadOnlyCollection<OrderByProperty>(properties);
 		}
 
@@ -30,7 +30,7 @@
 		/// <inheritdoc />
 		public override string ToString()
 		{
-			if (this.Properties.Count == 0)
+			if(this.Properties.Count == 0)
 			{
 				return "OrderBy=<none>";
 			}

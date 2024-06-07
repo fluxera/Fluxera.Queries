@@ -35,7 +35,10 @@
 			DataQuery<T> dataQuery = new DataQuery<T>
 			{
 				Filter = GetFilterParameterValue(context.Request.Query),
-				OrderBy = GetOrderByParameterValue(context.Request.Query)
+				OrderBy = GetOrderByParameterValue(context.Request.Query),
+				Skip = GetSkipParameterValue(context.Request.Query),
+				Top = GetTopParameterValue(context.Request.Query),
+				Count = GetCountParameterValue(context.Request.Query)
 			};
 
 			IQueryParser parser = context.RequestServices.GetRequiredService<IQueryParser>();
@@ -56,13 +59,49 @@
 		///		Gets the '$filter' query parameter value.
 		/// </summary>
 		[FromQuery(Name = "$filter")]
-		public string Filter { get; set; }
+		public string Filter { get; internal set; }
 
 		/// <summary>
 		///		Gets the '$orderby' query parameter value.
 		/// </summary>
 		[FromQuery(Name = "$orderby")]
-		public string OrderBy { get; set; }
+		public string OrderBy { get; internal set; }
+
+		/// <summary>
+		///		Gets the '$skip' query parameter value.
+		/// </summary>
+		[FromQuery(Name = "$skip")]
+		public int? Skip { get; internal set; }
+
+		/// <summary>
+		///		Gets the '$top' query parameter value.
+		/// </summary>
+		[FromQuery(Name = "$top")]
+		public int? Top { get; internal set; }
+
+		/// <summary>
+		///		Gets the '$count' query parameter value.
+		/// </summary>
+		[FromQuery(Name = "$count")]
+		public bool? Count { get; internal set; }
+
+		/// <summary>
+		///		Converts the data query to parsed query options.
+		/// </summary>
+		/// <returns></returns>
+		public QueryOptions ToQueryOptions()
+		{
+			return this.QueryOptions;
+		}
+
+		/// <summary>
+		///		Converts the data query to parsed query options.
+		/// </summary>
+		/// <param name="query"></param>
+		public static implicit operator QueryOptions(DataQuery query)
+		{
+			return query?.ToQueryOptions();
+		}
 
 		internal QueryOptions QueryOptions { get; set; }
 
@@ -90,6 +129,48 @@
 			return null;
 		}
 
+		internal static int? GetSkipParameterValue(IQueryCollection collection)
+		{
+			Guard.Against.Null(collection);
+
+			if(collection.TryGetValue(ParameterNames.Skip, out StringValues value))
+			{
+				string skipParameterValue = value.Single();
+				int.TryParse(skipParameterValue, out int skipValue);
+				return skipValue;
+			}
+
+			return null;
+		}
+
+		internal static int? GetTopParameterValue(IQueryCollection collection)
+		{
+			Guard.Against.Null(collection);
+
+			if(collection.TryGetValue(ParameterNames.Top, out StringValues value))
+			{
+				string topParameterValue = value.Single();
+				int.TryParse(topParameterValue, out int topValue);
+				return topValue;
+			}
+
+			return null;
+		}
+
+		internal static bool? GetCountParameterValue(IQueryCollection collection)
+		{
+			Guard.Against.Null(collection);
+
+			if(collection.TryGetValue(ParameterNames.Count, out StringValues value))
+			{
+				string countParameterValue = value.Single();
+				bool.TryParse(countParameterValue, out bool countValue);
+				return countValue;
+			}
+
+			return null;
+		}
+
 		/// <inheritdoc />
 		public override string ToString()
 		{
@@ -106,6 +187,27 @@
 			{
 				builder.Append("$orderby=");
 				builder.Append(this.OrderBy);
+				builder.Append('&');
+			}
+
+			if(this.Skip is not null)
+			{
+				builder.Append("$skip=");
+				builder.Append(this.Skip);
+				builder.Append('&');
+			}
+
+			if(this.Top is not null)
+			{
+				builder.Append("$top=");
+				builder.Append(this.Top);
+				builder.Append('&');
+			}
+
+			if(this.Count is not null)
+			{
+				builder.Append("$count=");
+				builder.Append(this.Count);
 				builder.Append('&');
 			}
 

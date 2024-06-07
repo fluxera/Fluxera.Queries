@@ -13,11 +13,11 @@
 		/// <summary>
 		///		Initializes a new instance of the <see cref="QueryOption"/> type.
 		/// </summary>
-		/// <param name="stringExpression">The expression in string form.</param>
+		/// <param name="expression">The expression in string form.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		protected QueryOption(string stringExpression)
+		protected QueryOption(string expression)
 		{
-			this.StringExpression = Guard.Against.Null(stringExpression);
+			this.StringExpression = Guard.Against.Null(expression);
 		}
 
 		/// <summary>
