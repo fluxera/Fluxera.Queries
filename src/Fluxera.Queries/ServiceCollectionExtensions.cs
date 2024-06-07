@@ -3,6 +3,7 @@
 	using Fluxera.Queries.Model;
 	using JetBrains.Annotations;
 	using Microsoft.Extensions.DependencyInjection;
+	using Microsoft.Extensions.DependencyInjection.Extensions;
 
 	/// <summary>
 	///		Extensions methods for the <see cref="IServiceCollection"/> type.
@@ -17,8 +18,8 @@
 		/// <returns></returns>
 		public static IServiceCollection AddQueryParser(this IServiceCollection services)
 		{
-			services.AddSingleton<IQueryParser, QueryParser>();
-			services.AddSingleton<EdmTypeProvider>();
+			services.TryAddSingleton<IQueryParser, QueryParser>();
+			services.TryAddSingleton<EdmTypeProvider>();
 			return services;
 		}
 	}

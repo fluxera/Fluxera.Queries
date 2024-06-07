@@ -1,16 +1,5 @@
 ﻿namespace Fluxera.Queries.UnitTests
 {
-
-	/* Unmerged change from project 'Fluxera.Queries.UnitTests (net8.0)'
-	Before:
-		using Fluxera.Enumeration;
-	After:
-		using Fluxera.Enumeration;
-		using Fluxera.Queries;
-		using Fluxera.Queries.UnitTests;
-		using Fluxera.Queries.UnitTests;
-		using Fluxera.Queries.UnitTests.Model;
-	*/
 	using Fluxera.Enumeration;
 
 	public sealed class CustomerStateEnum : Enumeration<CustomerStateEnum>

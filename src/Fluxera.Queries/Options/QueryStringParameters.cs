@@ -3,7 +3,6 @@
 	using System;
 	using System.Text;
 	using Fluxera.Guards;
-	using Fluxera.Queries;
 	using Fluxera.Queries.Parsers;
 
 	/// <summary>
@@ -11,16 +10,6 @@
 	/// </summary>
 	internal sealed class QueryStringParameters
 	{
-		public const string FilterParameterName = "$filter";
-		public const string OrderByParameterName = "$orderby";
-
-		//public const string SkipParameterName = "$skip";
-		//public const string TopParameterName = "$top";
-		//public const string SearchParameterName = "$search";
-		//public const string SkipTokenParameterName = "$skiptoken";
-		//public const string CountParameterName = "$count";
-		//public const string SelectParameterName = "$select";
-
 		private QueryStringParameters()
 		{
 		}
@@ -44,8 +33,8 @@
 		{
 			Guard.Against.Null(queryString);
 
-			const string filterParameterPrefix = FilterParameterName + "=";
-			const string orderByParameterPrefix = OrderByParameterName + "=";
+			const string filterParameterPrefix = ParameterNames.Filter + "=";
+			const string orderByParameterPrefix = ParameterNames.OrderBy + "=";
 
 			QueryStringParameters parameters = new QueryStringParameters();
 
@@ -92,7 +81,7 @@
 
 			if(this.Filter != null)
 			{
-				builder.Append(FilterParameterName);
+				builder.Append(ParameterNames.Filter);
 				builder.Append('=');
 				builder.Append(this.Filter);
 				builder.Append('&');
@@ -100,7 +89,7 @@
 
 			if(this.OrderBy != null)
 			{
-				builder.Append(OrderByParameterName);
+				builder.Append(ParameterNames.OrderBy);
 				builder.Append('=');
 				builder.Append(this.OrderBy);
 				builder.Append('&');

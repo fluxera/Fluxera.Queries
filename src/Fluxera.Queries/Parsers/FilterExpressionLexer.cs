@@ -82,7 +82,7 @@ namespace Fluxera.Queries.Parsers
 
 			if (this.content.Length != this.position)
 			{
-				throw new QueryParserException(Messages.UnableToParseFilter);
+				throw new QueryException(Messages.UnableToParseFilter);
 			}
 
 			return false;

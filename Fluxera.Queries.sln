@@ -23,9 +23,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0DE8426E
 		tests\Directory.Build.props = tests\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluxera.Queries", "src\Fluxera.Queries\Fluxera.Queries.csproj", "{69661153-2A48-47D5-B608-3CD8E0892AA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluxera.Queries", "src\Fluxera.Queries\Fluxera.Queries.csproj", "{69661153-2A48-47D5-B608-3CD8E0892AA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluxera.Queries.UnitTests", "tests\Fluxera.Queries.UnitTests\Fluxera.Queries.UnitTests.csproj", "{76F670C9-7818-4014-A876-C8692DA9AC01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluxera.Queries.UnitTests", "tests\Fluxera.Queries.UnitTests\Fluxera.Queries.UnitTests.csproj", "{76F670C9-7818-4014-A876-C8692DA9AC01}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{02585838-0FDA-4B4F-A989-51B8D0C45CA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluxera.Queries.AspNetCore", "src\Fluxera.Queries.AspNetCore\Fluxera.Queries.AspNetCore.csproj", "{97E696B7-5400-4B1E-B115-74D98155EBD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "sample\SampleApp\SampleApp.csproj", "{FC48B23D-49E9-4A90-A7BD-601C285793F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluxera.Queries.AspNetCore.UnitTests", "tests\Fluxera.Queries.AspNetCore.UnitTests\Fluxera.Queries.AspNetCore.UnitTests.csproj", "{0CA5B338-5F5A-42FD-B44A-D3EDB19EF98A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +49,18 @@ Global
 		{76F670C9-7818-4014-A876-C8692DA9AC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76F670C9-7818-4014-A876-C8692DA9AC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76F670C9-7818-4014-A876-C8692DA9AC01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97E696B7-5400-4B1E-B115-74D98155EBD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97E696B7-5400-4B1E-B115-74D98155EBD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97E696B7-5400-4B1E-B115-74D98155EBD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97E696B7-5400-4B1E-B115-74D98155EBD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC48B23D-49E9-4A90-A7BD-601C285793F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC48B23D-49E9-4A90-A7BD-601C285793F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC48B23D-49E9-4A90-A7BD-601C285793F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC48B23D-49E9-4A90-A7BD-601C285793F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CA5B338-5F5A-42FD-B44A-D3EDB19EF98A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA5B338-5F5A-42FD-B44A-D3EDB19EF98A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA5B338-5F5A-42FD-B44A-D3EDB19EF98A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CA5B338-5F5A-42FD-B44A-D3EDB19EF98A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +68,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{69661153-2A48-47D5-B608-3CD8E0892AA3} = {660FF601-6EFC-4A38-B356-A7B77CFEF5F6}
 		{76F670C9-7818-4014-A876-C8692DA9AC01} = {0DE8426E-57B6-40A8-8CF0-87C23D40B6E3}
+		{97E696B7-5400-4B1E-B115-74D98155EBD1} = {660FF601-6EFC-4A38-B356-A7B77CFEF5F6}
+		{FC48B23D-49E9-4A90-A7BD-601C285793F9} = {02585838-0FDA-4B4F-A989-51B8D0C45CA2}
+		{0CA5B338-5F5A-42FD-B44A-D3EDB19EF98A} = {0DE8426E-57B6-40A8-8CF0-87C23D40B6E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {461F9C7F-2B18-4722-9CB4-ABB14C655FBE}

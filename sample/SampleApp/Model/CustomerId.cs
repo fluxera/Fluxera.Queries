@@ -1,4 +1,4 @@
-﻿namespace Fluxera.Queries.UnitTests
+﻿namespace SampleApp.Model
 {
 	using Fluxera.StronglyTypedId;
 
