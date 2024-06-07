@@ -1,6 +1,7 @@
 ﻿namespace Fluxera.Queries.Model
 {
 	using System;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -18,8 +19,8 @@
 		/// <exception cref="ArgumentNullException"></exception>
 		internal EntitySet(string name, EdmComplexType entityType)
 		{
-			this.Name = Guard.ThrowIfNullOrWhiteSpace(name);
-			this.EdmType = Guard.ThrowIfNull(entityType);
+			this.Name = Guard.Against.NullOrWhiteSpace(name);
+			this.EdmType = Guard.Against.Null(entityType);
 		}
 
 		/// <summary>

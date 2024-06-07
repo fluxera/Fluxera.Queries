@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
 	using System.Linq;
+	using Fluxera.Guards;
 	using Fluxera.Queries.Model;
 	using JetBrains.Annotations;
 
@@ -32,7 +33,7 @@
 		/// <exception cref="InvalidOperationException"></exception>
 		public OrderByProperty(IEnumerable<EdmProperty> properties, OrderByDirection direction)
 		{
-			properties = Guard.ThrowIfNull(properties);
+			properties = Guard.Against.Null(properties);
 
 			this.Properties = new ReadOnlyCollection<EdmProperty>(properties.ToList());
 

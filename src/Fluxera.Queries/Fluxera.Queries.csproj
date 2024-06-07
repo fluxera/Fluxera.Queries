@@ -27,6 +27,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Fluxera.Enumeration" Version="8.1.1" />
+		<PackageReference Include="Fluxera.Guards" Version="8.1.1" />
 		<PackageReference Include="Fluxera.StronglyTypedId" Version="8.1.1" />
 		<PackageReference Include="Fluxera.Utilities" Version="8.1.0" />
 		<PackageReference Include="Fluxera.ValueObject" Version="8.1.1" />

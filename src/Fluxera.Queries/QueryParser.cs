@@ -1,6 +1,7 @@
 ﻿namespace Fluxera.Queries
 {
 	using System;
+	using Fluxera.Guards;
 	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Options;
 	using Fluxera.Utilities.Extensions;
@@ -19,8 +20,8 @@
 		/// <inheritdoc />
 		public QueryOptions ParseQueryOptions(Type entityType, string queryString)
 		{
-			Guard.ThrowIfNull(entityType);
-			Guard.ThrowIfNull(queryString);
+			Guard.Against.Null(entityType);
+			Guard.Against.Null(queryString);
 
 			QueryStringParameters parameters = QueryStringParameters.Create(queryString);
 			EdmComplexType edmEntityType = (EdmComplexType)this.typeProvider.GetByClrType(entityType);

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -20,7 +21,7 @@
 		/// <exception cref="ArgumentNullException"></exception>
 		internal EdmEnumMember(string name, int value)
 		{
-			this.Name = Guard.ThrowIfNullOrWhiteSpace(name);
+			this.Name = Guard.Against.NullOrWhiteSpace(name);
 			this.Value = value;
 		}
 

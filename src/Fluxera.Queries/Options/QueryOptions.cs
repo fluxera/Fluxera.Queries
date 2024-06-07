@@ -3,6 +3,7 @@
 	using JetBrains.Annotations;
 	using System.Text;
 	using Fluxera.Queries.Model;
+	using Fluxera.Guards;
 
 	/// <summary>
 	///     An object which contains the parsed query options.
@@ -27,7 +28,7 @@
 			this.parameters = parameters;
 			this.typeProvider = typeProvider;
 
-			this.EntitySet = Guard.ThrowIfNull(entitySet);
+			this.EntitySet = Guard.Against.Null(entitySet);
 		}
 
 		/// <summary>

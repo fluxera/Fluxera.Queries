@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Fluxera.Guards;
 	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Options;
 
@@ -31,8 +32,8 @@
 
 		private static OrderByProperty ParseOrderByProperty(string propertyString, EdmComplexType model)
 		{
-			Guard.ThrowIfNull(propertyString);
-			Guard.ThrowIfNull(model);
+			Guard.Against.Null(propertyString);
+			Guard.Against.Null(model);
 
 			string[] parts = propertyString.Split(SplitCharacter.Space, StringSplitOptions.RemoveEmptyEntries);
 

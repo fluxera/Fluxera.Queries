@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -20,9 +21,9 @@
 		/// <param name="members">The enum members.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		internal EdmEnumType(Type clrType, IReadOnlyList<EdmEnumMember> members)
-			: base(Guard.ThrowIfNull(clrType).Name, Guard.ThrowIfNull(clrType).FullName, clrType)
+			: base(Guard.Against.Null(clrType).Name, Guard.Against.Null(clrType).FullName, clrType)
 		{
-			this.Members = Guard.ThrowIfNull(members);
+			this.Members = Guard.Against.Null(members);
 		}
 
 		/// <summary>

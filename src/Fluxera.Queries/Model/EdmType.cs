@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -21,9 +22,9 @@
 		/// <exception cref="ArgumentNullException"></exception>
 		protected EdmType(string name, string fullName, Type clrType)
 		{
-			this.Name = Guard.ThrowIfNullOrWhiteSpace(name);
-			this.FullName = Guard.ThrowIfNullOrWhiteSpace(fullName);
-			this.ClrType = Guard.ThrowIfNull(clrType);
+			this.Name = Guard.Against.NullOrWhiteSpace(name);
+			this.FullName = Guard.Against.NullOrWhiteSpace(fullName);
+			this.ClrType = Guard.Against.Null(clrType);
 		}
 
 		/// <summary>

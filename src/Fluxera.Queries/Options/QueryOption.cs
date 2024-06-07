@@ -1,6 +1,7 @@
 ﻿namespace Fluxera.Queries.Options
 {
 	using System;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -16,7 +17,7 @@
 		/// <exception cref="ArgumentNullException"></exception>
 		protected QueryOption(string stringExpression)
 		{
-			this.StringExpression = Guard.ThrowIfNull(stringExpression);
+			this.StringExpression = Guard.Against.Null(stringExpression);
 		}
 
 		/// <summary>

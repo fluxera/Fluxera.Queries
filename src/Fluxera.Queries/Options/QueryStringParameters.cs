@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Text;
+	using Fluxera.Guards;
 	using Fluxera.Queries;
 	using Fluxera.Queries.Parsers;
 
@@ -41,7 +42,7 @@
 		/// <exception cref="ArgumentNullException"></exception>
 		public static QueryStringParameters Create(string queryString)
 		{
-			Guard.ThrowIfNull(queryString);
+			Guard.Against.Null(queryString);
 
 			const string filterParameterPrefix = FilterParameterName + "=";
 			const string orderByParameterPrefix = OrderByParameterName + "=";

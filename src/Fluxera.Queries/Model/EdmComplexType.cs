@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Linq;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -21,7 +22,7 @@
 		/// <param name="properties">The EDM properties of the type.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		internal EdmComplexType(Type clrType, IReadOnlyList<EdmProperty> properties)
-			: this(Guard.ThrowIfNull(clrType), null, properties)
+			: this(Guard.Against.Null(clrType), null, properties)
 		{
 		}
 
@@ -33,10 +34,10 @@
 		/// <param name="properties">The EDM properties of the type.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		internal EdmComplexType(Type clrType, EdmType baseType, IReadOnlyList<EdmProperty> properties)
-			: base(Guard.ThrowIfNull(clrType).Name, Guard.ThrowIfNull(clrType).FullName, clrType)
+			: base(Guard.Against.Null(clrType).Name, Guard.Against.Null(clrType).FullName, clrType)
 		{
 			this.BaseType = baseType;
-			this.Properties = Guard.ThrowIfNull(properties);
+			this.Properties = Guard.Against.Null(properties);
 		}
 
 		/// <summary>
@@ -57,7 +58,7 @@
 		/// <exception cref="ArgumentException"></exception>
 		public EdmProperty GetProperty(string name)
 		{
-			Guard.ThrowIfNull(name);
+			Guard.Against.Null(name);
 
 			EdmProperty property = this.Properties.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
 

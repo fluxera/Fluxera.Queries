@@ -2,6 +2,7 @@
 {
 	using System.Collections.Generic;
 	using System.Diagnostics;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -19,7 +20,7 @@
 		/// <param name="name">The name of the function.</param>
 		public FunctionCallNode(string name)
 		{
-			this.Name = Guard.ThrowIfNullOrWhiteSpace(name);
+			this.Name = Guard.Against.NullOrWhiteSpace(name);
 		}
 
 		/// <summary>

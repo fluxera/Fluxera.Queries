@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -18,9 +19,9 @@
 		/// <param name="clrType">The CLR type of the collection type.</param>
 		/// <param name="itemType">The EDM type of the collection items.</param>
 		internal EdmCollectionType(Type clrType, EdmType itemType)
-			: base("Collection", $"Collection({Guard.ThrowIfNull(itemType).FullName})", clrType)
+			: base("Collection", $"Collection({Guard.Against.Null(itemType).FullName})", clrType)
 		{
-			this.ItemType = Guard.ThrowIfNull(itemType);
+			this.ItemType = Guard.Against.Null(itemType);
 		}
 
 		/// <summary>

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -21,9 +22,9 @@
 		/// <exception cref="ArgumentNullException"></exception>
 		internal EdmProperty(string name, EdmType propertyType, EdmComplexType declaringType)
 		{
-			this.Name = Guard.ThrowIfNullOrWhiteSpace(name);
-			this.PropertyType = Guard.ThrowIfNull(propertyType);
-			this.DeclaringType = Guard.ThrowIfNull(declaringType);
+			this.Name = Guard.Against.NullOrWhiteSpace(name);
+			this.PropertyType = Guard.Against.Null(propertyType);
+			this.DeclaringType = Guard.Against.Null(declaringType);
 		}
 
 		/// <summary>
