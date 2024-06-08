@@ -38,7 +38,8 @@
 				OrderBy = GetOrderByParameterValue(context.Request.Query),
 				Skip = GetSkipParameterValue(context.Request.Query),
 				Top = GetTopParameterValue(context.Request.Query),
-				Count = GetCountParameterValue(context.Request.Query)
+				Count = GetCountParameterValue(context.Request.Query),
+				Select = GetSelectParameterValue(context.Request.Query)
 			};
 
 			IQueryParser parser = context.RequestServices.GetRequiredService<IQueryParser>();
@@ -84,6 +85,12 @@
 		/// </summary>
 		[FromQuery(Name = "$count")]
 		public bool? Count { get; internal set; }
+
+		/// <summary>
+		///		Gets the '$count' query parameter value.
+		/// </summary>
+		[FromQuery(Name = "$select")]
+		public string Select { get; internal set; }
 
 		/// <summary>
 		///		Converts the data query to parsed query options.
@@ -171,6 +178,18 @@
 			return null;
 		}
 
+		internal static string GetSelectParameterValue(IQueryCollection collection)
+		{
+			Guard.Against.Null(collection);
+
+			if(collection.TryGetValue(ParameterNames.Select, out StringValues value))
+			{
+				return value.Single();
+			}
+
+			return null;
+		}
+
 		/// <inheritdoc />
 		public override string ToString()
 		{
@@ -208,6 +227,13 @@
 			{
 				builder.Append("$count=");
 				builder.Append(this.Count);
+				builder.Append('&');
+			}
+
+			if(this.Select is not null)
+			{
+				builder.Append("$select=");
+				builder.Append(this.Select);
 				builder.Append('&');
 			}
 

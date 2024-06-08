@@ -4,7 +4,7 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///     A class containing de-serialized values from the '$count' query option.
+	///     A class containing de-serialized values from the $count query option.
 	/// </summary>
 	[PublicAPI]
 	public sealed class CountQueryOption : QueryOption

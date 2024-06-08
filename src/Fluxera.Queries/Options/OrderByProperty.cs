@@ -9,7 +9,7 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///     A class containing de-serialized values from the '$orderby' query option.
+	///     A class containing de-serialized values from the $orderby query option.
 	/// </summary>
 	[PublicAPI]
 	public sealed class OrderByProperty

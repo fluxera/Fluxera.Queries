@@ -4,7 +4,7 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///     A class containing de-serialized values from the '$skip' query option.
+	///     A class containing de-serialized values from the $skip query option.
 	/// </summary>
 	[PublicAPI]
 	public sealed class SkipQueryOption : QueryOption

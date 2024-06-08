@@ -20,11 +20,12 @@
 			endpoints.MapGet(ExecuteAsync, "customers");
 		}
 
-		private static async Task<IResult> ExecuteAsync(DataQuery<Customer> query,
+		private static async Task<IResult> ExecuteAsync(
+			DataQuery<Customer> query,
 			[FromServices] IRepository<Customer, CustomerId> repository,
 			CancellationToken cancellationToken = default)
 		{
-			QueryResult<Customer> result = await repository.ExecuteQueryAsync(query, cancellationToken);
+			QueryResult result = await repository.ExecuteFindManyAsync(query, cancellationToken);
 
 			return Results.Ok(result);
 		}

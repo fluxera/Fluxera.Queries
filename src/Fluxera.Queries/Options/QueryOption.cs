@@ -2,6 +2,7 @@
 {
 	using System;
 	using Fluxera.Guards;
+	using Fluxera.Queries.Parsers;
 	using JetBrains.Annotations;
 
 	/// <summary>

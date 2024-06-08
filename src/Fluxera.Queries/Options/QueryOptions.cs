@@ -16,6 +16,7 @@
 		private SkipQueryOption skip;
 		private TopQueryOption top;
 		private CountQueryOption count;
+		private SelectQueryOption select;
 
 		private readonly EdmTypeProvider typeProvider;
 		private readonly QueryStringParameters parameters;
@@ -40,7 +41,7 @@
 		public EntitySet EntitySet { get; }
 
 		/// <summary>
-		///     Gets the filter query option.
+		///     Gets the $filter query option.
 		/// </summary>
 		public FilterQueryOption Filter
 		{
@@ -56,7 +57,7 @@
 		}
 
 		/// <summary>
-		///     Gets the order by query option.
+		///     Gets the $orderby query option.
 		/// </summary>
 		public OrderByQueryOption OrderBy
 		{
@@ -72,7 +73,7 @@
 		}
 
 		/// <summary>
-		///     Gets the skip query option.
+		///     Gets the $skip query option.
 		/// </summary>
 		public SkipQueryOption Skip
 		{
@@ -88,7 +89,7 @@
 		}
 
 		/// <summary>
-		///     Gets the top query option.
+		///     Gets the $top query option.
 		/// </summary>
 		public TopQueryOption Top
 		{
@@ -104,7 +105,7 @@
 		}
 
 		/// <summary>
-		///     Gets the count query option.
+		///     Gets the $count query option.
 		/// </summary>
 		public CountQueryOption Count
 		{
@@ -116,6 +117,22 @@
 				}
 
 				return this.count;
+			}
+		}
+
+		/// <summary>
+		///     Gets the $select query option.
+		/// </summary>
+		public SelectQueryOption Select
+		{
+			get
+			{
+				if(this.select == null && this.parameters.Select != null)
+				{
+					this.select = new SelectQueryOption(this.parameters.Select, this.EntitySet.EdmType);
+				}
+
+				return this.select;
 			}
 		}
 
@@ -147,6 +164,11 @@
 			if(this.Count is not null)
 			{
 				builder.Append($"{this.Count}; ");
+			}
+
+			if(this.Select is not null)
+			{
+				builder.Append($"{this.Select}; ");
 			}
 
 			//if(this.Search is not null)
