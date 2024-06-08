@@ -48,6 +48,7 @@
 					dataQuery.Skip = DataQuery.GetSkipParameterValue(bindingContext.HttpContext.Request.Query);
 					dataQuery.Top = DataQuery.GetTopParameterValue(bindingContext.HttpContext.Request.Query);
 					dataQuery.Count = DataQuery.GetCountParameterValue(bindingContext.HttpContext.Request.Query);
+					dataQuery.Select = DataQuery.GetSelectParameterValue(bindingContext.HttpContext.Request.Query);
 
 					QueryOptions queryOptions = this.parser.ParseQueryOptions(entityType, dataQuery.ToString());
 					dataQuery.QueryOptions = queryOptions;

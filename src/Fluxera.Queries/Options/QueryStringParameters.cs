@@ -15,29 +15,34 @@
 		}
 
 		/// <summary>
-		///     Gets the string '$filter' parameter value from the incoming request.
+		///     Gets the string $filter parameter value from the incoming request.
 		/// </summary>
 		public string Filter { get; private set; }
 
 		/// <summary>
-		///     Gets the string '$orderby' parameter value from the incoming request.
+		///     Gets the string $orderby parameter value from the incoming request.
 		/// </summary>
 		public string OrderBy { get; private set; }
 
 		/// <summary>
-		///     Gets the string '$skip' parameter value from the incoming request.
+		///     Gets the string $skip parameter value from the incoming request.
 		/// </summary>
 		public string Skip { get; private set; }
 
 		/// <summary>
-		///     Gets the string '$top' parameter value from the incoming request.
+		///     Gets the string $top parameter value from the incoming request.
 		/// </summary>
 		public string Top { get; private set; }
 
 		/// <summary>
-		///     Gets the string '$count' parameter value from the incoming request.
+		///     Gets the string $count parameter value from the incoming request.
 		/// </summary>
 		public string Count { get; private set; }
+
+		/// <summary>
+		///     Gets the string $select parameter value from the incoming request.
+		/// </summary>
+		public string Select { get; private set; }
 
 		/// <summary>
 		///     Initializes a new instance of the <see cref="QueryStringParameters" /> class.
@@ -53,6 +58,7 @@
 			const string skipParameterPrefix = ParameterNames.Skip + "=";
 			const string topParameterPrefix = ParameterNames.Top + "=";
 			const string countParameterPrefix = ParameterNames.Count + "=";
+			const string selectParameterPrefix = ParameterNames.Select + "=";
 
 			QueryStringParameters parameters = new QueryStringParameters();
 
@@ -107,6 +113,13 @@
 							parameters.Count = decodedQueryOption.Substring(countParameterPrefix.Length);
 						}
 					}
+					else if(decodedQueryOption.StartsWith(selectParameterPrefix, StringComparison.Ordinal))
+					{
+						if(decodedQueryOption.Length != selectParameterPrefix.Length)
+						{
+							parameters.Select = decodedQueryOption.Substring(selectParameterPrefix.Length);
+						}
+					}
 				}
 			}
 
@@ -158,6 +171,14 @@
 				builder.Append('&');
 			}
 
+			if(this.Select != null)
+			{
+				builder.Append(ParameterNames.Select);
+				builder.Append('=');
+				builder.Append(this.Select);
+				builder.Append('&');
+			}
+
 			//if(this.Search != null)
 			//{
 			//	builder.Append(SearchParamName);
@@ -171,14 +192,6 @@
 			//	builder.Append(SkipTokenParamName);
 			//	builder.Append('=');
 			//	builder.Append(this.SkipToken);
-			//	builder.Append('&');
-			//}
-
-			//if(this.Select != null)
-			//{
-			//	builder.Append(SelectParamName);
-			//	builder.Append('=');
-			//	builder.Append(this.Select);
 			//	builder.Append('&');
 			//}
 

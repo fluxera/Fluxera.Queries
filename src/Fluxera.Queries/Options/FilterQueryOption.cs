@@ -6,7 +6,7 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///     A class containing de-serialized values from the '$filter' query option.
+	///     A class containing de-serialized values from the $filter query option.
 	/// </summary>
 	[PublicAPI]
 	public sealed class FilterQueryOption : QueryOption

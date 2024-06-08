@@ -7,7 +7,7 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///     A class containing de-serialized values from the '$orderby' query option.
+	///     A class containing de-serialized values from the $orderby query option.
 	/// </summary>
 	[PublicAPI]
 	public sealed class OrderByQueryOption : QueryOption
@@ -35,9 +35,9 @@
 				return "OrderBy=<none>";
 			}
 
-			string props = string.Join(",", this.Properties);
+			string properties = string.Join(",", this.Properties);
 
-			return $"OrderBy={props}";
+			return $"OrderBy={properties}";
 		}
 	}
 }
