@@ -17,7 +17,7 @@
 		/// <param name="entityType">The EDM type of the entities in the set.</param>
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
-		internal EntitySet(string name, EdmComplexType entityType)
+		public EntitySet(string name, EdmComplexType entityType)
 		{
 			this.Name = Guard.Against.NullOrWhiteSpace(name);
 			this.EdmType = Guard.Against.Null(entityType);

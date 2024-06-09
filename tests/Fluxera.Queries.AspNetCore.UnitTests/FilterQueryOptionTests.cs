@@ -5,6 +5,7 @@
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using FluentAssertions;
+	using Fluxera.Queries.AspNetCore.UnitTests.Model;
 	using MadEyeMatt.AspNetCore.Endpoints;
 	using Microsoft.AspNetCore.Builder;
 	using NUnit.Framework;
@@ -15,7 +16,10 @@
 		/// <inheritdoc />
 		protected override Task ConfigureServices(WebApplicationBuilder builder)
 		{
-			builder.Services.AddDataQueries();
+			builder.Services.AddDataQueries(options =>
+			{
+				options.EntitySet<Customer>("Customers");
+			});
 
 			return Task.CompletedTask;
 		}

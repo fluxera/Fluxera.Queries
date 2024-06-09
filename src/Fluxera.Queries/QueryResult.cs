@@ -1,11 +1,12 @@
 ﻿namespace Fluxera.Queries
 {
 	using System.Collections.Generic;
+	using System.Text.Json.Serialization;
 	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///     A class that represents the results of a query.
+	///     A class that represents the multiple results of a query.
 	/// </summary>
 	[PublicAPI]
 	public sealed class QueryResult
@@ -24,11 +25,14 @@
 		/// <summary>
 		///     Gets the total count of the query (optional).
 		/// </summary>
+		[JsonPropertyName("@odata.count")]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public long? TotalCount { get; }
 
 		/// <summary>
 		///     Gets the filtered and paginated results of the query.
 		/// </summary>
+		[JsonPropertyName("value")]
 		public IReadOnlyCollection<object> Items { get; }
 	}
 

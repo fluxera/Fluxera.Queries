@@ -11,7 +11,7 @@
 	[PublicAPI]
 	public sealed class FilterQueryOption : QueryOption
 	{
-		internal FilterQueryOption(string expression, EdmComplexType edmType, EdmTypeProvider typeProvider)
+		internal FilterQueryOption(string expression, EdmComplexType edmType, IEdmTypeProvider typeProvider)
 			: base(expression)
 		{
 			this.Expression = FilterExpressionParser.Parse(expression, edmType, typeProvider);

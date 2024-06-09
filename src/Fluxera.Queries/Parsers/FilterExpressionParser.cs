@@ -7,7 +7,7 @@
 
 	internal static class FilterExpressionParser
 	{
-		public static QueryNode Parse(string expression, EdmComplexType model, EdmTypeProvider typeProvider)
+		public static QueryNode Parse(string expression, EdmComplexType model, IEdmTypeProvider typeProvider)
 		{
 			FilterExpressionParserImpl parserImpl = new FilterExpressionParserImpl(model, typeProvider);
 			QueryNode queryNode = parserImpl.Parse(new FilterExpressionLexer(expression));
@@ -20,11 +20,11 @@
 			private readonly EdmComplexType model;
 			private readonly Stack<QueryNode> nodeStack = new Stack<QueryNode>();
 			private readonly Queue<Token> tokens = new Queue<Token>();
-			private readonly EdmTypeProvider typeProvider;
+			private readonly IEdmTypeProvider typeProvider;
 			private int groupingDepth;
 			private BinaryOperatorKind nextBinaryOperatorKind = BinaryOperatorKind.None;
 
-			internal FilterExpressionParserImpl(EdmComplexType model, EdmTypeProvider typeProvider)
+			internal FilterExpressionParserImpl(EdmComplexType model, IEdmTypeProvider typeProvider)
 			{
 				this.model = model;
 				this.typeProvider = typeProvider;

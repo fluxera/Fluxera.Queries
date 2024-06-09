@@ -9,7 +9,7 @@ namespace Fluxera.Queries.Parsers
 	{
 		private const string DateFormat = "yyyy-MM-dd";
 
-		public static ConstantNode ParseConstantNode(Token token, EdmTypeProvider typeProvider)
+		public static ConstantNode ParseConstantNode(Token token, IEdmTypeProvider typeProvider)
 		{
 			return token.TokenType switch
 			{
@@ -106,7 +106,7 @@ namespace Fluxera.Queries.Parsers
 			return ConstantNode.Double(value, doubleValue);
 		}
 
-		private static ConstantNode ParseEnum(string value, EdmTypeProvider typeProvider)
+		private static ConstantNode ParseEnum(string value, IEdmTypeProvider typeProvider)
 		{
 			int firstQuote = value.IndexOf('\'');
 			string edmEnumTypeName = value.Substring(0, firstQuote);

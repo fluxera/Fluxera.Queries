@@ -6,18 +6,22 @@
 	using Fluxera.Guards;
 	using Fluxera.Queries;
 	using Fluxera.Queries.AspNetCore;
+	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Options;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.Extensions.Logging;
+	using Microsoft.Extensions.Options;
 
 	internal sealed class DataQueryModelBinder : IModelBinder
 	{
-		private readonly ILogger<DataQueryModelBinder> logger;
 		private readonly IQueryParser parser;
+		private readonly IOptions<DataQueriesOptions> options;
+		private readonly ILogger<DataQueryModelBinder> logger;
 
-		public DataQueryModelBinder(IQueryParser parser, ILogger<DataQueryModelBinder> logger)
+		public DataQueryModelBinder(IQueryParser parser, IOptions<DataQueriesOptions> options, ILogger<DataQueryModelBinder> logger)
 		{
 			this.parser = parser;
+			this.options = options;
 			this.logger = logger;
 		}
 
@@ -50,7 +54,8 @@
 					dataQuery.Count = DataQuery.GetCountParameterValue(bindingContext.HttpContext.Request.Query);
 					dataQuery.Select = DataQuery.GetSelectParameterValue(bindingContext.HttpContext.Request.Query);
 
-					QueryOptions queryOptions = this.parser.ParseQueryOptions(entityType, dataQuery.ToString());
+					EntitySet entitySet = this.options.Value.GetByType(entityType);
+					QueryOptions queryOptions = this.parser.ParseQueryOptions(entitySet, dataQuery.ToString());
 					dataQuery.QueryOptions = queryOptions;
 				}
 

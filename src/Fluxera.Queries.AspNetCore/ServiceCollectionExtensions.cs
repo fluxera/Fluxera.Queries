@@ -1,9 +1,11 @@
 ﻿namespace Fluxera.Queries.AspNetCore
 {
+	using System;
 	using Fluxera.Queries.AspNetCore.ModelBinding;
 	using JetBrains.Annotations;
-	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.Extensions.DependencyInjection;
+	using Microsoft.Extensions.Options;
 
 	/// <summary>
 	///		Extensions methods for the <see cref="IServiceCollection"/> type.
@@ -11,19 +13,24 @@
 	[PublicAPI]
 	public static class ServiceCollectionExtensions
 	{
-		/// <summary>
-		///		Adds the data queries services.
-		/// </summary>
-		/// <param name="services"></param>
-		/// <returns></returns>
-		public static IServiceCollection AddDataQueries(this IServiceCollection services)
+		///  <summary>
+		/// 		Adds the data queries services.
+		///  </summary>
+		///  <param name="services"></param>
+		///  <param name="configure"></param>
+		///  <returns></returns>
+		public static IServiceCollection AddDataQueries(this IServiceCollection services, Action<DataQueriesOptions> configure)
 		{
 			services.AddQueryParser();
 
-			services.PostConfigure<MvcOptions>(o =>
+			services.PostConfigure<MvcOptions>(options =>
 			{
-				o.ModelBinderProviders.Insert(0, new DataQueryModelBinderProvider());
+				options.ModelBinderProviders.Insert(0, new DataQueryModelBinderProvider());
 			});
+
+			services.Configure(configure);
+
+			services.AddTransient<IPostConfigureOptions<DataQueriesOptions>, ConfigureDataQueriesOptions>();
 
 			return services;
 		}

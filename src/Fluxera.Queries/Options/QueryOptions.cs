@@ -18,7 +18,7 @@
 		private CountQueryOption count;
 		private SelectQueryOption select;
 
-		private readonly EdmTypeProvider typeProvider;
+		private readonly IEdmTypeProvider typeProvider;
 		private readonly QueryStringParameters parameters;
 
 		/// <summary>
@@ -27,7 +27,7 @@
 		/// <param name="parameters">The query string parameters of the request.</param>
 		/// <param name="entitySet">The entity set of the query.</param>
 		/// <param name="typeProvider">The type provider.</param>
-		internal QueryOptions(QueryStringParameters parameters, EntitySet entitySet, EdmTypeProvider typeProvider)
+		internal QueryOptions(QueryStringParameters parameters, EntitySet entitySet, IEdmTypeProvider typeProvider)
 		{
 			this.parameters = parameters;
 			this.typeProvider = typeProvider;
