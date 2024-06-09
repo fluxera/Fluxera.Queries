@@ -1,6 +1,5 @@
-﻿namespace Fluxera.Queries
+﻿namespace Fluxera.Queries.Repository
 {
-	using Fluxera.Queries.Model;
 	using JetBrains.Annotations;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -12,14 +11,14 @@
 	public static class ServiceCollectionExtensions
 	{
 		/// <summary>
-		///		Adds the query parser services.
+		///		Adds the repository query executor service.
 		/// </summary>
 		/// <param name="services"></param>
 		/// <returns></returns>
-		public static IServiceCollection AddQueryParser(this IServiceCollection services)
+		public static IServiceCollection AddRepositoryQueryExecutor(this IServiceCollection services)
 		{
-			services.TryAddSingleton<IQueryParser, QueryParser>();
-			services.TryAddSingleton<IEdmTypeProvider, EdmTypeProvider>();
+			services.TryAddTransient(typeof(IQueryExecutor<,>), typeof(QueryExecutor<,>));
+
 			return services;
 		}
 	}

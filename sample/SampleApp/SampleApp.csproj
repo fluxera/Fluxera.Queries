@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -10,11 +10,7 @@
 		<PackageReference Include="Bogus" Version="35.5.1" />
 		<PackageReference Include="Fluxera.Repository.MongoDB" Version="8.6.2" />
 		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
-		<PackageReference Include="MadEyeMatt.AspNetCore.Endpoints" Version="8.1.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-		<PackageReference Include="Fluxera.Enumeration.SystemTextJson" Version="8.1.1" />
-		<PackageReference Include="Fluxera.StronglyTypedId.SystemTextJson" Version="8.2.0" />
-		<PackageReference Include="Fluxera.ValueObject.SystemTextJson" Version="8.1.1" />
 	</ItemGroup>	
 
 	<ItemGroup>

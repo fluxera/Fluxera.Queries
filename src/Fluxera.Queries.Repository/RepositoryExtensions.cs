@@ -28,7 +28,7 @@
 		/// <param name="queryOptions"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		public static async Task<object> ExecuteGetAsync<T, TKey>(this IReadOnlyRepository<T, TKey> repository,
+		public static async Task<SingleResult> ExecuteGetAsync<T, TKey>(this IReadOnlyRepository<T, TKey> repository,
 			TKey id,
 			QueryOptions queryOptions,
 			CancellationToken cancellationToken = default)
@@ -47,7 +47,7 @@
 				? await repository.GetAsync(id, cancellationToken)
 				: await repository.GetAsync(id, selector, cancellationToken);
 
-			return item;
+			return new SingleResult(item);
 		}
 
 		/// <summary>

@@ -14,7 +14,7 @@
 	///		Creates EDM types or provides access to cached types.
 	/// </summary>
 	[PublicAPI]
-	internal sealed class EdmTypeProvider
+	internal sealed class EdmTypeProvider : IEdmTypeProvider
 	{
 		private static readonly Dictionary<Type, EdmType> PrimitiveTypes = new Dictionary<Type, EdmType>
 		{
@@ -73,11 +73,11 @@
 		/// <summary>
 		///		Gets an EDM type for the given EDM type name.
 		/// </summary>
-		/// <param name="emdTypeName">The full EDM type name.</param>
+		/// <param name="edmTypeName">The full EDM type name.</param>
 		/// <returns></returns>
-		public EdmType GetByName(string emdTypeName)
+		public EdmType GetByName(string edmTypeName)
 		{
-			return this.MapByName.GetOrAdd(emdTypeName, name =>
+			return this.MapByName.GetOrAdd(edmTypeName, name =>
 			{
 				return this.MapByType.Values.FirstOrDefault(e => e.FullName == name);
 			});

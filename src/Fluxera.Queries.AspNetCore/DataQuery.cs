@@ -11,7 +11,9 @@
 	using System.Threading.Tasks;
 	using Fluxera.Queries.AspNetCore.ParameterBinding;
 	using Fluxera.Guards;
+	using Fluxera.Queries.Model;
 	using Microsoft.Extensions.DependencyInjection;
+	using Microsoft.Extensions.Options;
 	using Microsoft.Extensions.Primitives;
 
 	/// <summary>
@@ -31,7 +33,6 @@
 				throw new InvalidOperationException("The data queries ca only be used for GET requests.");
 			}
 
-			Type entityType = typeof(T);
 			DataQuery<T> dataQuery = new DataQuery<T>
 			{
 				Filter = GetFilterParameterValue(context.Request.Query),
@@ -42,8 +43,11 @@
 				Select = GetSelectParameterValue(context.Request.Query)
 			};
 
+			IOptions<DataQueriesOptions> options = context.RequestServices.GetRequiredService<IOptions<DataQueriesOptions>>();
+			EntitySet entitySet = options.Value.GetByType<T>();
+
 			IQueryParser parser = context.RequestServices.GetRequiredService<IQueryParser>();
-			QueryOptions queryOptions = parser.ParseQueryOptions(entityType, dataQuery.ToString());
+			QueryOptions queryOptions = parser.ParseQueryOptions(entitySet, dataQuery.ToString());
 			dataQuery.QueryOptions = queryOptions;
 
 			return ValueTask.FromResult(dataQuery);
@@ -108,6 +112,34 @@
 		public static implicit operator QueryOptions(DataQuery query)
 		{
 			return query?.ToQueryOptions();
+		}
+
+		internal static DataQuery Create(HttpContext context, Type entityType)
+		{
+			if(context.Request.Method != "GET")
+			{
+				throw new InvalidOperationException("The data queries ca only be used for GET requests.");
+			}
+
+			Type dataQueryType = typeof(DataQuery<>).MakeGenericType(entityType);
+			
+			DataQuery dataQuery = (DataQuery)Activator.CreateInstance(dataQueryType);
+
+			dataQuery.Filter = GetFilterParameterValue(context.Request.Query);
+			dataQuery.OrderBy = GetOrderByParameterValue(context.Request.Query);
+			dataQuery.Skip = GetSkipParameterValue(context.Request.Query);
+			dataQuery.Top = GetTopParameterValue(context.Request.Query);
+			dataQuery.Count = GetCountParameterValue(context.Request.Query);
+			dataQuery.Select = GetSelectParameterValue(context.Request.Query);
+
+			IOptions<DataQueriesOptions> options = context.RequestServices.GetRequiredService<IOptions<DataQueriesOptions>>();
+			EntitySet entitySet = options.Value.GetByType(entityType);
+
+			IQueryParser parser = context.RequestServices.GetRequiredService<IQueryParser>();
+			QueryOptions queryOptions = parser.ParseQueryOptions(entitySet, dataQuery.ToString());
+			dataQuery.QueryOptions = queryOptions;
+
+			return dataQuery;
 		}
 
 		internal QueryOptions QueryOptions { get; set; }

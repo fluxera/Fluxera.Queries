@@ -2,15 +2,13 @@ namespace SampleApp
 {
 	using System.Reflection;
 	using System.Threading.Tasks;
-	using Fluxera.Enumeration.SystemTextJson;
 	using Fluxera.Queries.AspNetCore;
+	using Fluxera.Queries.Repository;
 	using Fluxera.Repository;
 	using Fluxera.Repository.MongoDB;
-	using Fluxera.StronglyTypedId.SystemTextJson;
-	using Fluxera.ValueObject.SystemTextJson;
-	using MadEyeMatt.AspNetCore.Endpoints;
 	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Builder;
+	using Microsoft.AspNetCore.Http;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Hosting;
 	using SampleApp.Model;
@@ -39,24 +37,13 @@ namespace SampleApp
 					repositoryOptionsBuilder.EnableUnitOfWork();
 				});
 			});
-			builder.Services.AddDataQueries();
-			builder.Services
-				   .AddControllers()
-				   .AddJsonOptions(options =>
-				   {
-					   //options.JsonSerializerOptions.UseSpatial();
-					   options.JsonSerializerOptions.UseEnumeration();
-					   options.JsonSerializerOptions.UsePrimitiveValueObject();
-					   options.JsonSerializerOptions.UseStronglyTypedId();
-				   });
 
-			builder.Services.ConfigureHttpJsonOptions(options =>
+			builder.Services.AddDataQueries(options =>
 			{
-				//options.SerializerOptions.UseSpatial();
-				options.SerializerOptions.UseEnumeration();
-				options.SerializerOptions.UsePrimitiveValueObject();
-				options.SerializerOptions.UseStronglyTypedId();
+				options.EntitySet<Customer>("Customers");
 			});
+
+			builder.Services.AddRepositoryQueryExecutor();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
@@ -72,11 +59,7 @@ namespace SampleApp
 
 			app.UseHttpsRedirection();
 
-			app.UseAuthorization();
-
-			app.MapControllers();
-
-			app.MapEndpoints();
+			app.MapDataQueriesEndpoints();
 
 			//using(IServiceScope serviceScope = app.Services.CreateScope())
 			//{
