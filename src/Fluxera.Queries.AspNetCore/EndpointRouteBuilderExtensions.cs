@@ -68,7 +68,10 @@
 									  .MapGet(entitySetOptions.Name.ToLowerInvariant(), ExecuteFindManyAsync)
 									  .WithName($"Find {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
-									  .WithMetadata(entitySetOptions);
+									  .WithMetadata(entitySetOptions)
+									  .WithDescription("Retrieves multiple entities by the filter predicate.")
+									  .WithOpenApi()
+									  .Produces(200, entitySetOptions.EntityType);
 				configure?.Invoke(routeHandlerBuilder);
 
 				// Map the endpoint for retrieving an entity by ID.
@@ -76,15 +79,22 @@
 									  .MapGet($"{entitySetOptions.Name.ToLowerInvariant()}/{{id:required}}", ExecuteGetAsync)
 									  .WithName($"Get {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
-									  .WithMetadata(entitySetOptions);
+									  .WithMetadata(entitySetOptions)
+									  .WithDescription("Retrieves a single entity by ID.")
+									  .WithOpenApi()
+									  .Produces(200, entitySetOptions.EntityType)
+									  .Produces(404);
 				configure?.Invoke(routeHandlerBuilder);
 
-				// Map the endpoint for retrieving the count od entities.
+				// Map the endpoint for retrieving the count of entities.
 				routeHandlerBuilder = routeGroupBuilder
 									  .MapGet($"{entitySetOptions.Name.ToLowerInvariant()}/$count", ExecuteCountAsync)
 									  .WithName($"Count {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
-									  .WithMetadata(entitySetOptions);
+									  .WithMetadata(entitySetOptions)
+									  .WithDescription("Retrieves the count of entities in the data store.")
+									  .WithOpenApi()
+									  .Produces<long>(contentType: "text/plain");
 				configure?.Invoke(routeHandlerBuilder);
 			}
 
@@ -92,12 +102,6 @@
 
 			static async Task<IResult> ExecuteFindManyAsync(
 				HttpContext context,
-				[FromQuery(Name = "$filter")] string filter,
-				[FromQuery(Name = "$orderby")] string orderby,
-				[FromQuery(Name = "$skip")] int? skip,
-				[FromQuery(Name = "$top")] int? top,
-				[FromQuery(Name = "$count")] bool? count,
-				[FromQuery(Name = "$select")] string select,
 				CancellationToken cancellationToken = default)
 			{
 				EntitySetOptions options = GetEntitySetOptions(context);
@@ -112,7 +116,6 @@
 			static async Task<IResult> ExecuteGetAsync(
 				HttpContext context,
 				[FromRoute] string id,
-				[FromQuery(Name = "$select")] string select,
 				CancellationToken cancellationToken = default)
 			{
 				EntitySetOptions options = GetEntitySetOptions(context);
@@ -129,7 +132,6 @@
 
 			static async Task<IResult> ExecuteCountAsync(
 				HttpContext context,
-				[FromQuery(Name = "$filter")] string filter,
 				CancellationToken cancellationToken = default)
 			{
 				EntitySetOptions options = GetEntitySetOptions(context);

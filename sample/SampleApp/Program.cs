@@ -8,7 +8,6 @@ namespace SampleApp
 	using Fluxera.Repository.MongoDB;
 	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Builder;
-	using Microsoft.AspNetCore.Http;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Hosting;
 	using SampleApp.Model;
@@ -32,7 +31,7 @@ namespace SampleApp
 			{
 				repositoryBuilder.AddMongoRepository<SampleRepositoryContext>(repositoryOptionsBuilder =>
 				{
-					repositoryOptionsBuilder.UseFor<Customer>();
+					repositoryOptionsBuilder.UseFor<CustomerDto>();
 
 					repositoryOptionsBuilder.EnableUnitOfWork();
 				});
@@ -40,7 +39,7 @@ namespace SampleApp
 
 			builder.Services.AddDataQueries(options =>
 			{
-				options.EntitySet<Customer>("Customers");
+				options.EntitySet<CustomerDto>("Customers");
 			});
 
 			builder.Services.AddRepositoryQueryExecutor();

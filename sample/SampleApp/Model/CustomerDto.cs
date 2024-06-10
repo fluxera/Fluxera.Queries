@@ -2,7 +2,7 @@
 {
 	using Fluxera.Entity;
 
-	public sealed class Customer : AggregateRoot<Customer, CustomerId>
+	public sealed class CustomerDto : AggregateRoot<CustomerDto, CustomerId>
 	{
 		public string FirstName { get; set; }
 
@@ -10,8 +10,10 @@
 
 		public string Email { get; set; }
 
-		public int Age { get; set; }
+		public Age Age { get; set; }
 
 		public CustomerState State { get; set; }
+
+		public AddressDto AddressDto { get; set; }
 	}
 }

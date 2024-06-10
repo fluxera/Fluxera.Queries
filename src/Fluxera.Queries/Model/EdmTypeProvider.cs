@@ -54,11 +54,7 @@
 			[typeof(string)] = EdmPrimitiveType.String
 		};
 
-		private readonly ConcurrentDictionary<string, EdmType> MapByName = new ConcurrentDictionary<string, EdmType>(
-			PrimitiveTypes.Values.GroupBy(x => x.FullName).ToDictionary(x => x.Key, x => x.First()));
-
-		private readonly ConcurrentDictionary<Type, EdmType> MapByType = new ConcurrentDictionary<Type, EdmType>(
-			PrimitiveTypes);
+		private readonly ConcurrentDictionary<Type, EdmType> MapByType = new ConcurrentDictionary<Type, EdmType>(PrimitiveTypes);
 
 		/// <summary>
 		///		Gets an EDM type for the given CLR type.
@@ -67,7 +63,9 @@
 		/// <returns>The corresponding EDM type.</returns>
 		public EdmType GetByClrType(Type clrType)
 		{
-			return this.MapByType.GetOrAdd(clrType, this.ResolveEdmType);
+			EdmType edmType = this.MapByType.GetOrAdd(clrType, this.ResolveEdmType);
+
+			return edmType;
 		}
 
 		/// <summary>
@@ -77,10 +75,7 @@
 		/// <returns></returns>
 		public EdmType GetByName(string edmTypeName)
 		{
-			return this.MapByName.GetOrAdd(edmTypeName, name =>
-			{
-				return this.MapByType.Values.FirstOrDefault(e => e.FullName == name);
-			});
+			return this.MapByType.Values.FirstOrDefault(x => x.FullName == edmTypeName);
 		}
 
 		private EdmType ResolveEdmType(Type clrType)
@@ -106,14 +101,20 @@
 			if(clrType.IsStronglyTypedId())
 			{
 				Type valueType = clrType.GetStronglyTypedIdValueType();
-				return this.GetByClrType(valueType);
+				EdmType edmType = this.GetByClrType(valueType);
+				edmType.RedirectedFromType = clrType;
+
+				return edmType;
 			}
 
 			// Handle primitive value objects.
 			if(clrType.IsPrimitiveValueObject())
 			{
 				Type valueType = clrType.GetPrimitiveValueObjectValueType();
-				return this.GetByClrType(valueType);
+				EdmType edmType = this.GetByClrType(valueType);
+				edmType.RedirectedFromType = clrType;
+
+				return edmType;
 			}
 
 			// Handle enumerables.
@@ -151,7 +152,12 @@
 				}
 			}
 
-			return new EdmEnumType(clrType, members.AsReadOnly());
+			EdmEnumType edmEnumType = new EdmEnumType(clrType, members.AsReadOnly())
+			{
+				RedirectedFromType = clrType
+			};
+
+			return edmEnumType;
 		}
 
 		private EdmType CreateComplexType(Type clrType, IDictionary<Type, EdmType> visitedTypes)

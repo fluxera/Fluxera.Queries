@@ -2,10 +2,12 @@
 {
 	using System;
 	using Fluxera.Queries.AspNetCore.ModelBinding;
+	using Fluxera.Queries.AspNetCore.Swagger;
 	using JetBrains.Annotations;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
+	using Swashbuckle.AspNetCore.SwaggerGen;
 
 	/// <summary>
 	///		Extensions methods for the <see cref="IServiceCollection"/> type.
@@ -31,6 +33,8 @@
 			services.Configure(configure);
 
 			services.AddTransient<IPostConfigureOptions<DataQueriesOptions>, ConfigureDataQueriesOptions>();
+
+			services.AddTransient<IPostConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
 
 			return services;
 		}
