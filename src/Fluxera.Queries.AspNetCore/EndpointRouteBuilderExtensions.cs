@@ -65,30 +65,30 @@
 
 				// Map the endpoint for retrieving multiple entities.
 				routeHandlerBuilder = routeGroupBuilder
-									  .MapGet(entitySetOptions.Name.ToLowerInvariant(), ExecuteFindManyAsync)
+									  .MapGet(entitySetOptions.Name, ExecuteFindManyAsync)
 									  .WithName($"Find {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
 									  .WithMetadata(entitySetOptions)
 									  .WithDescription("Retrieves multiple entities by the filter predicate.")
 									  .WithOpenApi()
-									  .Produces(200, entitySetOptions.EntityType);
+									  .Produces(200, entitySetOptions.ComplexTypeOptions.ClrType);
 				configure?.Invoke(routeHandlerBuilder);
 
 				// Map the endpoint for retrieving an entity by ID.
 				routeHandlerBuilder = routeGroupBuilder
-									  .MapGet($"{entitySetOptions.Name.ToLowerInvariant()}/{{id:required}}", ExecuteGetAsync)
+									  .MapGet($"{entitySetOptions.Name}/{{id:required}}", ExecuteGetAsync)
 									  .WithName($"Get {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
 									  .WithMetadata(entitySetOptions)
 									  .WithDescription("Retrieves a single entity by ID.")
 									  .WithOpenApi()
-									  .Produces(200, entitySetOptions.EntityType)
+									  .Produces(200, entitySetOptions.ComplexTypeOptions.ClrType)
 									  .Produces(404);
 				configure?.Invoke(routeHandlerBuilder);
 
 				// Map the endpoint for retrieving the count of entities.
 				routeHandlerBuilder = routeGroupBuilder
-									  .MapGet($"{entitySetOptions.Name.ToLowerInvariant()}/$count", ExecuteCountAsync)
+									  .MapGet($"{entitySetOptions.Name}/$count", ExecuteCountAsync)
 									  .WithName($"Count {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
 									  .WithMetadata(entitySetOptions)
@@ -105,7 +105,7 @@
 				CancellationToken cancellationToken = default)
 			{
 				EntitySetOptions options = GetEntitySetOptions(context);
-				DataQuery dataQuery = DataQuery.Create(context, options.EntityType);
+				DataQuery dataQuery = DataQuery.Create(context, options.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = GetQueryExecutor(context, options);
 				QueryResult result = await queryExecutor.InternalExecuteFindManyAsync(dataQuery, cancellationToken);
@@ -119,8 +119,8 @@
 				CancellationToken cancellationToken = default)
 			{
 				EntitySetOptions options = GetEntitySetOptions(context);
-				object identifier = ConvertIdentifier(id, options.IdentifierType);
-				DataQuery dataQuery = DataQuery.Create(context, options.EntityType);
+				object identifier = ConvertIdentifier(id, options.KeyType);
+				DataQuery dataQuery = DataQuery.Create(context, options.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = GetQueryExecutor(context, options);
 				SingleResult result = await queryExecutor.InternalExecuteGetAsync(identifier, dataQuery, cancellationToken);
@@ -135,7 +135,7 @@
 				CancellationToken cancellationToken = default)
 			{
 				EntitySetOptions options = GetEntitySetOptions(context);
-				DataQuery dataQuery = DataQuery.Create(context, options.EntityType);
+				DataQuery dataQuery = DataQuery.Create(context, options.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = GetQueryExecutor(context, options);
 				long count = await queryExecutor.InternalExecuteCountAsync(dataQuery, cancellationToken);
@@ -156,7 +156,7 @@
 
 			static IQueryExecutor GetQueryExecutor(HttpContext context, EntitySetOptions options)
 			{
-				Type queryExecutorType = typeof(IQueryExecutor<,>).MakeGenericType(options.EntityType, options.IdentifierType);
+				Type queryExecutorType = typeof(IQueryExecutor<,>).MakeGenericType(options.ComplexTypeOptions.ClrType, options.KeyType);
 				IQueryExecutor queryExecutor = (IQueryExecutor)context.RequestServices.GetRequiredService(queryExecutorType);
 
 				return queryExecutor;

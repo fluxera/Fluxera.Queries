@@ -6,7 +6,9 @@
 	using System.Reflection;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Model;
+	using Fluxera.StronglyTypedId;
 	using Fluxera.Utilities.Extensions;
+	using Fluxera.ValueObject;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -17,37 +19,132 @@
 	{
 		private readonly IDictionary<Type, EntitySetOptions> entitySetsByType = new Dictionary<Type, EntitySetOptions>();
 		private readonly IDictionary<string, EntitySetOptions> entitySetsByName = new Dictionary<string, EntitySetOptions>();
+		private readonly IDictionary<Type, ComplexTypeOptions> complexTypesByType = new Dictionary<Type, ComplexTypeOptions>();
+
+		/// <summary>
+		///		Configures a complex type the given type and complex type name.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="complexTypeName"></param>
+		/// <param name="configure"></param>
+		public ComplexTypeOptions ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null)
+			where T : class
+		{
+			Guard.Against.NullOrWhiteSpace(complexTypeName);
+
+			if(typeof(T).IsEnumerable() || typeof(T).IsStronglyTypedId() || typeof(T).IsPrimitiveValueObject())
+			{
+				throw new ArgumentException($"The type {typeof(T).Name} is not a complex type.");
+			}
+
+			ComplexTypeOptions complexType = this.ComplexType(configure);
+
+			complexType.TypeName = complexTypeName;
+
+			return complexType;
+		}
+
+		/// <summary>
+		///		Configures a complex type the given type.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="configure"></param>
+		public ComplexTypeOptions ComplexType<T>(Action<IComplexTypeOptionsBuilder<T>> configure = null)
+			where T : class
+		{
+			if(typeof(T).IsEnumerable() || typeof(T).IsStronglyTypedId() || typeof(T).IsPrimitiveValueObject())
+			{
+				throw new ArgumentException($"The type {typeof(T).Name} is not a complex type.");
+			}
+
+			ComplexTypeOptions complexType = new ComplexTypeOptions
+			{
+				ClrType = typeof(T)
+			};
+
+			if(!this.complexTypesByType.TryAdd(complexType.ClrType, complexType))
+			{
+				throw new InvalidOperationException($"A complex type for the type '{complexType.ClrType}' was already configured.");
+			}
+
+			ComplexTypeOptionsBuilder<T> builder = new ComplexTypeOptionsBuilder<T>(complexType);
+			configure?.Invoke(builder);
+
+			return complexType;
+		}
+
+		/// <summary>
+		///		Configures an entity set for the given type, name and entity type name.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="name"></param>
+		/// <param name="entityTypeName"></param>
+		/// <param name="configure"></param>
+		/// <returns></returns>
+		public EntitySetOptions EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null)
+			where T : class
+		{
+			Guard.Against.NullOrWhiteSpace(entityTypeName);
+
+			if(typeof(T).IsEnumerable() || typeof(T).IsStronglyTypedId() || typeof(T).IsPrimitiveValueObject())
+			{
+				throw new ArgumentException($"The type {typeof(T).Name} is not a complex type.");
+			}
+
+			EntitySetOptions entitySet = this.EntitySet(name, configure);
+
+			entitySet.ComplexTypeOptions.TypeName = entityTypeName;
+
+			return entitySet;
+		}
 
 		///  <summary>
-		/// 		Configures an entity set for the given type and name.
+		/// 	Configures an entity set for the given type and name.
 		///  </summary>
 		///  <typeparam name="T">The entity type.</typeparam>
 		///  <param name="name">The entity set name.</param>
-		///  <param name="configure">An action to configure the options for the entity set.</param>
+		///  <param name="configure">An action to configure the entity set.</param>
 		///  <exception cref="NotImplementedException"></exception>
-		public void EntitySet<T>(string name, Action<EntitySetOptions> configure = null)
+		public EntitySetOptions EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null)
 			where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(name);
 
-			EntitySetOptions entitySet = new EntitySetOptions();
-			configure?.Invoke(entitySet);
-			entitySet.Name = name;
-			entitySet.EntityType = typeof(T);
-			entitySet.IdentifierType = GetIdentifierType(typeof(T));
+			if(typeof(T).IsEnumerable() || typeof(T).IsStronglyTypedId() || typeof(T).IsPrimitiveValueObject())
+			{
+				throw new ArgumentException($"The type {typeof(T).Name} is not a complex type.");
+			}
+
+			EntitySetOptions entitySet = new EntitySetOptions
+			{
+				Name = name,
+				ComplexTypeOptions =
+				{
+					ClrType = typeof(T)
+				}
+			};
 
 			if(!this.entitySetsByName.TryAdd(entitySet.Name, entitySet))
 			{
 				throw new InvalidOperationException($"An entity set with the name '{entitySet.Name}' was already configured.");
 			}
 
-			if(!this.entitySetsByType.TryAdd(entitySet.EntityType, entitySet))
+			if(!this.entitySetsByType.TryAdd(entitySet.ComplexTypeOptions.ClrType, entitySet))
 			{
-				throw new InvalidOperationException($"An entity set for the type '{entitySet.EntityType}' was already configured.");
+				throw new InvalidOperationException($"An entity set for the type '{entitySet.ComplexTypeOptions.ClrType}' was already configured.");
 			}
+
+			EntityTypeOptionsBuilder<T> builder = new EntityTypeOptionsBuilder<T>(entitySet);
+			configure?.Invoke(builder);
+
+			entitySet.KeyType ??= GetIdentifierType(typeof(T));
+
+			return entitySet;
 		}
 
 		internal IReadOnlyCollection<EntitySetOptions> EntitySetOptions => this.entitySetsByType.Values.AsReadOnly();
+
+		internal IReadOnlyCollection<ComplexTypeOptions> ComplexTypeOptions => this.complexTypesByType.Values.AsReadOnly();
 
 		/// <summary>
 		///		Gets the configured entity set for the given entity type.
@@ -71,16 +168,13 @@
 				: null;
 		}
 
-		private Type GetIdentifierType(Type entityType)
+		private static Type GetIdentifierType(Type entityType)
 		{
 			PropertyInfo propertyInfo = entityType.GetProperties().FirstOrDefault(x => x.Name.Equals("ID", StringComparison.OrdinalIgnoreCase));
 
-			if(propertyInfo is null)
-			{
-				throw new InvalidOperationException($"The entity {entityType.Name} doesn't define an ID property.");
-			}
-
-			return propertyInfo.PropertyType;
+			return propertyInfo is null
+				? throw new InvalidOperationException($"The entity {entityType.Name} doesn't define a key property named ID or Id.")
+				: propertyInfo.PropertyType;
 		}
 	}
 }

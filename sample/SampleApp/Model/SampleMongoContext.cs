@@ -14,7 +14,7 @@
 		/// <inheritdoc />
 		public override string GetCollectionName<TDocument>()
 		{
-			return base.GetCollectionName<TDocument>().Pluralize();
+			return base.GetCollectionName<TDocument>().Replace("Dto", "").Pluralize();
 		}
 	}
 }

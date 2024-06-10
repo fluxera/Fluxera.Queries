@@ -60,7 +60,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			EdmType edmType = provider.GetByClrType(clrType);
+			EdmType edmType = provider.GetByType(clrType);
 
 			edmType.Should().NotBeNull();
 			edmType.Name.Should().Be(name);
@@ -72,7 +72,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			EdmType edmType = provider.GetByClrType(typeof(CustomerState));
+			EdmType edmType = provider.GetByType(typeof(CustomerState));
 
 			edmType.Should().NotBeNull();
 			edmType.Should().BeOfType<EdmEnumType>();
@@ -95,7 +95,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			EdmType edmType = provider.GetByClrType(typeof(CustomerStateEnum));
+			EdmType edmType = provider.GetByType(typeof(CustomerStateEnum));
 
 			edmType.Should().NotBeNull();
 			edmType.Should().BeOfType<EdmEnumType>();
@@ -118,7 +118,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			EdmType edmType = provider.GetByClrType(typeof(CustomerId));
+			EdmType edmType = provider.GetByType(typeof(CustomerId));
 
 			edmType.Should().NotBeNull();
 			edmType.Should().BeOfType<EdmPrimitiveType>();
@@ -132,7 +132,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			EdmType edmType = provider.GetByClrType(typeof(Age));
+			EdmType edmType = provider.GetByType(typeof(Age));
 
 			edmType.Should().NotBeNull();
 			edmType.Should().BeOfType<EdmPrimitiveType>();
@@ -146,7 +146,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			EdmType edmType = provider.GetByClrType(typeof(List<int>));
+			EdmType edmType = provider.GetByType(typeof(List<int>));
 
 			edmType.Should().NotBeNull();
 			edmType.Should().BeOfType<EdmCollectionType>();
@@ -163,7 +163,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			EdmType edmType = provider.GetByClrType(typeof(Customer));
+			EdmType edmType = provider.GetByType(typeof(Customer));
 
 			edmType.Should().NotBeNull();
 			edmType.Should().BeOfType<EdmComplexType>();

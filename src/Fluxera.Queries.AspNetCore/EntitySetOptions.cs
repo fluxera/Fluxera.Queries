@@ -1,6 +1,8 @@
 ﻿namespace Fluxera.Queries.AspNetCore
 {
 	using System;
+	using System.Collections.Generic;
+	using System.Reflection;
 	using Fluxera.Queries.Model;
 	using JetBrains.Annotations;
 
@@ -16,19 +18,19 @@
 		internal string Name { get; set; }
 
 		/// <summary>
-		///		Gets the entity type.
-		/// </summary>
-		internal Type EntityType { get; set; }
-
-		/// <summary>
 		///		Gets the ID type.
 		/// </summary>
-		internal Type IdentifierType { get; set; }
+		internal Type KeyType { get; set; }
 
 		/// <summary>
 		///		Gets the entity set.
 		/// </summary>
 		internal EntitySet EntitySet { get; set; }
+
+		/// <summary>
+		///		Gets the complex type options of the entity.
+		/// </summary>
+		internal ComplexTypeOptions ComplexTypeOptions { get; } = new ComplexTypeOptions();
 
 		///// <summary>
 		/////		Gets or sets the (optional) default $top value when no value

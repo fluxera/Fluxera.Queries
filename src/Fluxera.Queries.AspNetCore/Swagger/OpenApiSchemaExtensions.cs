@@ -28,13 +28,13 @@
 
 		public static void SetComplexType(this OpenApiSchema schema, Type type, IEdmTypeProvider typeProvider)
 		{
-			EdmType edmType = typeProvider.GetByClrType(type);
+			EdmType edmType = typeProvider.GetByType(type);
 			schema.Extensions["x-edm-complextype"] = new OpenApiBoolean(edmType is EdmComplexType);
 		}
 
 		public static void SetEdmTypeName(this OpenApiSchema schema, Type type, IEdmTypeProvider typeProvider)
 		{
-			EdmType edmType = typeProvider.GetByClrType(type);
+			EdmType edmType = typeProvider.GetByType(type);
 			schema.Extensions["x-edm-edmtype"] = new OpenApiString(edmType.FullName);
 		}
 

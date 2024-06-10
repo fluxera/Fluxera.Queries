@@ -1,8 +1,15 @@
 ﻿namespace Fluxera.Queries.AspNetCore
 {
 	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text.Json;
+	using System.Text.Json.Serialization;
+	using Fluxera.Enumeration.SystemTextJson;
 	using Fluxera.Queries.AspNetCore.ModelBinding;
 	using Fluxera.Queries.AspNetCore.Swagger;
+	using Fluxera.StronglyTypedId.SystemTextJson;
+	using Fluxera.ValueObject.SystemTextJson;
 	using JetBrains.Annotations;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.Extensions.DependencyInjection;

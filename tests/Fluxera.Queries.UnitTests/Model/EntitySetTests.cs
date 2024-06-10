@@ -13,7 +13,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			Action action = () => new EntitySet(null, (EdmComplexType)provider.GetByClrType(typeof(Customer)));
+			Action action = () => new EntitySet(null, (EdmComplexType)provider.GetByType(typeof(Customer)));
 
 			action.Should().Throw<ArgumentNullException>();
 		}
@@ -25,7 +25,7 @@
 		{
 			EdmTypeProvider provider = new EdmTypeProvider();
 
-			Action action = () => new EntitySet(name, (EdmComplexType)provider.GetByClrType(typeof(Customer)));
+			Action action = () => new EntitySet(name, (EdmComplexType)provider.GetByType(typeof(Customer)));
 
 			action.Should().Throw<ArgumentException>();
 		}

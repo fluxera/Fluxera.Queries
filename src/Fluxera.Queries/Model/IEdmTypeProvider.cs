@@ -9,12 +9,12 @@
 	[PublicAPI]
 	public interface IEdmTypeProvider
 	{
-		/// <summary>
-		///		Gets an EDM type for the given CLR type.
-		/// </summary>
-		/// <param name="clrType">The CLR type.</param>
-		/// <returns>The corresponding EDM type.</returns>
-		EdmType GetByClrType(Type clrType);
+		///  <summary>
+		/// 	Gets or creates an EDM type for the given CLR type.
+		///  </summary>
+		///  <param name="clrType">The CLR type.</param>
+		///  <returns>The corresponding EDM type.</returns>
+		EdmType GetByType(Type clrType);
 
 		/// <summary>
 		///		Gets an EDM type for the given EDM type name.

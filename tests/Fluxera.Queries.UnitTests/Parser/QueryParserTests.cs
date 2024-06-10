@@ -25,7 +25,7 @@
 			IEdmTypeProvider typeProvider = new EdmTypeProvider();
 			IQueryParser queryParser = new QueryParser(typeProvider);
 
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByClrType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
 			Action action = () => queryParser.ParseQueryOptions(entitySet, null);
@@ -41,7 +41,7 @@
 			IEdmTypeProvider typeProvider = new EdmTypeProvider();
 			IQueryParser queryParser = new QueryParser(typeProvider);
 
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByClrType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
 			QueryOptions queryOptions = queryParser.ParseQueryOptions(entitySet, queryString);
@@ -60,7 +60,7 @@
 			IEdmTypeProvider typeProvider = new EdmTypeProvider();
 			IQueryParser queryParser = new QueryParser(typeProvider);
 
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByClrType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
 			QueryOptions queryOptions = queryParser.ParseQueryOptions(entitySet, queryString);
@@ -77,7 +77,7 @@
 			IEdmTypeProvider typeProvider = new EdmTypeProvider();
 			IQueryParser queryParser = new QueryParser(typeProvider);
 
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByClrType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
 			QueryOptions queryOptions = queryParser.ParseQueryOptions(entitySet, queryString);
@@ -96,7 +96,7 @@
 			IEdmTypeProvider typeProvider = new EdmTypeProvider();
 			IQueryParser queryParser = new QueryParser(typeProvider);
 
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByClrType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
 			QueryOptions queryOptions = queryParser.ParseQueryOptions(entitySet, queryString);
