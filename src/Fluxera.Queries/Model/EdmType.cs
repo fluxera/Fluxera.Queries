@@ -42,6 +42,12 @@
 		/// </summary>
 		public string Name { get; }
 
+		/// <summary>
+		///		Gets the type the CRL type was redirected from.
+		///		This is the case for strongly-typed IDs, enumerations and primitive value objects.
+		/// </summary>
+		internal Type RedirectedFromType { get; set; }
+
 		/// <inheritdoc />
 		public bool Equals(EdmType other)
 		{
