@@ -11,5 +11,7 @@
 		public string City { get; set; }
 
 		public ZipCode ZipCode { get; set; }
+
+		public decimal IgnoreMe { get; set; }
 	}
 }

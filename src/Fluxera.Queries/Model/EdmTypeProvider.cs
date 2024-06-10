@@ -6,6 +6,7 @@
 	using System.Linq;
 	using System.Reflection;
 	using Fluxera.Enumeration;
+	using Fluxera.Guards;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.ValueObject;
 	using JetBrains.Annotations;
@@ -56,23 +57,15 @@
 
 		private readonly ConcurrentDictionary<Type, EdmType> MapByType = new ConcurrentDictionary<Type, EdmType>(PrimitiveTypes);
 
-		/// <summary>
-		///		Gets an EDM type for the given CLR type.
-		/// </summary>
-		/// <param name="clrType">The CLR type.</param>
-		/// <returns>The corresponding EDM type.</returns>
-		public EdmType GetByClrType(Type clrType)
+		/// <inheritdoc />
+		public EdmType GetByType(Type clrType)
 		{
 			EdmType edmType = this.MapByType.GetOrAdd(clrType, this.ResolveEdmType);
 
 			return edmType;
 		}
 
-		/// <summary>
-		///		Gets an EDM type for the given EDM type name.
-		/// </summary>
-		/// <param name="edmTypeName">The full EDM type name.</param>
-		/// <returns></returns>
+		/// <inheritdoc />
 		public EdmType GetByName(string edmTypeName)
 		{
 			return this.MapByType.Values.FirstOrDefault(x => x.FullName == edmTypeName);
@@ -101,7 +94,7 @@
 			if(clrType.IsStronglyTypedId())
 			{
 				Type valueType = clrType.GetStronglyTypedIdValueType();
-				EdmType edmType = this.GetByClrType(valueType);
+				EdmType edmType = this.GetByType(valueType);
 				edmType.RedirectedFromType = clrType;
 
 				return edmType;
@@ -111,7 +104,7 @@
 			if(clrType.IsPrimitiveValueObject())
 			{
 				Type valueType = clrType.GetPrimitiveValueObjectValueType();
-				EdmType edmType = this.GetByClrType(valueType);
+				EdmType edmType = this.GetByType(valueType);
 				edmType.RedirectedFromType = clrType;
 
 				return edmType;

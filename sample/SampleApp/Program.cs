@@ -1,5 +1,6 @@
 namespace SampleApp
 {
+	using System;
 	using System.Reflection;
 	using System.Threading.Tasks;
 	using Fluxera.Queries.AspNetCore;
@@ -39,7 +40,17 @@ namespace SampleApp
 
 			builder.Services.AddDataQueries(options =>
 			{
-				options.EntitySet<CustomerDto>("Customers");
+				options.EntitySet<CustomerDto>("Customers", "Customer", entityType =>
+				{
+					// TODO: Required()
+					entityType.HasKey(x => x.ID)
+							  .Ignore(x => x.IgnoreMe);
+				});
+
+				options.ComplexType<AddressDto>("Address", complexType =>
+				{
+					complexType.Ignore(x => x.IgnoreMe);
+				});
 			});
 
 			builder.Services.AddRepositoryQueryExecutor();
@@ -60,9 +71,19 @@ namespace SampleApp
 
 			app.MapDataQueriesEndpoints();
 
+			using(IServiceScope serviceScope = app.Services.CreateScope())
+			{
+				IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
+
+				CustomerDto dto = await repository.FindOneAsync(x => x.Age.Value > 40);
+
+				Console.WriteLine(dto);
+			}
+
+
 			//using(IServiceScope serviceScope = app.Services.CreateScope())
 			//{
-			//	IRepository<Customer, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<Customer, CustomerId>>();
+			//	IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
 			//	IUnitOfWorkFactory unitOfWorkFactory = serviceScope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory>();
 			//	IUnitOfWork unitOfWork = unitOfWorkFactory.CreateUnitOfWork(repository.RepositoryName);
 
@@ -71,7 +92,7 @@ namespace SampleApp
 			//		return;
 			//	}
 
-			//	Faker<Customer> faker = new Faker<Customer>()
+			//	Faker<CustomerDto> faker = new Faker<CustomerDto>()
 			//		.UseSeed(37)
 			//		.CustomInstantiator(x =>
 			//		{
@@ -85,18 +106,18 @@ namespace SampleApp
 
 			//			CustomerState state = Random.Shared.Next(0, 10).IsEven() ? CustomerState.New : CustomerState.Legacy;
 
-			//			return new Customer
+			//			return new CustomerDto
 			//			{
 			//				FirstName = firstName,
 			//				LastName = lastName,
 			//				Email = email,
-			//				Age = age,
+			//				Age = new Age(age),
 			//				State = state
 			//			};
 			//		});
 
 			//	int counter = 0;
-			//	foreach(Customer customer in faker.GenerateForever())
+			//	foreach(CustomerDto customer in faker.GenerateForever())
 			//	{
 			//		counter++;
 

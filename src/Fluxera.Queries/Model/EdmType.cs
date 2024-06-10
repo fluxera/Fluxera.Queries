@@ -1,7 +1,10 @@
 ﻿namespace Fluxera.Queries.Model
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Diagnostics;
+	using System.Linq;
+	using System.Xml.Linq;
 	using Fluxera.Guards;
 	using JetBrains.Annotations;
 
@@ -35,18 +38,28 @@
 		/// <summary>
 		///     Gets the full name of the EDM type.
 		/// </summary>
-		public string FullName { get; }
+		public string FullName { get; private set; }
 
 		/// <summary>
 		///     Gets the name of the EDM type.
 		/// </summary>
-		public string Name { get; }
+		public string Name { get; private set; }
 
 		/// <summary>
 		///		Gets the type the CRL type was redirected from.
 		///		This is the case for strongly-typed IDs, enumerations and primitive value objects.
 		/// </summary>
 		internal Type RedirectedFromType { get; set; }
+
+		internal void Rename(string edmTypeName)
+		{
+			this.Name = Guard.Against.NullOrWhiteSpace(edmTypeName);
+
+			IList<string> parts = this.FullName.Split('.')[..^1].ToList();
+			parts.Add(this.Name);
+
+			this.FullName = parts.Aggregate((s1, s2) => string.Concat(s1, '.', s2));
+		}
 
 		/// <inheritdoc />
 		public bool Equals(EdmType other)

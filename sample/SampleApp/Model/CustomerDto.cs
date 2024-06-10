@@ -14,6 +14,8 @@
 
 		public CustomerState State { get; set; }
 
-		public AddressDto AddressDto { get; set; }
+		public AddressDto Address { get; set; }
+
+		public double IgnoreMe { get; set; }
 	}
 }
