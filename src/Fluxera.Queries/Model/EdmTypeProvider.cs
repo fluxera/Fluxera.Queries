@@ -6,7 +6,6 @@
 	using System.Linq;
 	using System.Reflection;
 	using Fluxera.Enumeration;
-	using Fluxera.Guards;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.ValueObject;
 	using JetBrains.Annotations;
@@ -93,21 +92,13 @@
 			// Handle strongly-typed IDs.
 			if(clrType.IsStronglyTypedId())
 			{
-				Type valueType = clrType.GetStronglyTypedIdValueType();
-				EdmType edmType = this.GetByType(valueType);
-				edmType.RedirectedFromType = clrType;
-
-				return edmType;
+				return CreateStronglyTypedIdType(clrType, visitedTypes);
 			}
 
 			// Handle primitive value objects.
 			if(clrType.IsPrimitiveValueObject())
 			{
-				Type valueType = clrType.GetPrimitiveValueObjectValueType();
-				EdmType edmType = this.GetByType(valueType);
-				edmType.RedirectedFromType = clrType;
-
-				return edmType;
+				return CreatePrimitiveValueObjectType(clrType, visitedTypes);
 			}
 
 			// Handle enumerables.
@@ -145,10 +136,7 @@
 				}
 			}
 
-			EdmEnumType edmEnumType = new EdmEnumType(clrType, members.AsReadOnly())
-			{
-				RedirectedFromType = clrType
-			};
+			EdmEnumType edmEnumType = new EdmEnumType(clrType, members.AsReadOnly());
 
 			return edmEnumType;
 		}
@@ -162,6 +150,58 @@
 			IOrderedEnumerable<PropertyInfo> clrTypeProperties =
 				clrType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 					   .Where(x => x.CanRead && x.CanWrite)
+					   .OrderBy(x => x.Name);
+
+			List<EdmProperty> edmProperties = new List<EdmProperty>();
+			EdmComplexType edmComplexType = new EdmComplexType(clrType, baseType, edmProperties);
+
+			visitedTypes[clrType] = edmComplexType;
+
+			IEnumerable<EdmProperty> properties = clrTypeProperties.Select(
+				property => new EdmProperty(property.Name,
+					this.MapByType.GetOrAdd(property.PropertyType,
+						type => this.ResolveEdmType(type, visitedTypes)), edmComplexType));
+
+			edmProperties.AddRange(properties);
+
+			return edmComplexType;
+		}
+
+		private EdmType CreateStronglyTypedIdType(Type clrType, IDictionary<Type, EdmType> visitedTypes)
+		{
+			EdmType baseType = clrType.BaseType != typeof(object)
+				? this.ResolveEdmType(clrType.BaseType, visitedTypes)
+				: null;
+
+			IOrderedEnumerable<PropertyInfo> clrTypeProperties =
+				clrType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+					   .Where(x => x.CanRead)
+					   .OrderBy(x => x.Name);
+
+			List<EdmProperty> edmProperties = new List<EdmProperty>();
+			EdmComplexType edmComplexType = new EdmComplexType(clrType, baseType, edmProperties);
+
+			visitedTypes[clrType] = edmComplexType;
+
+			IEnumerable<EdmProperty> properties = clrTypeProperties.Select(
+				property => new EdmProperty(property.Name,
+					this.MapByType.GetOrAdd(property.PropertyType,
+						type => this.ResolveEdmType(type, visitedTypes)), edmComplexType));
+
+			edmProperties.AddRange(properties);
+
+			return edmComplexType;
+		}
+
+		private EdmType CreatePrimitiveValueObjectType(Type clrType, IDictionary<Type, EdmType> visitedTypes)
+		{
+			EdmType baseType = clrType.BaseType != typeof(object)
+				? this.ResolveEdmType(clrType.BaseType, visitedTypes)
+				: null;
+
+			IOrderedEnumerable<PropertyInfo> clrTypeProperties =
+				clrType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+					   .Where(x => x.CanRead)
 					   .OrderBy(x => x.Name);
 
 			List<EdmProperty> edmProperties = new List<EdmProperty>();

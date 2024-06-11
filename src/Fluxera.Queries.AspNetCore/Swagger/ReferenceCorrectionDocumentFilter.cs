@@ -1,5 +1,6 @@
 ﻿namespace Fluxera.Queries.AspNetCore.Swagger
 {
+	using System;
 	using System.Linq;
 	using Fluxera.Queries.Model;
 	using Fluxera.StronglyTypedId;
@@ -38,17 +39,19 @@
 								string edmTypeName = referencedSchema.GetEdmTypeName();
 								EdmType edmType = this.typeProvider.GetByName(edmTypeName);
 
-								if(edmType.RedirectedFromType is not null && edmType.RedirectedFromType.IsPrimitiveValueObject())
+								if(edmType.ClrType is not null && edmType.ClrType.IsPrimitiveValueObject())
 								{
-									OpenApiSchema primitive = edmType.ClrType.MapTypeToOpenApiPrimitiveType();
+									Type valueType = edmType.ClrType.GetPrimitiveValueObjectValueType();
+									OpenApiSchema primitive = valueType.MapTypeToOpenApiPrimitiveType();
 
 									property.Type = primitive.Type;
 									property.Format = primitive.Format;
 									property.Reference = null;
 								}
-								else if(edmType.RedirectedFromType is not null && edmType.RedirectedFromType.IsStronglyTypedId())
+								else if(edmType.ClrType is not null && edmType.ClrType.IsStronglyTypedId())
 								{
-									OpenApiSchema primitive = edmType.ClrType.MapTypeToOpenApiPrimitiveType();
+									Type valueType = edmType.ClrType.GetStronglyTypedIdValueType();
+									OpenApiSchema primitive = valueType.MapTypeToOpenApiPrimitiveType();
 
 									property.Type = primitive.Type;
 									property.Format = primitive.Format;

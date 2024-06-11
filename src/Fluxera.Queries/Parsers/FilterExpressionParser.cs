@@ -4,6 +4,8 @@
 	using System.Collections.Generic;
 	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Nodes;
+	using Fluxera.StronglyTypedId;
+	using Fluxera.ValueObject;
 
 	internal static class FilterExpressionParser
 	{
