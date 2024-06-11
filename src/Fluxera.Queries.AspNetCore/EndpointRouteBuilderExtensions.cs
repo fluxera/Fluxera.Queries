@@ -1,13 +1,18 @@
 ﻿namespace Fluxera.Queries.AspNetCore
 {
 	using System;
+	using System.Collections.Concurrent;
+	using System.Collections.Generic;
+	using System.Linq;
 	using System.Reflection;
 	using System.Text.Json;
 	using System.Text.Json.Serialization;
+	using System.Text.Json.Serialization.Metadata;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Fluxera.Enumeration.SystemTextJson;
 	using Fluxera.Queries.AspNetCore.Options;
+	using Fluxera.Queries.Model;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.StronglyTypedId.SystemTextJson;
 	using Fluxera.ValueObject.SystemTextJson;
@@ -25,27 +30,7 @@
 	[PublicAPI]
 	public static class EndpointRouteBuilderExtensions
 	{
-		// TODO: Remove ignored properties from result.
-		private static readonly Lazy<JsonSerializerOptions> JsonSerializerOptions = new Lazy<JsonSerializerOptions>(() =>
-		{
-			JsonSerializerOptions options = new JsonSerializerOptions
-			{
-				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-				DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
-				Converters =
-				{
-					new JsonStringEnumConverter()
-				}
-			};
-
-			//options.UseSpatial();
-			options.UseEnumeration();
-			options.UsePrimitiveValueObject();
-			options.UseStronglyTypedId();
-
-			return options;
-		});
+		private static JsonSerializerOptions jsonSerializerOptions;
 
 		/// <summary>
 		/// 	Maps endpoints for the configured entity sets.
@@ -61,7 +46,7 @@
 
 			RouteGroupBuilder routeGroupBuilder = builder.MapGroup(routePrefix);
 
-			foreach(EntitySetOptions entitySetOptions in options.Value.EntitySetOptions)
+			foreach(EntitySetOptions entitySetOptions in options.Value.EntitySetOptions.Values)
 			{
 				// ReSharper disable once RedundantAssignment
 				RouteHandlerBuilder routeHandlerBuilder = null;
@@ -71,6 +56,7 @@
 									  .MapGet(entitySetOptions.Name, ExecuteFindManyAsync)
 									  .WithName($"Find {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
+									  .WithMetadata(options.Value)
 									  .WithMetadata(entitySetOptions)
 									  .WithDescription("Retrieves multiple entities by the filter predicate.")
 									  .WithOpenApi()
@@ -82,6 +68,7 @@
 									  .MapGet($"{entitySetOptions.Name}/{{id:required}}", ExecuteGetAsync)
 									  .WithName($"Get {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
+									  .WithMetadata(options.Value)
 									  .WithMetadata(entitySetOptions)
 									  .WithDescription("Retrieves a single entity by ID.")
 									  .WithOpenApi()
@@ -94,6 +81,7 @@
 									  .MapGet($"{entitySetOptions.Name}/$count", ExecuteCountAsync)
 									  .WithName($"Count {entitySetOptions.Name}")
 									  .WithTags(entitySetOptions.Name)
+									  .WithMetadata(options.Value)
 									  .WithMetadata(entitySetOptions)
 									  .WithDescription("Retrieves the count of entities in the data store.")
 									  .WithOpenApi()
@@ -107,13 +95,14 @@
 				HttpContext context,
 				CancellationToken cancellationToken = default)
 			{
-				EntitySetOptions options = GetEntitySetOptions(context);
-				DataQuery dataQuery = DataQuery.Create(context, options.ComplexTypeOptions.ClrType);
+				DataQueriesOptions dataQueriesOptions = GetDataQueriesOptions(context);
+				EntitySetOptions entitySetOptions = GetEntitySetOptions(context);
+				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
-				IQueryExecutor queryExecutor = GetQueryExecutor(context, options);
+				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
 				QueryResult result = await queryExecutor.InternalExecuteFindManyAsync(dataQuery, cancellationToken);
 
-				return Results.Json(result, JsonSerializerOptions.Value, statusCode: 200);
+				return Results.Json(result, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200);
 			}
 
 			static async Task<IResult> ExecuteGetAsync(
@@ -121,15 +110,16 @@
 				[FromRoute] string id,
 				CancellationToken cancellationToken = default)
 			{
-				EntitySetOptions options = GetEntitySetOptions(context);
-				object identifier = ConvertIdentifier(id, options.KeyType);
-				DataQuery dataQuery = DataQuery.Create(context, options.ComplexTypeOptions.ClrType);
+				DataQueriesOptions dataQueriesOptions = GetDataQueriesOptions(context);
+				EntitySetOptions entitySetOptions = GetEntitySetOptions(context);
+				object identifier = ConvertIdentifier(id, entitySetOptions.KeyType);
+				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
-				IQueryExecutor queryExecutor = GetQueryExecutor(context, options);
+				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
 				SingleResult result = await queryExecutor.InternalExecuteGetAsync(identifier, dataQuery, cancellationToken);
 
 				return result.HasValue
-					? Results.Json(result.Item, JsonSerializerOptions.Value, statusCode: 200)
+					? Results.Json(result.Item, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200)
 					: Results.NotFound();
 			}
 
@@ -137,13 +127,24 @@
 				HttpContext context,
 				CancellationToken cancellationToken = default)
 			{
-				EntitySetOptions options = GetEntitySetOptions(context);
-				DataQuery dataQuery = DataQuery.Create(context, options.ComplexTypeOptions.ClrType);
+				EntitySetOptions entitySetOptions = GetEntitySetOptions(context);
+				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
-				IQueryExecutor queryExecutor = GetQueryExecutor(context, options);
+				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
 				long count = await queryExecutor.InternalExecuteCountAsync(dataQuery, cancellationToken);
 
 				return Results.Text(count.ToString(), statusCode: 200);
+			}
+
+			static DataQueriesOptions GetDataQueriesOptions(HttpContext context)
+			{
+				DataQueriesOptions options = context.GetEndpoint()?.Metadata.GetMetadata<DataQueriesOptions>();
+				if(options is null)
+				{
+					throw new InvalidOperationException("The data queries options metadata was not available.");
+				}
+
+				return options;
 			}
 
 			static EntitySetOptions GetEntitySetOptions(HttpContext context)
@@ -178,6 +179,73 @@
 				}
 
 				return Convert.ChangeType(id, identifierType);
+			}
+		}
+
+		private static JsonSerializerOptions CreateJsonSerializerOptions(DataQueriesOptions dataQueriesOptions)
+		{
+			if(jsonSerializerOptions is not null)
+			{
+				return jsonSerializerOptions;
+			}
+
+			jsonSerializerOptions = new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+				DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+				Converters =
+				{
+					new JsonStringEnumConverter()
+				},
+				TypeInfoResolver = new DefaultJsonTypeInfoResolver
+				{
+					Modifiers =
+					{
+						CustomModifier
+					}
+				}
+			};
+
+			//options.UseSpatial();
+			jsonSerializerOptions.UseEnumeration();
+			jsonSerializerOptions.UsePrimitiveValueObject();
+			jsonSerializerOptions.UseStronglyTypedId();
+
+			return jsonSerializerOptions;
+
+			void CustomModifier(JsonTypeInfo jsonTypeInfo)
+			{
+				if(jsonTypeInfo.Type.IsClass)
+				{
+					dataQueriesOptions.EntitySetOptions.TryGetValue(jsonTypeInfo.Type, out EntitySetOptions entitySetOptions);
+					dataQueriesOptions.ComplexTypeOptions.TryGetValue(jsonTypeInfo.Type, out ComplexTypeOptions complexTypeOptions);
+
+					complexTypeOptions ??= entitySetOptions?.ComplexTypeOptions;
+
+					if(complexTypeOptions is not null)
+					{
+						// Remove ignored properties.
+						if(jsonTypeInfo.Type == complexTypeOptions.ClrType)
+						{
+							IList<JsonPropertyInfo> ignoredProperties = new List<JsonPropertyInfo>();
+
+							foreach(PropertyInfo ignoredProperty in complexTypeOptions.IgnoredProperties)
+							{
+								JsonPropertyInfo jsonPropertyInfo = jsonTypeInfo.Properties.FirstOrDefault(
+									x => x.Name.Equals(ignoredProperty.Name, StringComparison.OrdinalIgnoreCase));
+
+								ignoredProperties.Add(jsonPropertyInfo);
+							}
+
+							foreach(JsonPropertyInfo ignoredProperty in ignoredProperties)
+							{
+								jsonTypeInfo.Properties.Remove(ignoredProperty);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
