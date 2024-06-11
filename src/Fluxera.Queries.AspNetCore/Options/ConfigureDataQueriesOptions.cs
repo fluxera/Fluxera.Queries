@@ -1,4 +1,4 @@
-﻿namespace Fluxera.Queries.AspNetCore
+﻿namespace Fluxera.Queries.AspNetCore.Options
 {
 	using System.Reflection;
 	using Fluxera.Queries.Model;
@@ -18,7 +18,7 @@
 		/// <inheritdoc />
 		public void PostConfigure(string name, DataQueriesOptions options)
 		{
-			foreach (EntitySetOptions entitySetOptions in options.EntitySetOptions)
+			foreach(EntitySetOptions entitySetOptions in options.EntitySetOptions)
 			{
 				EdmComplexType edmType = (EdmComplexType)this.typeProvider.GetByType(entitySetOptions.ComplexTypeOptions.ClrType);
 

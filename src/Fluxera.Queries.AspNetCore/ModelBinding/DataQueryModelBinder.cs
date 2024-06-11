@@ -6,6 +6,7 @@
 	using Fluxera.Guards;
 	using Fluxera.Queries;
 	using Fluxera.Queries.AspNetCore;
+	using Fluxera.Queries.AspNetCore.Options;
 	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Options;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;

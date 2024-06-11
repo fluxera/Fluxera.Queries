@@ -1,10 +1,10 @@
-﻿namespace Fluxera.Queries.AspNetCore
+﻿namespace Fluxera.Queries.AspNetCore.Options
 {
 	using System;
 	using System.Linq.Expressions;
 	using System.Reflection;
 
-	internal sealed class EntityTypeOptionsBuilder<T> : IEntityTypeOptionsBuilder<T> 
+	internal sealed class EntityTypeOptionsBuilder<T> : IEntityTypeOptionsBuilder<T>
 		where T : class
 	{
 		private readonly EntitySetOptions entitySetOptions;

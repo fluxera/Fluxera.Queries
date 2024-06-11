@@ -1,15 +1,10 @@
 ﻿namespace Fluxera.Queries.AspNetCore
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text.Json;
-	using System.Text.Json.Serialization;
-	using Fluxera.Enumeration.SystemTextJson;
 	using Fluxera.Queries.AspNetCore.ModelBinding;
+	using Fluxera.Queries.AspNetCore.Options;
 	using Fluxera.Queries.AspNetCore.Swagger;
-	using Fluxera.StronglyTypedId.SystemTextJson;
-	using Fluxera.ValueObject.SystemTextJson;
+	using Fluxera.Utilities.Extensions;
 	using JetBrains.Annotations;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +23,7 @@
 		///  <param name="services"></param>
 		///  <param name="configure"></param>
 		///  <returns></returns>
-		public static IServiceCollection AddDataQueries(this IServiceCollection services, Action<DataQueriesOptions> configure)
+		public static IServiceCollection AddDataQueries(this IServiceCollection services, Action<IDataQueriesOptionsBuilder> configure)
 		{
 			services.AddQueryParser();
 
@@ -37,7 +32,11 @@
 				options.ModelBinderProviders.Insert(0, new DataQueryModelBinderProvider());
 			});
 
-			services.Configure(configure);
+			services.Configure<DataQueriesOptions>(options =>
+			{
+				DataQueriesOptionsBuilder builder = new DataQueriesOptionsBuilder(options);
+				configure?.Invoke(builder);
+			});
 
 			services.AddTransient<IPostConfigureOptions<DataQueriesOptions>, ConfigureDataQueriesOptions>();
 
