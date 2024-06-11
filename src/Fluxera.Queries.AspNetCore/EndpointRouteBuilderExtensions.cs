@@ -25,10 +25,12 @@
 	[PublicAPI]
 	public static class EndpointRouteBuilderExtensions
 	{
+		// TODO: Remove ignored properties from result.
 		private static readonly Lazy<JsonSerializerOptions> JsonSerializerOptions = new Lazy<JsonSerializerOptions>(() =>
 		{
 			JsonSerializerOptions options = new JsonSerializerOptions
 			{
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 				DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 				Converters =

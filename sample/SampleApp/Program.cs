@@ -71,14 +71,14 @@ namespace SampleApp
 
 			app.MapDataQueriesEndpoints();
 
-			using(IServiceScope serviceScope = app.Services.CreateScope())
-			{
-				IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
+			//using(IServiceScope serviceScope = app.Services.CreateScope())
+			//{
+			//	IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
 
-				CustomerDto dto = await repository.FindOneAsync(x => x.Age.Value > 40);
+			//	CustomerDto dto = await repository.FindOneAsync(x => x.Age.Value > 40);
 
-				Console.WriteLine(dto);
-			}
+			//	Console.WriteLine(dto);
+			//}
 
 
 			//using(IServiceScope serviceScope = app.Services.CreateScope())

@@ -45,12 +45,6 @@
 		/// </summary>
 		public string Name { get; private set; }
 
-		/// <summary>
-		///		Gets the type the CRL type was redirected from.
-		///		This is the case for strongly-typed IDs, enumerations and primitive value objects.
-		/// </summary>
-		internal Type RedirectedFromType { get; set; }
-
 		internal void Rename(string edmTypeName)
 		{
 			this.Name = Guard.Against.NullOrWhiteSpace(edmTypeName);

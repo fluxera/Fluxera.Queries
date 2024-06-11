@@ -28,7 +28,8 @@
 		public IList<PropertyInfo> IgnoredProperties => this.properties
 			.Values
 			.Where(x => x.IsIgnored)
-			.Select(x => x.PropertyInfo).ToList();
+			.Select(x => x.PropertyInfo)
+			.ToList();
 
 		public void IgnoreProperty(PropertyInfo propertyInfo)
 		{
