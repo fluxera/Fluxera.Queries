@@ -1,4 +1,4 @@
-﻿namespace Fluxera.Queries.AspNetCore
+﻿namespace Fluxera.Queries.AspNetCore.Options
 {
 	using System;
 	using System.Collections.Generic;
@@ -9,13 +9,11 @@
 	using Fluxera.StronglyTypedId;
 	using Fluxera.Utilities.Extensions;
 	using Fluxera.ValueObject;
-	using JetBrains.Annotations;
 
 	/// <summary>
 	///		The options for the data queries.
 	/// </summary>
-	[PublicAPI]
-	public sealed class DataQueriesOptions
+	internal sealed class DataQueriesOptions
 	{
 		private readonly IDictionary<Type, EntitySetOptions> entitySetsByType = new Dictionary<Type, EntitySetOptions>();
 		private readonly IDictionary<string, EntitySetOptions> entitySetsByName = new Dictionary<string, EntitySetOptions>();
@@ -27,7 +25,7 @@
 		/// <typeparam name="T"></typeparam>
 		/// <param name="complexTypeName"></param>
 		/// <param name="configure"></param>
-		public ComplexTypeOptions ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null)
+		public void ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null)
 			where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(complexTypeName);
@@ -40,8 +38,6 @@
 			ComplexTypeOptions complexType = this.ComplexType(configure);
 
 			complexType.TypeName = complexTypeName;
-
-			return complexType;
 		}
 
 		/// <summary>
@@ -81,7 +77,7 @@
 		/// <param name="entityTypeName"></param>
 		/// <param name="configure"></param>
 		/// <returns></returns>
-		public EntitySetOptions EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null)
+		public void EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null)
 			where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(entityTypeName);
@@ -94,8 +90,6 @@
 			EntitySetOptions entitySet = this.EntitySet(name, configure);
 
 			entitySet.ComplexTypeOptions.TypeName = entityTypeName;
-
-			return entitySet;
 		}
 
 		///  <summary>
@@ -163,8 +157,8 @@
 		/// <returns></returns>
 		public EntitySet GetByType(Type entityType)
 		{
-			return this.entitySetsByType.TryGetValue(entityType, out EntitySetOptions options) 
-				? options.EntitySet 
+			return this.entitySetsByType.TryGetValue(entityType, out EntitySetOptions options)
+				? options.EntitySet
 				: null;
 		}
 

@@ -1,4 +1,4 @@
-﻿namespace Fluxera.Queries.AspNetCore
+﻿namespace Fluxera.Queries.AspNetCore.Options
 {
 	using System;
 	using System.Linq.Expressions;

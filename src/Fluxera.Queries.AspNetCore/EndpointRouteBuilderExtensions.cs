@@ -7,6 +7,7 @@
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Fluxera.Enumeration.SystemTextJson;
+	using Fluxera.Queries.AspNetCore.Options;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.StronglyTypedId.SystemTextJson;
 	using Fluxera.ValueObject.SystemTextJson;

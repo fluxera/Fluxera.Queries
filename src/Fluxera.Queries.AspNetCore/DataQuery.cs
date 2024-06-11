@@ -15,6 +15,7 @@
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
 	using Microsoft.Extensions.Primitives;
+	using Fluxera.Queries.AspNetCore.Options;
 
 	/// <summary>
 	///		A class that should be used in controller actions and endpoint delegates
