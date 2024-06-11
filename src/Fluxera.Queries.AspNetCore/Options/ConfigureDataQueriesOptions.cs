@@ -18,7 +18,7 @@
 		/// <inheritdoc />
 		public void PostConfigure(string name, DataQueriesOptions options)
 		{
-			foreach(EntitySetOptions entitySetOptions in options.EntitySetOptions)
+			foreach(EntitySetOptions entitySetOptions in options.EntitySetOptions.Values)
 			{
 				EdmComplexType edmType = (EdmComplexType)this.typeProvider.GetByType(entitySetOptions.ComplexTypeOptions.ClrType);
 
@@ -27,7 +27,7 @@
 				this.ConfigureComplexType(entitySetOptions.ComplexTypeOptions);
 			}
 
-			foreach(ComplexTypeOptions complexTypeOptions in options.ComplexTypeOptions)
+			foreach(ComplexTypeOptions complexTypeOptions in options.ComplexTypeOptions.Values)
 			{
 				this.ConfigureComplexType(complexTypeOptions);
 			}

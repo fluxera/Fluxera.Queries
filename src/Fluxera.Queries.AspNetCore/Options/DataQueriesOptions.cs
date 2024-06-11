@@ -136,9 +136,9 @@
 			return entitySet;
 		}
 
-		internal IReadOnlyCollection<EntitySetOptions> EntitySetOptions => this.entitySetsByType.Values.AsReadOnly();
+		internal IReadOnlyDictionary<Type, EntitySetOptions> EntitySetOptions => this.entitySetsByType.AsReadOnly();
 
-		internal IReadOnlyCollection<ComplexTypeOptions> ComplexTypeOptions => this.complexTypesByType.Values.AsReadOnly();
+		internal IReadOnlyDictionary<Type, ComplexTypeOptions> ComplexTypeOptions => this.complexTypesByType.AsReadOnly();
 
 		/// <summary>
 		///		Gets the configured entity set for the given entity type.
