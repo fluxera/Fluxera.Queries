@@ -1,8 +1,10 @@
 ﻿namespace SampleApp.Model
 {
 	using Fluxera.ValueObject;
+	using JetBrains.Annotations;
 
-	public class AddressDto : ValueObject<AddressDto>
+	[PublicAPI]
+	public sealed class AddressDto : ValueObject<AddressDto>
 	{
 		public string Street { get; set; }
 

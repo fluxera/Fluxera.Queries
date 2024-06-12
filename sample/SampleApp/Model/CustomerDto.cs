@@ -1,7 +1,9 @@
 ﻿namespace SampleApp.Model
 {
 	using Fluxera.Entity;
+	using JetBrains.Annotations;
 
+	[PublicAPI]
 	public sealed class CustomerDto : AggregateRoot<CustomerDto, CustomerId>
 	{
 		public string FirstName { get; set; }

@@ -1,9 +1,11 @@
 ﻿namespace SampleApp.Model
 {
 	using Fluxera.Utilities.Extensions;
+	using JetBrains.Annotations;
 	using MadEyeMatt.MongoDB.DbContext;
 
-	public sealed class SampleMongoContext : MongoDbContext
+	[UsedImplicitly]
+	internal sealed class SampleMongoContext : MongoDbContext
 	{
 		/// <inheritdoc />
 		protected override void OnConfiguring(MongoDbContextOptionsBuilder builder)
