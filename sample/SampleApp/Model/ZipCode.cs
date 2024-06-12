@@ -1,8 +1,10 @@
 ﻿namespace SampleApp.Model
 {
 	using Fluxera.ValueObject;
+	using JetBrains.Annotations;
 
-	public class ZipCode : PrimitiveValueObject<ZipCode, string>
+	[PublicAPI]
+	public sealed class ZipCode : PrimitiveValueObject<ZipCode, string>
 	{
 		/// <inheritdoc />
 		public ZipCode(string value) : base(value)

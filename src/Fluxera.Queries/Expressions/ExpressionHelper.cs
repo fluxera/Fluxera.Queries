@@ -4,6 +4,10 @@
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Runtime.Serialization;
+	using Fluxera.Enumeration;
+	using Fluxera.StronglyTypedId;
+	using Fluxera.Utilities.Extensions;
+	using Fluxera.ValueObject;
 
 	internal static class ExpressionHelper
 	{
@@ -57,15 +61,88 @@
 
 			bool toPromoteIsNullable = toPromoteNullableType is not null;
 
-			if(toPromote.Type.IsValueType && otherExpressionType == typeof(object) &&
-				toPromoteIsNullable)
+			if(toPromote.Type.IsValueType && otherExpressionType == typeof(object) && toPromoteIsNullable)
 			{
 				return Expression.Convert(toPromote, otherExpressionType);
 			}
 
+			// Promote 
+			if(otherPrimitiveType.IsPrimitiveValueObject())
+			{
+				Type valueType = otherPrimitiveType.GetPrimitiveValueObjectValueType();
+				if(valueType == toPromotePrimitiveType)
+				{
+					// We can promote only ConstantsExpressions from the primitive value.
+					if(toPromote is ConstantExpression constant)
+					{
+						if(constant.Value is null)
+						{
+							return constant;
+						}
+
+						object constantValue = constant.Value;
+
+						MethodInfo methodInfo = otherPrimitiveType.GetMethod("Create", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+						constantValue = methodInfo?.Invoke(null, [constantValue]) ?? constantValue;
+
+						ConstantExpression constantExpression = Expression.Constant(constantValue, otherPrimitiveType);
+						return constantExpression;
+					}
+				}
+			}
+
+			if(otherPrimitiveType.IsEnumeration())
+			{
+				Type valueType = typeof(string);
+				if(valueType == toPromotePrimitiveType)
+				{
+					// We can promote only ConstantsExpressions from the enumeration name.
+					if(toPromote is ConstantExpression constant)
+					{
+						if(constant.Value is null)
+						{
+							return constant;
+						}
+
+						object constantValue = constant.Value;
+
+						MethodInfo methodInfo = otherPrimitiveType.GetMethod("ParseName", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+						constantValue = methodInfo?.Invoke(null, [constantValue, false]) ?? constantValue;
+
+						ConstantExpression constantExpression = Expression.Constant(constantValue, otherPrimitiveType);
+						return constantExpression;
+					}
+				}
+			}
+
+			if(otherPrimitiveType.IsStronglyTypedId())
+			{
+				Type valueType = otherPrimitiveType.GetStronglyTypedIdValueType();
+				if(valueType == toPromotePrimitiveType)
+				{
+					// We can promote only ConstantsExpressions from the ID value.
+					if(toPromote is ConstantExpression constant)
+					{
+						if(constant.Value is null)
+						{
+							return constant;
+						}
+
+						object constantValue = constant.Value;
+
+						MethodInfo methodInfo = otherPrimitiveType.GetMethod("Create", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+						constantValue = methodInfo?.Invoke(null, [constantValue]) ?? constantValue;
+
+						ConstantExpression constantExpression = Expression.Constant(constantValue, otherPrimitiveType);
+						return constantExpression;
+					}
+				}
+			}
+
 			if(toPromotePrimitiveType == typeof(string) && otherPrimitiveType.IsEnum)
 			{
-				if(toPromote is ConstantExpression constant) // we can promote only ConstantsExpressions from string
+				// We can promote only ConstantsExpressions from string.
+				if(toPromote is ConstantExpression constant)
 				{
 					if(constant.Value is null)
 					{
@@ -83,7 +160,7 @@
 			if(toPromotePrimitiveType == TypeUtilities.DateOnlyType &&
 				(otherPrimitiveType == TypeUtilities.DateTimeType || otherPrimitiveType == TypeUtilities.DateTimeOffsetType))
 			{
-				// We support constant values directly, for other kind of mappings we need to convert DateTime to DateOnly below
+				// We support constant values directly, for other kind of mappings we need to convert DateTime to DateOnly below.
 				if(toPromote is ConstantExpression constant)
 				{
 					if(constant.Value is null)
@@ -104,17 +181,16 @@
 				}
 			}
 
-			// we can support only conversion to DateOnly from DateTime
+			// We can support only conversion to DateOnly from DateTime.
 			if(toPromotePrimitiveType == TypeUtilities.DateTimeType && otherPrimitiveType == TypeUtilities.DateOnlyType)
 			{
 				if(other is ConstantExpression)
 				{
-					// the other side is a constant expression, it will be converted by this method if possible
-					// on the above if block
+					// The other side is a constant expression, it will be converted by this method if possible the above if block.
 					return toPromote;
 				}
 
-				// we can short-circuit a constant value
+				// We can short-circuit a constant value.
 				if(toPromote is ConstantExpression constant)
 				{
 					if(constant.Value is null)
@@ -153,8 +229,7 @@
 			{
 				if(other is ConstantExpression)
 				{
-					// the other side is a constant expression, it will be converted by this method if possible
-					// on the above if block
+					// The other side is a constant expression, it will be converted by this method if possibly on the above if block.
 					return toPromote;
 				}
 
@@ -303,7 +378,7 @@
 
 			if(otherNullableType is not null && !otherPrimitiveType.IsEnum && toPromotePrimitiveType != typeof(object))
 			{
-				// this will promote nullables to the best matching type of nullable (in this case is the same type of the "toPromote" type)
+				// This will promote nullables to the best matching type of nullable (in this case is the same type of the "toPromote" type).
 
 				toPromoteNullableType ??= typeof(Nullable<>).MakeGenericType(toPromotePrimitiveType);
 				return ConvertExpression(toPromote, toPromoteIsNullable, toPromotePrimitiveType, toPromoteNullableType);

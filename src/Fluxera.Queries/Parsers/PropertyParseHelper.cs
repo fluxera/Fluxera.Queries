@@ -2,11 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
-	using Fluxera.Enumeration;
 	using Fluxera.Queries.Model;
-	using Fluxera.StronglyTypedId;
-	using Fluxera.ValueObject;
 
 	internal static class PropertyParseHelper
 	{
@@ -14,7 +10,7 @@
 		{
 			List<EdmProperty> properties = new List<EdmProperty>();
 
-			foreach(string propertyName in RewriteProperties(tokenValue, edmComplexType))
+			foreach(string propertyName in RewriteProperties(tokenValue/*, edmComplexType*/))
 			{
 				if(edmComplexType is null)
 				{
@@ -26,22 +22,22 @@
 					EdmProperty currentProperty = edmComplexType.GetProperty(propertyName);
 					properties.Add(currentProperty);
 
-					// Special handling for the last property of enumeration.
-					if(currentProperty.PropertyType is not EdmComplexType)
-					{
-						EdmProperty lastProperty = currentProperty;
-						if(lastProperty.PropertyType.ClrType.IsEnumeration())
-						{
-							List<EdmProperty> enumerationProperties = new List<EdmProperty>();
-							EdmComplexType complexType = new EdmComplexType(lastProperty.PropertyType.ClrType, enumerationProperties);
-							currentProperty = new EdmProperty("Name", EdmPrimitiveType.String, complexType);
+					//// Special handling for the last property of enumeration.
+					//if(currentProperty.PropertyType is not EdmComplexType)
+					//{
+					//	EdmProperty lastProperty = currentProperty;
+					//	if(lastProperty.PropertyType.ClrType.IsEnumeration())
+					//	{
+					//		List<EdmProperty> enumerationProperties = new List<EdmProperty>();
+					//		EdmComplexType complexType = new EdmComplexType(lastProperty.PropertyType.ClrType, enumerationProperties);
+					//		currentProperty = new EdmProperty("Name", EdmPrimitiveType.String, complexType);
 
-							enumerationProperties.Add(currentProperty);
-							properties.Add(currentProperty);
+					//		enumerationProperties.Add(currentProperty);
+					//		properties.Add(currentProperty);
 
-							break;
-						}
-					}
+					//		break;
+					//	}
+					//}
 
 					edmComplexType = currentProperty.PropertyType as EdmComplexType;
 				}
@@ -54,50 +50,50 @@
 			return properties;
 		}
 
-		private static string[] RewriteProperties(string tokenValue, EdmComplexType edmComplexType)
+		private static string[] RewriteProperties(string tokenValue/*, EdmComplexType edmComplexType*/)
 		{
-			IList<string> properties = tokenValue.Split('/').ToList();
+			return tokenValue.Split('/', StringSplitOptions.TrimEntries);
 
-			EdmProperty lastProperty = null;
+			//EdmProperty lastProperty = null;
 
-			foreach(string propertyName in properties)
-			{
-				if(edmComplexType is null)
-				{
-					throw new QueryException($"Property {propertyName} not found.");
-				}
+			//foreach(string propertyName in properties)
+			//{
+			//	if(edmComplexType is null)
+			//	{
+			//		throw new QueryException($"Property {propertyName} not found.");
+			//	}
 
-				try
-				{
-					EdmProperty currentProperty = edmComplexType.GetProperty(propertyName);
-					lastProperty = currentProperty;
-					edmComplexType = currentProperty.PropertyType as EdmComplexType;
-				}
-				catch(Exception ex)
-				{
-					throw new QueryException(ex.Message);
-				}
-			}
+			//	try
+			//	{
+			//		EdmProperty currentProperty = edmComplexType.GetProperty(propertyName);
+			//		lastProperty = currentProperty;
+			//		edmComplexType = currentProperty.PropertyType as EdmComplexType;
+			//	}
+			//	catch(Exception ex)
+			//	{
+			//		throw new QueryException(ex.Message);
+			//	}
+			//}
 
-			// Rewrite the properties for primitive value objects and strongly-typed IDs
-			// when the last property type one of those special types.
-			if(lastProperty is not null && 
-				(lastProperty.PropertyType.ClrType.IsPrimitiveValueObject() || 
-				 lastProperty.PropertyType.ClrType.IsStronglyTypedId()))
-			{
-				// We add the property name 'Value' to the end.
-				properties.Add("Value");
-			}
+			//// Rewrite the properties for primitive value objects and strongly-typed IDs
+			//// when the last property type one of those special types.
+			//if(lastProperty is not null && 
+			//	(lastProperty.PropertyType.ClrType.IsPrimitiveValueObject() || 
+			//	 lastProperty.PropertyType.ClrType.IsStronglyTypedId()))
+			//{
+			//	// We add the property name 'Value' to the end.
+			//	properties.Add("Value");
+			//}
 
-			// Rewrite the properties for enumeration when the last property type is of
-			// this special type.
-			if(lastProperty is not null && lastProperty.PropertyType.ClrType.IsEnumeration())
-			{
-				// We add the property name 'Value' to the end.
-				properties.Add("Name");
-			}
+			//// Rewrite the properties for enumeration when the last property type is of
+			//// this special type.
+			//if(lastProperty is not null && lastProperty.PropertyType.ClrType.IsEnumeration())
+			//{
+			//	// We add the property name 'Value' to the end.
+			//	properties.Add("Name");
+			//}
 
-			return properties.ToArray();
+			//return properties.ToArray();
 		}
 	}
 }
