@@ -40,10 +40,10 @@
 			Guard.Against.Null(queryOptions);
 
 			// 1. Build the selector expression (optional).
-			Expression<Func<T, dynamic>> selector = queryOptions.ToSelector<T>();
+			Expression<Func<T, T>> selector = queryOptions.ToSelector<T>();
 
 			// 2. Execute the get query.
-			object item = selector is null
+			T item = selector is null
 				? await repository.GetAsync(id, cancellationToken)
 				: await repository.GetAsync(id, selector, cancellationToken);
 
@@ -102,7 +102,7 @@
 			Expression<Func<T, bool>> predicate = queryOptions.ToPredicate<T>();
 
 			// 3. Build the selector expression (optional).
-			Expression<Func<T, dynamic>> selector = queryOptions.ToSelector<T>();
+			Expression<Func<T, T>> selector = queryOptions.ToSelector<T>();
 
 			// 4. Get the total count of the query (optional).
 			long? totalCount = null;
@@ -115,7 +115,7 @@
 			}
 
 			// 5. Execute the find many query.
-			IReadOnlyCollection<object> items = selector is null
+			IReadOnlyCollection<T> items = selector is null
 				? await repository.FindManyAsync(predicate, options, cancellationToken)
 				: await repository.FindManyAsync(predicate, selector, options, cancellationToken);
 
@@ -131,7 +131,7 @@
 		/// <param name="queryOptions"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		public static async Task<object> ExecuteFindOneAsync<T, TKey>(this IReadOnlyRepository<T, TKey> repository,
+		public static async Task<T> ExecuteFindOneAsync<T, TKey>(this IReadOnlyRepository<T, TKey> repository,
 			QueryOptions queryOptions,
 			CancellationToken cancellationToken = default)
 			where T : AggregateRoot<T, TKey>
@@ -147,91 +147,14 @@
 			Expression<Func<T, bool>> predicate = queryOptions.ToPredicate<T>();
 
 			// 3. Build the selector expression (optional).
-			Expression<Func<T, dynamic>> selector = queryOptions.ToSelector<T>();
+			Expression<Func<T, T>> selector = queryOptions.ToSelector<T>();
 
 			// 4. Execute the find many query.
-			object item = selector is null
+			T item = selector is null
 				? await repository.FindOneAsync(predicate, options, cancellationToken)
 				: await repository.FindOneAsync(predicate, selector, options, cancellationToken);
 
 			return item;
 		}
-
-		///// <summary>
-		/////		Executes the get query defined by the given <see cref="TKey"/> and <see cref="QueryOptions"/>.
-		///// </summary>
-		///// <typeparam name="T"></typeparam>
-		///// <typeparam name="TKey"></typeparam>
-		///// <param name="repository"></param>
-		///// <param name="id"></param>
-		///// <param name="queryOptions"></param>
-		///// <param name="cancellationToken"></param>
-		///// <returns></returns>
-		//public static async Task<T> ExecuteTypedGetAsync<T, TKey>(this IReadOnlyRepository<T, TKey> repository,
-		//	TKey id,
-		//	QueryOptions queryOptions,
-		//	CancellationToken cancellationToken = default)
-		//	where T : AggregateRoot<T, TKey>
-		//	where TKey : IComparable<TKey>, IEquatable<TKey>
-		//{
-		//	Guard.Against.Null(id);
-		//	Guard.Against.Null(repository);
-		//	Guard.Against.Null(queryOptions);
-
-		//	// 1. Build the selector expression (optional).
-		//	Expression<Func<T, T>> selector = queryOptions.ToTypedSelector<T>();
-
-		//	// 2. Execute the get query.
-		//	T item = selector is null
-		//		? await repository.GetAsync(id, cancellationToken)
-		//		: await repository.GetAsync(id, selector, cancellationToken);
-
-		//	return item;
-		//}
-
-		///// <summary>
-		/////		Executes the find many query defined by the given <see cref="QueryOptions"/>.
-		///// </summary>
-		///// <typeparam name="T"></typeparam>
-		///// <typeparam name="TKey"></typeparam>
-		///// <param name="repository"></param>
-		///// <param name="queryOptions"></param>
-		///// <param name="cancellationToken"></param>
-		///// <returns></returns>
-		//public static async Task<QueryResult<T>> ExecuteTypedQueryAsync<T, TKey>(this IReadOnlyRepository<T, TKey> repository,
-		//	QueryOptions queryOptions,
-		//	CancellationToken cancellationToken = default)
-		//	where T : AggregateRoot<T, TKey>
-		//	where TKey : IComparable<TKey>, IEquatable<TKey>
-		//{
-		//	Guard.Against.Null(repository);
-		//	Guard.Against.Null(queryOptions);
-
-		//	// 1. Build the query options: sorting and paging.
-		//	IQueryOptions<T> options = queryOptions.ToQueryOptions<T>();
-
-		//	// 2. Build the query predicate.
-		//	Expression<Func<T, bool>> predicate = queryOptions.ToPredicate<T>();
-
-		//	// 3. Build the selector expression (optional).
-		//	Expression<Func<T, T>> selector = queryOptions.ToTypedSelector<T>();
-
-		//	// 4. Get the total count of the query (optional).
-		//	long? totalCount = null;
-		//	if(queryOptions.Count is not null)
-		//	{
-		//		if(queryOptions.Count.CountValue)
-		//		{
-		//			totalCount = await repository.CountAsync(predicate, cancellationToken);
-		//		}
-		//	}
-
-		//	// 5. Execute the find many query.
-		//	IReadOnlyCollection<T> items = selector is null
-		//		? await repository.FindManyAsync(predicate, options, cancellationToken)
-		//		: await repository.FindManyAsync(predicate, selector, options, cancellationToken);
-
-		//	return new QueryResult<T>(items, totalCount);
-		//}
 	}
 }

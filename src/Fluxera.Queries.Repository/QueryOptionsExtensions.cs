@@ -24,7 +24,7 @@
 		/// <returns></returns>
 		public static Expression<Func<T, bool>> ToPredicate<T>(this QueryOptions queryOptions)
 		{
-			return queryOptions.Filter?.ToExpression<T>() ?? (x => true);
+			return queryOptions.Filter?.ToPredicateExpression<T>() ?? (x => true);
 		}
 
 		/// <summary>
@@ -33,20 +33,9 @@
 		/// <typeparam name="T"></typeparam>
 		/// <param name="queryOptions"></param>
 		/// <returns></returns>
-		public static Expression<Func<T, T>> ToTypedSelector<T>(this QueryOptions queryOptions)
+		public static Expression<Func<T, T>> ToSelector<T>(this QueryOptions queryOptions)
 		{
-			return queryOptions.Select?.ToTypedExpression<T>();
-		}
-
-		/// <summary>
-		///		Creates a selector expression from the given <see cref="QueryOptions"/>.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="queryOptions"></param>
-		/// <returns></returns>
-		public static Expression<Func<T, dynamic>> ToSelector<T>(this QueryOptions queryOptions)
-		{
-			return queryOptions.Select?.ToExpression<T>();
+			return queryOptions.Select?.ToSelectorExpression<T>();
 		}
 
 		/// <summary>
@@ -75,7 +64,7 @@
 			// 1. Apply the orderby options.
 			if(queryOptions.OrderBy is not null && queryOptions.OrderBy.Properties.Count > 0)
 			{
-				IReadOnlyCollection<OrderByExpression<T>> expressions = queryOptions.OrderBy.ToExpressions<T>();
+				IReadOnlyCollection<OrderByExpression<T>> expressions = queryOptions.OrderBy.ToOrderByExpressions<T>();
 
 				bool isFirstClause = true;
 

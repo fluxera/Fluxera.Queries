@@ -5,6 +5,7 @@
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Reflection.Metadata;
 	using DynamicAnonymousType;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Expressions.Functions;
@@ -33,7 +34,7 @@
 		/// <typeparam name="T"></typeparam>
 		/// <param name="filterQueryOption"></param>
 		/// <returns></returns>
-		public static Expression<Func<T, bool>> ToExpression<T>(this FilterQueryOption filterQueryOption)
+		public static Expression<Func<T, bool>> ToPredicateExpression<T>(this FilterQueryOption filterQueryOption)
 		{
 			Guard.Against.Null(filterQueryOption);
 			Guard.Against.Null(filterQueryOption.Expression, nameof(filterQueryOption.Expression));
@@ -54,7 +55,7 @@
 		/// <param name="selectQueryOption"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public static Expression<Func<T, T>> ToTypedExpression<T>(this SelectQueryOption selectQueryOption)
+		public static Expression<Func<T, T>> ToSelectorExpression<T>(this SelectQueryOption selectQueryOption)
 		{
 			Guard.Against.Null(selectQueryOption);
 
@@ -88,73 +89,6 @@
 
 			return Expression.Lambda<Func<T, T>>(memberInitExpression, parameter);
 		}
-
-		/// <summary>
-		///		Creates a dynamic selector expression.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="selectQueryOption"></param>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		public static Expression<Func<T, dynamic>> ToExpression<T>(this SelectQueryOption selectQueryOption)
-		{
-			Guard.Against.Null(selectQueryOption);
-
-			if(selectQueryOption.Properties.Count == 0)
-			{
-				return null;
-			}
-
-			ParameterExpression parameter = Expression.Parameter(typeof(T), "x");
-
-			IList<(string, Type)> propertyDefinitions = new List<(string, Type)>();
-			foreach(SelectProperty clause in selectQueryOption.Properties)
-			{
-				// x.PropertyName
-				foreach(EdmProperty edmProperty in clause.Properties)
-				{
-					PropertyInfo property = parameter.Type.GetProperty(edmProperty.Name);
-
-					if(property is null)
-					{
-						throw new InvalidOperationException($"Invalid property name {edmProperty.Name}.");
-					}
-
-					propertyDefinitions.Add((property.Name, property.PropertyType));
-				}
-			}
-
-			Type type = DynamicFactory.CreateType(propertyDefinitions);
-
-			IList<MemberAssignment> bindings = new List<MemberAssignment>();
-			foreach(SelectProperty clause in selectQueryOption.Properties)
-			{
-				// x.PropertyName
-				foreach(EdmProperty edmProperty in clause.Properties)
-				{
-					PropertyInfo property = parameter.Type.GetProperty(edmProperty.Name);
-					PropertyInfo propertyInfo = type.GetProperty(edmProperty.Name);
-
-					if(property is null)
-					{
-						throw new InvalidOperationException($"Invalid property name {edmProperty.Name}.");
-					}
-
-					if(propertyInfo is null)
-					{
-						throw new InvalidOperationException($"Invalid property name {edmProperty.Name}.");
-					}
-
-					MemberExpression propertyExpression = Expression.MakeMemberAccess(parameter, property);
-					MemberAssignment binding = Expression.Bind(propertyInfo, propertyExpression);
-					bindings.Add(binding);
-				}
-			}
-			NewExpression newExpression = Expression.New(type);
-			MemberInitExpression memberInitExpression = Expression.MemberInit(newExpression, bindings);
-
-			return Expression.Lambda<Func<T, dynamic>>(memberInitExpression, parameter);
-		}
 			
 		/// <summary>	
 		///		Creates orderby/thenby property expressions including the order direction.
@@ -163,7 +97,7 @@
 		/// <param name="orderByQueryOption"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public static IReadOnlyCollection<OrderByExpression<T>> ToExpressions<T>(this OrderByQueryOption orderByQueryOption)
+		public static IReadOnlyCollection<OrderByExpression<T>> ToOrderByExpressions<T>(this OrderByQueryOption orderByQueryOption)
 		{
 			Guard.Against.Null(orderByQueryOption);
 
