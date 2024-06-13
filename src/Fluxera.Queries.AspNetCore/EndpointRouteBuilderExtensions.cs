@@ -171,7 +171,7 @@
 					MethodInfo tryParseMethod = identifierType.GetMethod("TryParse", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 
 					object[] parameters = [id, null];
-					tryParseMethod.Invoke(null, parameters);
+					tryParseMethod?.Invoke(null, parameters);
 
 					return parameters[1];
 				}
@@ -190,7 +190,7 @@
 			jsonSerializerOptions = new JsonSerializerOptions
 			{
 				WriteIndented = true,
-				DefaultIgnoreCondition = JsonIgnoreCondition.Always,
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 				DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 				Converters =

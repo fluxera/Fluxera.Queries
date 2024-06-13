@@ -46,6 +46,42 @@
 			return lambda;
 		}
 
+		private static Expression CreateSelectorExpression(Expression expression, Type type, IList<SelectProperty> properties)
+		{
+			IList<MemberAssignment> bindings = new List<MemberAssignment>();
+
+			foreach(SelectProperty clause in properties)
+			{
+				// x.PropertyName
+				foreach(EdmProperty edmProperty in clause.Properties)
+				{
+					PropertyInfo property = type.GetProperty(edmProperty.Name);
+
+					if(property is null)
+					{
+						throw new InvalidOperationException($"Invalid property name {edmProperty.Name}.");
+					}
+
+					Expression propertyExpression = Expression.MakeMemberAccess(expression, property);
+					MemberAssignment binding = Expression.Bind(property, propertyExpression);
+					bindings.Add(binding);
+
+					//if(edmProperty.PropertyType is EdmComplexType)
+					//{
+					//	expression = CreateSelectorExpression(
+					//		expression,
+					//		edmProperty.PropertyType.ClrType,
+					//		[clause]);
+					//}
+				}
+			}
+
+			NewExpression newExpression = Expression.New(type);
+			expression = Expression.MemberInit(newExpression, bindings);
+
+			return expression;
+		}
+
 		/// <summary>
 		///		Creates a typed selector expression.
 		/// </summary>
@@ -56,40 +92,21 @@
 		public static Expression<Func<T, T>> ToSelectorExpression<T>(this SelectQueryOption selectQueryOption)
 		{
 			Guard.Against.Null(selectQueryOption);
-
-			if(selectQueryOption.Properties.Count == 0)
-			{
-				return null;
-			}
-
-			ParameterExpression parameter = Expression.Parameter(typeof(T), "x");
-
-			IList<MemberAssignment> bindings = new List<MemberAssignment>();
-			foreach(SelectProperty clause in selectQueryOption.Properties)
-			{
-				// x.PropertyName
-				foreach(EdmProperty edmProperty in clause.Properties)
-				{
-					PropertyInfo property = parameter.Type.GetProperty(edmProperty.Name);
-
-					if(property is null)
-					{
-						throw new InvalidOperationException($"Invalid property name {edmProperty.Name}.");
-					}
-
-					MemberExpression propertyExpression = Expression.MakeMemberAccess(parameter, property);
-					MemberAssignment binding = Expression.Bind(property, propertyExpression);
-					bindings.Add(binding);
-				}
-			}
-			NewExpression newExpression = Expression.New(parameter.Type);
-			MemberInitExpression memberInitExpression = Expression.MemberInit(newExpression, bindings);
-
-			return Expression.Lambda<Func<T, T>>(memberInitExpression, parameter);
-		}
 			
+			ParameterExpression parameter = Expression.Parameter(typeof(T), "x");
+			Expression expression = parameter;
+
+			if(selectQueryOption.Properties.Count > 0)
+			{
+				expression = CreateSelectorExpression(parameter, parameter.Type, selectQueryOption.Properties.ToList());
+			}
+
+			Expression<Func<T, T>> lambda = Expression.Lambda<Func<T, T>>(expression, parameter);
+			return lambda;
+		}
+
 		/// <summary>	
-		///		Creates orderby/thenby property expressions including the order direction.
+		///		Creates OrderBy/ThenBy property expressions including the order direction.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="orderByQueryOption"></param>

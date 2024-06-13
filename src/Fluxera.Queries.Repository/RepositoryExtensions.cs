@@ -19,7 +19,7 @@
 	public static class RepositoryExtensions
 	{
 		/// <summary>
-		///		Executes the get query defined by the given <see cref="TKey"/> and <see cref="QueryOptions"/>.
+		///		Executes the get query defined by the given <typeparamref name="TKey"/> and <see cref="QueryOptions"/>.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TKey"></typeparam>

@@ -1,5 +1,8 @@
 namespace SampleApp
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Threading.Tasks;
 	using Fluxera.Queries.AspNetCore;
@@ -70,86 +73,94 @@ namespace SampleApp
 
 			app.MapDataQueriesEndpoints();
 
+			using(IServiceScope serviceScope = app.Services.CreateScope())
+			{
+				IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
+
+				Expression<Func<CustomerDto, CustomerDto>> expression = 
+					x => new CustomerDto 
+					{ 
+						FirstName = x.FirstName, 
+						Address = new AddressDto
+						{
+							City = x.Address.City
+						}
+					};
+
+				CustomerDto dtos = await repository.FindOneAsync(x => true, expression);
+			}
+
 			//using(IServiceScope serviceScope = app.Services.CreateScope())
-			//{
-			//	IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
+				//{
+				//	IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
+				//	IUnitOfWorkFactory unitOfWorkFactory = serviceScope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory>();
+				//	IUnitOfWork unitOfWork = unitOfWorkFactory.CreateUnitOfWork(repository.RepositoryName);
 
-			//	CustomerDto dto = await repository.FindOneAsync(x => x.Age.Value > 40);
+				//	if(await repository.CountAsync() > 0)
+				//	{
+				//		return;
+				//	}
 
-			//	Console.WriteLine(dto);
-			//}
+				//	Faker<AddressDto> addressFaker = new Faker<AddressDto>()
+				//		.UseSeed(37)
+				//		.CustomInstantiator(x =>
+				//		{
+				//			string street = x.Address.StreetName();
+				//			string number = x.Address.BuildingNumber();
+				//			string city = x.Address.City();
+				//			string zipCode = x.Address.ZipCode("#####");
 
-			//using(IServiceScope serviceScope = app.Services.CreateScope())
-			//{
-			//	IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
-			//	IUnitOfWorkFactory unitOfWorkFactory = serviceScope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory>();
-			//	IUnitOfWork unitOfWork = unitOfWorkFactory.CreateUnitOfWork(repository.RepositoryName);
+				//			return new AddressDto
+				//			{
+				//				Street = street,
+				//				Number = number,
+				//				City = city,
+				//				ZipCode = new ZipCode(zipCode)
+				//			};
+				//		});
 
-			//	if(await repository.CountAsync() > 0)
-			//	{
-			//		return;
-			//	}
+				//	Faker<CustomerDto> customerFaker = new Faker<CustomerDto>()
+				//	   .UseSeed(37)
+				//	   .CustomInstantiator(x =>
+				//	   {
+				//		   string firstName = x.Name.FirstName();
+				//		   string lastName = x.Name.LastName();
+				//		   string email = x.Internet.Email(firstName, lastName);
 
-			//	Faker<AddressDto> addressFaker = new Faker<AddressDto>()
-			//		.UseSeed(37)
-			//		.CustomInstantiator(x =>
-			//		{
-			//			string street = x.Address.StreetName();
-			//			string number = x.Address.BuildingNumber();
-			//			string city = x.Address.City();
-			//			string zipCode = x.Address.ZipCode("#####");
+				//		   DateTime today = DateTime.Today;
+				//		   DateTime dateOfBirth = x.Person.DateOfBirth;
+				//		   int age = today.Year - dateOfBirth.Year;
 
-			//			return new AddressDto
-			//			{
-			//				Street = street,
-			//				Number = number,
-			//				City = city,
-			//				ZipCode = new ZipCode(zipCode)
-			//			};
-			//		});
+				//		   CustomerState state = Random.Shared.Next(0, 10).IsEven() ? CustomerState.New : CustomerState.Legacy;
 
-			//	Faker<CustomerDto> customerFaker = new Faker<CustomerDto>()
-			//	   .UseSeed(37)
-			//	   .CustomInstantiator(x =>
-			//	   {
-			//		   string firstName = x.Name.FirstName();
-			//		   string lastName = x.Name.LastName();
-			//		   string email = x.Internet.Email(firstName, lastName);
+				//		   return new CustomerDto
+				//		   {
+				//			   FirstName = firstName,
+				//			   LastName = lastName,
+				//			   Email = email,
+				//			   Age = new Age(age),
+				//			   State = state,
+				//			   Address = addressFaker.Generate(1).First()
+				//		   };
+				//	   });
 
-			//		   DateTime today = DateTime.Today;
-			//		   DateTime dateOfBirth = x.Person.DateOfBirth;
-			//		   int age = today.Year - dateOfBirth.Year;
+				//	int counter = 0;
+				//	foreach(CustomerDto customer in customerFaker.GenerateForever())
+				//	{
+				//		counter++;
 
-			//		   CustomerState state = Random.Shared.Next(0, 10).IsEven() ? CustomerState.New : CustomerState.Legacy;
+				//		await repository.AddAsync(customer);
 
-			//		   return new CustomerDto
-			//		   {
-			//			   FirstName = firstName,
-			//			   LastName = lastName,
-			//			   Email = email,
-			//			   Age = new Age(age),
-			//			   State = state,
-			//			   Address = addressFaker.Generate(1).First()
-			//		   };
-			//	   });
+				//		if(counter == 100)
+				//		{
+				//			break;
+				//		}
+				//	}
 
-			//	int counter = 0;
-			//	foreach(CustomerDto customer in customerFaker.GenerateForever())
-			//	{
-			//		counter++;
+				//	await unitOfWork.SaveChangesAsync();
+				//}
 
-			//		await repository.AddAsync(customer);
-
-			//		if(counter == 100)
-			//		{
-			//			break;
-			//		}
-			//	}
-
-			//	await unitOfWork.SaveChangesAsync();
-			//}
-
-			await app.RunAsync();
+				await app.RunAsync();
 		}
 	}
 }
