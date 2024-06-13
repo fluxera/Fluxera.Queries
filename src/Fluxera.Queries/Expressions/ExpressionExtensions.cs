@@ -5,6 +5,7 @@
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Reflection.Metadata.Ecma335;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Expressions.Functions;
 	using Fluxera.Queries.Model;
@@ -46,38 +47,52 @@
 			return lambda;
 		}
 
-		private static Expression CreateSelectorExpression(Expression expression, Type type, IList<SelectProperty> properties)
+		private static Expression CreateSelectorExpression(Expression expression, Type type, IList<SelectProperty> properties, IList<MemberAssignment> bindings = null)
 		{
-			IList<MemberAssignment> bindings = new List<MemberAssignment>();
+			bindings ??= new List<MemberAssignment>();
 
-			foreach(SelectProperty clause in properties)
+			IEnumerable<IGrouping<string, SelectProperty>> groups = properties.GroupBy(x => x.Properties[0].Name);
+			foreach(IGrouping<string, SelectProperty> clauseGroup in groups)
 			{
-				// x.PropertyName
-				foreach(EdmProperty edmProperty in clause.Properties)
-				{
-					PropertyInfo property = type.GetProperty(edmProperty.Name);
+				string groupName = clauseGroup.Key;
+				PropertyInfo property = type.GetProperty(groupName);
 
-					if(property is null)
+				if(property is null)
+				{
+					throw new InvalidOperationException($"Invalid property name {groupName}.");
+				}
+
+				// Recurse if the select clause hast more than one property part.
+				SelectProperty firstProperty = clauseGroup.First();
+				if(firstProperty.Properties.Count > 1)
+				{
+					IList<SelectProperty> selectProperties = clauseGroup
+						.Select(x => new SelectProperty(x.Properties.ToArray()[1..]))
+						.Where(x => x.Properties.Count > 0)
+						.ToList();
+
+					Type propertyType = property.PropertyType;
+					Expression parameter = expression;
+					expression = Expression.MakeMemberAccess(parameter, property);
+					Expression topLevelExpression = expression;
+
+					foreach(SelectProperty selectProperty in selectProperties)
 					{
-						throw new InvalidOperationException($"Invalid property name {edmProperty.Name}.");
+						expression = CreateSelectorExpression(topLevelExpression, propertyType, [selectProperty], bindings);
 					}
 
-					Expression propertyExpression = Expression.MakeMemberAccess(expression, property);
-					MemberAssignment binding = Expression.Bind(property, propertyExpression);
-					bindings.Add(binding);
+					//NewExpression newExpression = Expression.New(propertyType);
+					//expression = Expression.MemberInit(newExpression, bindings);
 
-					//if(edmProperty.PropertyType is EdmComplexType)
-					//{
-					//	expression = CreateSelectorExpression(
-					//		expression,
-					//		edmProperty.PropertyType.ClrType,
-					//		[clause]);
-					//}
+					//bindings.Clear();
+				}
+				else
+				{
+					expression = Expression.MakeMemberAccess(expression, property);
+					MemberAssignment binding = Expression.Bind(property, expression);
+					bindings.Add(binding);
 				}
 			}
-
-			NewExpression newExpression = Expression.New(type);
-			expression = Expression.MemberInit(newExpression, bindings);
 
 			return expression;
 		}
@@ -98,7 +113,10 @@
 
 			if(selectQueryOption.Properties.Count > 0)
 			{
-				expression = CreateSelectorExpression(parameter, parameter.Type, selectQueryOption.Properties.ToList());
+				expression = CreateSelectorExpression(
+					parameter, 
+					parameter.Type, 
+					selectQueryOption.Properties.ToList());
 			}
 
 			Expression<Func<T, T>> lambda = Expression.Lambda<Func<T, T>>(expression, parameter);

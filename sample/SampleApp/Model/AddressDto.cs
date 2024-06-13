@@ -14,6 +14,8 @@
 
 		public ZipCode ZipCode { get; set; }
 
+		public CountryDto Country { get; set; }
+
 		public decimal IgnoreMe { get; set; }
 	}
 }
