@@ -1,15 +1,11 @@
 namespace SampleApp
 {
-	using System;
-	using System.Linq;
 	using System.Reflection;
 	using System.Threading.Tasks;
-	using Bogus;
 	using Fluxera.Queries.AspNetCore;
 	using Fluxera.Queries.Repository;
 	using Fluxera.Repository;
 	using Fluxera.Repository.MongoDB;
-	using Fluxera.Utilities.Extensions;
 	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.Extensions.DependencyInjection;

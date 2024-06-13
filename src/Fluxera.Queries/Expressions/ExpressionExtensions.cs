@@ -5,8 +5,6 @@
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
-	using System.Reflection.Metadata;
-	using DynamicAnonymousType;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Expressions.Functions;
 	using Fluxera.Queries.Model;
