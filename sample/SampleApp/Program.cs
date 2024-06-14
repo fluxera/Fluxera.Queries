@@ -1,15 +1,11 @@
 namespace SampleApp
 {
-	using System;
-	using System.Linq;
 	using System.Reflection;
 	using System.Threading.Tasks;
-	using Bogus;
 	using Fluxera.Queries.AspNetCore;
 	using Fluxera.Queries.Repository;
 	using Fluxera.Repository;
 	using Fluxera.Repository.MongoDB;
-	using Fluxera.Utilities.Extensions;
 	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +50,8 @@ namespace SampleApp
 				{
 					complexType.Ignore(x => x.IgnoreMe);
 				});
+
+				options.ComplexType<CountryDto>("Country");
 			});
 
 			builder.Services.AddRepositoryQueryExecutor();
@@ -74,84 +72,7 @@ namespace SampleApp
 
 			app.MapDataQueriesEndpoints();
 
-			//using(IServiceScope serviceScope = app.Services.CreateScope())
-			//{
-			//	IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
-
-			//	CustomerDto dto = await repository.FindOneAsync(x => x.Age.Value > 40);
-
-			//	Console.WriteLine(dto);
-			//}
-
-			//using(IServiceScope serviceScope = app.Services.CreateScope())
-			//{
-			//	IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
-			//	IUnitOfWorkFactory unitOfWorkFactory = serviceScope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory>();
-			//	IUnitOfWork unitOfWork = unitOfWorkFactory.CreateUnitOfWork(repository.RepositoryName);
-
-			//	if(await repository.CountAsync() > 0)
-			//	{
-			//		return;
-			//	}
-
-			//	Faker<AddressDto> addressFaker = new Faker<AddressDto>()
-			//		.UseSeed(37)
-			//		.CustomInstantiator(x =>
-			//		{
-			//			string street = x.Address.StreetName();
-			//			string number = x.Address.BuildingNumber();
-			//			string city = x.Address.City();
-			//			string zipCode = x.Address.ZipCode("#####");
-
-			//			return new AddressDto
-			//			{
-			//				Street = street,
-			//				Number = number,
-			//				City = city,
-			//				ZipCode = new ZipCode(zipCode)
-			//			};
-			//		});
-
-			//	Faker<CustomerDto> customerFaker = new Faker<CustomerDto>()
-			//	   .UseSeed(37)
-			//	   .CustomInstantiator(x =>
-			//	   {
-			//		   string firstName = x.Name.FirstName();
-			//		   string lastName = x.Name.LastName();
-			//		   string email = x.Internet.Email(firstName, lastName);
-
-			//		   DateTime today = DateTime.Today;
-			//		   DateTime dateOfBirth = x.Person.DateOfBirth;
-			//		   int age = today.Year - dateOfBirth.Year;
-
-			//		   CustomerState state = Random.Shared.Next(0, 10).IsEven() ? CustomerState.New : CustomerState.Legacy;
-
-			//		   return new CustomerDto
-			//		   {
-			//			   FirstName = firstName,
-			//			   LastName = lastName,
-			//			   Email = email,
-			//			   Age = new Age(age),
-			//			   State = state,
-			//			   Address = addressFaker.Generate(1).First()
-			//		   };
-			//	   });
-
-			//	int counter = 0;
-			//	foreach(CustomerDto customer in customerFaker.GenerateForever())
-			//	{
-			//		counter++;
-
-			//		await repository.AddAsync(customer);
-
-			//		if(counter == 100)
-			//		{
-			//			break;
-			//		}
-			//	}
-
-			//	await unitOfWork.SaveChangesAsync();
-			//}
+			await app.SeedData();
 
 			await app.RunAsync();
 		}

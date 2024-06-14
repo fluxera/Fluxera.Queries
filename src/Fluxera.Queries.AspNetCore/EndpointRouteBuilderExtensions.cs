@@ -1,7 +1,6 @@
 ﻿namespace Fluxera.Queries.AspNetCore
 {
 	using System;
-	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
@@ -12,7 +11,6 @@
 	using System.Threading.Tasks;
 	using Fluxera.Enumeration.SystemTextJson;
 	using Fluxera.Queries.AspNetCore.Options;
-	using Fluxera.Queries.Model;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.StronglyTypedId.SystemTextJson;
 	using Fluxera.ValueObject.SystemTextJson;
@@ -173,7 +171,7 @@
 					MethodInfo tryParseMethod = identifierType.GetMethod("TryParse", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 
 					object[] parameters = [id, null];
-					tryParseMethod.Invoke(null, parameters);
+					tryParseMethod?.Invoke(null, parameters);
 
 					return parameters[1];
 				}
@@ -192,7 +190,7 @@
 			jsonSerializerOptions = new JsonSerializerOptions
 			{
 				WriteIndented = true,
-				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 				DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 				Converters =

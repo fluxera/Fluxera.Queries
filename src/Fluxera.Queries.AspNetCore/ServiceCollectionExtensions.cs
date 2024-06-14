@@ -4,7 +4,6 @@
 	using Fluxera.Queries.AspNetCore.ModelBinding;
 	using Fluxera.Queries.AspNetCore.Options;
 	using Fluxera.Queries.AspNetCore.Swagger;
-	using Fluxera.Utilities.Extensions;
 	using JetBrains.Annotations;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.Extensions.DependencyInjection;

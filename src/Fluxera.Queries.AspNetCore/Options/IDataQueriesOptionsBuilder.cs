@@ -15,14 +15,14 @@
 		/// <typeparam name="T"></typeparam>
 		/// <param name="complexTypeName"></param>
 		/// <param name="configure"></param>
-		void ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class;
+		IDataQueriesOptionsBuilder ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class;
 
 		/// <summary>
 		///		Configures a complex type.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="configure"></param>
-		void ComplexType<T>(Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class;
+		IDataQueriesOptionsBuilder ComplexType<T>(Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class;
 
 		/// <summary>
 		///		Configures an entity set.
@@ -31,7 +31,7 @@
 		/// <param name="name"></param>
 		/// <param name="entityTypeName"></param>
 		/// <param name="configure"></param>
-		void EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
+		IDataQueriesOptionsBuilder EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
 
 		/// <summary>
 		///		Configures an entity set.
@@ -39,6 +39,6 @@
 		/// <typeparam name="T"></typeparam>
 		/// <param name="name"></param>
 		/// <param name="configure"></param>
-		void EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
+		IDataQueriesOptionsBuilder EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
 	}
 }

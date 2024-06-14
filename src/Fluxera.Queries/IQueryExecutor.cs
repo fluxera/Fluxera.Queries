@@ -20,7 +20,7 @@
 		internal Task<QueryResult> InternalExecuteFindManyAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		///		Executes the get query defined by the given <see cref="TKey"/> and <see cref="QueryOptions"/>.
+		///		Executes the get query defined by the given ID and <see cref="QueryOptions"/>.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <param name="queryOptions"></param>
@@ -55,7 +55,7 @@
 		Task<QueryResult> ExecuteFindManyAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		///		Executes the get query defined by the given <see cref="TKey"/> and <see cref="QueryOptions"/>.
+		///		Executes the get query defined by the given ID and <see cref="QueryOptions"/>.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <param name="queryOptions"></param>

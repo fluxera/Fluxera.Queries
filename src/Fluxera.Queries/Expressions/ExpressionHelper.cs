@@ -6,7 +6,6 @@
 	using System.Runtime.Serialization;
 	using Fluxera.Enumeration;
 	using Fluxera.StronglyTypedId;
-	using Fluxera.Utilities.Extensions;
 	using Fluxera.ValueObject;
 
 	internal static class ExpressionHelper
