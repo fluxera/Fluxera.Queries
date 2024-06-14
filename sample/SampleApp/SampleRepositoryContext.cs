@@ -1,4 +1,4 @@
-﻿namespace SampleApp.Model
+﻿namespace SampleApp
 {
 	using Fluxera.Repository.MongoDB;
 	using JetBrains.Annotations;

@@ -10,7 +10,8 @@ namespace SampleApp
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Hosting;
-	using SampleApp.Model;
+	using SampleApp.Application.Contracts.Customers;
+	using SampleApp.Domain.Customer;
 
 	public static class Program
 	{
@@ -31,7 +32,7 @@ namespace SampleApp
 			{
 				repositoryBuilder.AddMongoRepository<SampleRepositoryContext>(repositoryOptionsBuilder =>
 				{
-					repositoryOptionsBuilder.UseFor<CustomerDto>();
+					repositoryOptionsBuilder.UseFor<Customer>();
 
 					repositoryOptionsBuilder.EnableUnitOfWork();
 				});

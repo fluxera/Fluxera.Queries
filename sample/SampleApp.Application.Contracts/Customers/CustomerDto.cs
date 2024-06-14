@@ -1,11 +1,13 @@
-﻿namespace SampleApp.Model
+﻿namespace SampleApp.Application.Contracts.Customers
 {
-	using Fluxera.Entity;
 	using JetBrains.Annotations;
+	using SampleApp.Domain.Shared.Customer;
 
 	[PublicAPI]
-	public sealed class CustomerDto : AggregateRoot<CustomerDto, CustomerId>
+	public sealed class CustomerDto
 	{
+		public CustomerId ID { get; set; }
+
 		public string FirstName { get; set; }
 
 		public string LastName { get; set; }

@@ -8,7 +8,8 @@
 	using Fluxera.Utilities.Extensions;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.Extensions.DependencyInjection;
-	using SampleApp.Model;
+	using SampleApp.Domain.Customer;
+	using SampleApp.Domain.Shared.Customer;
 
 	internal static class DataSeeder
 	{
@@ -16,7 +17,7 @@
 		{
 			using(IServiceScope serviceScope = app.Services.CreateScope())
 			{
-				IRepository<CustomerDto, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<CustomerDto, CustomerId>>();
+				IRepository<Customer, CustomerId> repository = serviceScope.ServiceProvider.GetRequiredService<IRepository<Customer, CustomerId>>();
 				IUnitOfWorkFactory unitOfWorkFactory = serviceScope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory>();
 				IUnitOfWork unitOfWork = unitOfWorkFactory.CreateUnitOfWork(repository.RepositoryName);
 
@@ -25,21 +26,21 @@
 					return;
 				}
 
-				Faker<CountryDto> countryFaker = new Faker<CountryDto>()
+				Faker<Country> countryFaker = new Faker<Country>()
 					.UseSeed(37)
 					.CustomInstantiator(x =>
 					{
 						string code = x.Address.CountryCode();
 						string name = x.Address.Country();
 
-						return new CountryDto
+						return new Country
 						{
 							Code = code,
 							Name = name,
 						};
 					});
 
-				Faker<AddressDto> addressFaker = new Faker<AddressDto>()
+				Faker<Address> addressFaker = new Faker<Address>()
 					.UseSeed(37)
 					.CustomInstantiator(x =>
 					{
@@ -48,7 +49,7 @@
 						string city = x.Address.City();
 						string zipCode = x.Address.ZipCode("#####");
 
-						return new AddressDto
+						return new Address
 						{
 							Street = street,
 							Number = number,
@@ -58,7 +59,7 @@
 						};
 					});
 
-				Faker<CustomerDto> customerFaker = new Faker<CustomerDto>()
+				Faker<Customer> customerFaker = new Faker<Customer>()
 				   .UseSeed(37)
 				   .CustomInstantiator(x =>
 				   {
@@ -72,7 +73,7 @@
 
 					   CustomerState state = Random.Shared.Next(0, 10).IsEven() ? CustomerState.New : CustomerState.Legacy;
 
-					   return new CustomerDto
+					   return new Customer
 					   {
 						   FirstName = firstName,
 						   LastName = lastName,
@@ -84,7 +85,7 @@
 				   });
 
 				int counter = 0;
-				foreach(CustomerDto customer in customerFaker.GenerateForever())
+				foreach(Customer customer in customerFaker.GenerateForever())
 				{
 					counter++;
 

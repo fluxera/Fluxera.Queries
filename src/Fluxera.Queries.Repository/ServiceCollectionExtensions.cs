@@ -3,6 +3,7 @@
 	using JetBrains.Annotations;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
+	using SampleApp;
 
 	/// <summary>
 	///		Extensions methods for the <see cref="IServiceCollection"/> type.
@@ -17,7 +18,19 @@
 		/// <returns></returns>
 		public static IServiceCollection AddRepositoryQueryExecutor(this IServiceCollection services)
 		{
-			services.TryAddTransient(typeof(IQueryExecutor<,>), typeof(QueryExecutor<,>));
+			services.TryAddTransient(typeof(IQueryExecutor<,>), typeof(RepositoryQueryExecutor<,>));
+
+			return services;
+		}
+
+		/// <summary>
+		///		Adds the repository query executor service.
+		/// </summary>
+		/// <param name="services"></param>
+		/// <returns></returns>
+		public static IServiceCollection AddMappingRepositoryQueryExecutor(this IServiceCollection services)
+		{
+			services.TryAddTransient(typeof(IQueryExecutor<,>), typeof(MappingRepositoryQueryExecutor<,,>));
 
 			return services;
 		}

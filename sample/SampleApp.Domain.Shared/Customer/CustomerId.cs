@@ -1,4 +1,4 @@
-﻿namespace SampleApp.Model
+﻿namespace SampleApp.Domain.Shared.Customer
 {
 	using Fluxera.StronglyTypedId;
 	using JetBrains.Annotations;

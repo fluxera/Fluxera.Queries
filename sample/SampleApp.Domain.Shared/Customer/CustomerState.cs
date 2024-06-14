@@ -1,4 +1,4 @@
-﻿namespace SampleApp.Model
+﻿namespace SampleApp.Domain.Shared.Customer
 {
 	using System.Runtime.CompilerServices;
 	using Fluxera.Enumeration;

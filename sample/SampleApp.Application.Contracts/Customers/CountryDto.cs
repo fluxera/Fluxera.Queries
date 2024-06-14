@@ -1,10 +1,9 @@
-﻿namespace SampleApp.Model
+﻿namespace SampleApp.Application.Contracts.Customers
 {
-	using Fluxera.ValueObject;
 	using JetBrains.Annotations;
 
 	[PublicAPI]
-	public sealed class CountryDto : ValueObject<CountryDto>
+	public sealed class CountryDto
 	{
 		public string Code { get; set; }
 

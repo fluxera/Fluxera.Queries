@@ -1,10 +1,10 @@
-﻿namespace SampleApp.Model
+﻿namespace SampleApp.Application.Contracts.Customers
 {
-	using Fluxera.ValueObject;
 	using JetBrains.Annotations;
+	using SampleApp.Domain.Shared.Customer;
 
 	[PublicAPI]
-	public sealed class AddressDto : ValueObject<AddressDto>
+	public sealed class AddressDto
 	{
 		public string Street { get; set; }
 
