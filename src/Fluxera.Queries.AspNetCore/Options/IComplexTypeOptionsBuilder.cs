@@ -5,7 +5,7 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///		Build options for a complex type.
+	///		Build the options for a complex type.
 	/// </summary>
 	[PublicAPI]
 	public interface IComplexTypeOptionsBuilder<T> where T : class

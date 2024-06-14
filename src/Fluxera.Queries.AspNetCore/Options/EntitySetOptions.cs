@@ -28,22 +28,10 @@
 		/// </summary>
 		public ComplexTypeOptions ComplexTypeOptions { get; } = new ComplexTypeOptions();
 
-		///// <summary>
-		/////		Gets or sets the (optional) default $top value when no value
-		/////		is provided in the query string.
-		///// </summary>
-		//internal int? DefaultTop { get; set; }
-
-		///// <summary>
-		/////		Gets or sets the (optional) maximum $top value even if a higher
-		/////		values is provided in the query string.
-		///// </summary>
-		//internal int? MaxTop { get; set; }
-
-		///// <summary>
-		/////		Flag, indicating if the @odata.count value is always written in
-		/////		the response, overriding the value provided oin the query string.
-		///// </summary>
-		//internal bool AlwaysIncludeCount { get; set; }
+		/// <summary>
+		///		Flag, indicating if the @odata.count value is always written in
+		///		the response, overriding the value provided in the query string.
+		/// </summary>
+		public bool AlwaysIncludeCount { get; set; }
 	}
 }

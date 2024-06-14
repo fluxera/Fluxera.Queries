@@ -3,6 +3,7 @@ namespace SampleApp
 	using System.Reflection;
 	using System.Threading.Tasks;
 	using Fluxera.Queries.AspNetCore;
+	using Fluxera.Queries.AspNetCore.Options;
 	using Fluxera.Queries.Repository;
 	using Fluxera.Repository;
 	using Fluxera.Repository.MongoDB;
@@ -39,12 +40,12 @@ namespace SampleApp
 
 			builder.Services.AddDataQueries(options =>
 			{
-				options.EntitySet<CustomerDto>("Customers", "Customer", entityType =>
+				IEntitySetOptionsBuilder entitySet = options.EntitySet<CustomerDto>("Customers", "Customer", entityType =>
 				{
-					// TODO: Required()
-					entityType.HasKey(x => x.ID)
-							  .Ignore(x => x.IgnoreMe);
+					entityType.HasKey(x => x.ID);
+					entityType.Ignore(x => x.IgnoreMe);
 				});
+				entitySet.AlwaysIncludeCount();
 
 				options.ComplexType<AddressDto>("Address", complexType =>
 				{

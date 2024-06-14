@@ -5,7 +5,7 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///		Build options for an entity type.
+	///		Build the options for an entity type.
 	/// </summary>
 	[PublicAPI]
 	public interface IEntityTypeOptionsBuilder<T> where T : class
