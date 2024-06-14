@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Infrastructure" Version="8.13.1" />
+    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Persistence.MongoDB" Version="8.13.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Customers\" />
+  </ItemGroup>
+
+</Project>

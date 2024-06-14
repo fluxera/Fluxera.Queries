@@ -11,16 +11,27 @@
 		<PackageReference Include="Fluxera.Repository.MongoDB" Version="8.6.4" />
 		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-	</ItemGroup>	
+	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Fluxera.Queries.AspNetCore\Fluxera.Queries.AspNetCore.csproj" />
+		<PackageReference Include="Fluxera.Extensions.Hosting" Version="8.2.1" />
+		<PackageReference Include="Fluxera.Extensions.Hosting.AspNetCore" Version="8.2.1" />
+		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.AspNetCore.HealthChecks" Version="8.13.1" />
+		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.OpenTelemetry" Version="8.13.1" />
+		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.Serilog" Version="8.13.1" />
+		<PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\..\src\Fluxera.Queries.Repository\Fluxera.Queries.Repository.csproj" />
 		<ProjectReference Include="..\..\src\Fluxera.Queries\Fluxera.Queries.csproj" />
-		<ProjectReference Include="..\SampleApp.Application.Contracts\SampleApp.Application.Contracts.csproj" />
 		<ProjectReference Include="..\SampleApp.Application\SampleApp.Application.csproj" />
-		<ProjectReference Include="..\SampleApp.Domain.Shared\SampleApp.Domain.Shared.csproj" />
 		<ProjectReference Include="..\SampleApp.Domain\SampleApp.Domain.csproj" />
+		<ProjectReference Include="..\SampleApp.HttpApi\SampleApp.HttpApi.csproj" />
+		<ProjectReference Include="..\SampleApp.Infrastructure\SampleApp.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

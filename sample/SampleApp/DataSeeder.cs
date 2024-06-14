@@ -8,8 +8,8 @@
 	using Fluxera.Utilities.Extensions;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.Extensions.DependencyInjection;
-	using SampleApp.Domain.Customer;
-	using SampleApp.Domain.Shared.Customer;
+	using SampleApp.Domain.Customers;
+	using SampleApp.Domain.Shared.Customers;
 
 	internal static class DataSeeder
 	{

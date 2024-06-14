@@ -3,7 +3,6 @@
 	using JetBrains.Annotations;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
-	using SampleApp;
 
 	/// <summary>
 	///		Extensions methods for the <see cref="IServiceCollection"/> type.

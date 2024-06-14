@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Customer\" />
+    <Folder Include="Customers\" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace SampleApp.Domain.Customer
+﻿namespace SampleApp.Domain.Customers
 {
 	using Fluxera.ValueObject;
 	using JetBrains.Annotations;

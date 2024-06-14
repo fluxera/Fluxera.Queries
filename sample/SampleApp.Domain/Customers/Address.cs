@@ -1,8 +1,8 @@
-﻿namespace SampleApp.Domain.Customer
+﻿namespace SampleApp.Domain.Customers
 {
 	using Fluxera.ValueObject;
 	using JetBrains.Annotations;
-	using SampleApp.Domain.Shared.Customer;
+	using SampleApp.Domain.Shared.Customers;
 
 	[PublicAPI]
 	public sealed class Address : ValueObject<Address>

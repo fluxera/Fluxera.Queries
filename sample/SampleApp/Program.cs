@@ -11,7 +11,7 @@ namespace SampleApp
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Hosting;
 	using SampleApp.Application.Contracts.Customers;
-	using SampleApp.Domain.Customer;
+	using SampleApp.Domain.Customers;
 
 	public static class Program
 	{
@@ -21,22 +21,22 @@ namespace SampleApp
 
 			// Add services to the container.
 
-			builder.Services.AddMediatR(options =>
-			{
-				options.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-			});
+			//builder.Services.AddMediatR(options =>
+			//{
+			//	options.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+			//});
 
-			builder.Services.AddMongoDbContext<SampleMongoContext>();
+			//builder.Services.AddMongoDbContext<SampleMongoContext>();
 
-			builder.Services.AddRepository(repositoryBuilder =>
-			{
-				repositoryBuilder.AddMongoRepository<SampleRepositoryContext>(repositoryOptionsBuilder =>
-				{
-					repositoryOptionsBuilder.UseFor<Customer>();
+			//builder.Services.AddRepository(repositoryBuilder =>
+			//{
+			//	repositoryBuilder.AddMongoRepository<SampleRepositoryContext>(repositoryOptionsBuilder =>
+			//	{
+			//		repositoryOptionsBuilder.UseFor<Customer>();
 
-					repositoryOptionsBuilder.EnableUnitOfWork();
-				});
-			});
+			//		repositoryOptionsBuilder.EnableUnitOfWork();
+			//	});
+			//});
 
 			builder.Services.AddDataQueries(options =>
 			{

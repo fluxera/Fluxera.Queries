@@ -1,7 +1,7 @@
 ﻿namespace SampleApp.Application.Contracts.Customers
 {
 	using JetBrains.Annotations;
-	using SampleApp.Domain.Shared.Customer;
+	using SampleApp.Domain.Shared.Customers;
 
 	[PublicAPI]
 	public sealed class AddressDto

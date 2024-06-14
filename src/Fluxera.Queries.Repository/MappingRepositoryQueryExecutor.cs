@@ -1,4 +1,4 @@
-﻿namespace SampleApp
+﻿namespace Fluxera.Queries.Repository
 {
 	using System;
 	using System.Collections.Generic;
@@ -11,7 +11,6 @@
 	using Fluxera.Guards;
 	using Fluxera.Queries;
 	using Fluxera.Queries.Options;
-	using Fluxera.Queries.Repository;
 	using Fluxera.Repository;
 	using Fluxera.Repository.Query;
 	using JetBrains.Annotations;
@@ -54,14 +53,14 @@
 			{
 				if(queryOptions.Count.CountValue)
 				{
-					totalCount = await repository.CountAsync(mappedPredicate, cancellationToken);
+					totalCount = await this.repository.CountAsync(mappedPredicate, cancellationToken);
 				}
 			}
 
 			// 5. Execute the find many query.
 			IReadOnlyCollection<T> items = selector is null
-				? await repository.FindManyAsync(mappedPredicate, mappedOptions, cancellationToken)
-				: await repository.FindManyAsync(mappedPredicate, mappedSelector, mappedOptions, cancellationToken);
+				? await this.repository.FindManyAsync(mappedPredicate, mappedOptions, cancellationToken)
+				: await this.repository.FindManyAsync(mappedPredicate, mappedSelector, mappedOptions, cancellationToken);
 
 			return new QueryResult(items, totalCount);
 		}
@@ -78,8 +77,8 @@
 
 			// 2. Execute the get query.
 			T item = selector is null
-				? await repository.GetAsync(id, cancellationToken)
-				: await repository.GetAsync(id, mappedSelector, cancellationToken);
+				? await this.repository.GetAsync(id, cancellationToken)
+				: await this.repository.GetAsync(id, mappedSelector, cancellationToken);
 
 			return new SingleResult(item);
 		}
@@ -94,7 +93,7 @@
 			Expression<Func<T, bool>> mappedPredicate = this.mapper.MapExpression<Expression<Func<T, bool>>>(predicate);
 
 			// 2. Execute the count query.
-			long count = await repository.CountAsync(mappedPredicate, cancellationToken);
+			long count = await this.repository.CountAsync(mappedPredicate, cancellationToken);
 
 			return count;
 		}

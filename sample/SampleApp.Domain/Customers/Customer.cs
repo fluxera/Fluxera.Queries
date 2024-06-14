@@ -1,8 +1,8 @@
-﻿namespace SampleApp.Domain.Customer
+﻿namespace SampleApp.Domain.Customers
 {
 	using Fluxera.Entity;
 	using JetBrains.Annotations;
-	using SampleApp.Domain.Shared.Customer;
+	using SampleApp.Domain.Shared.Customers;
 
 	[PublicAPI]
 	public sealed class Customer : AggregateRoot<Customer, CustomerId>

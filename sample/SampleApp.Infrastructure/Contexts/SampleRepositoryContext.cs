@@ -1,4 +1,4 @@
-﻿namespace SampleApp
+﻿namespace SampleApp.Infrastructure.Contexts
 {
 	using Fluxera.Repository.MongoDB;
 	using JetBrains.Annotations;

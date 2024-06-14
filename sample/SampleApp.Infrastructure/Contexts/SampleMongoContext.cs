@@ -1,4 +1,4 @@
-﻿namespace SampleApp
+﻿namespace SampleApp.Infrastructure.Contexts
 {
 	using Fluxera.Utilities.Extensions;
 	using JetBrains.Annotations;
