@@ -5,7 +5,6 @@
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
-	using System.Reflection.Metadata.Ecma335;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Expressions.Functions;
 	using Fluxera.Queries.Model;
@@ -47,56 +46,6 @@
 			return lambda;
 		}
 
-		private static Expression CreateSelectorExpression(Expression expression, Type type, IList<SelectProperty> properties, IList<MemberAssignment> bindings = null)
-		{
-			bindings ??= new List<MemberAssignment>();
-
-			IEnumerable<IGrouping<string, SelectProperty>> groups = properties.GroupBy(x => x.Properties[0].Name);
-			foreach(IGrouping<string, SelectProperty> clauseGroup in groups)
-			{
-				string groupName = clauseGroup.Key;
-				PropertyInfo property = type.GetProperty(groupName);
-
-				if(property is null)
-				{
-					throw new InvalidOperationException($"Invalid property name {groupName}.");
-				}
-
-				// Recurse if the select clause hast more than one property part.
-				SelectProperty firstProperty = clauseGroup.First();
-				if(firstProperty.Properties.Count > 1)
-				{
-					IList<SelectProperty> selectProperties = clauseGroup
-						.Select(x => new SelectProperty(x.Properties.ToArray()[1..]))
-						.Where(x => x.Properties.Count > 0)
-						.ToList();
-
-					Type propertyType = property.PropertyType;
-					Expression parameter = expression;
-					expression = Expression.MakeMemberAccess(parameter, property);
-					Expression topLevelExpression = expression;
-
-					foreach(SelectProperty selectProperty in selectProperties)
-					{
-						expression = CreateSelectorExpression(topLevelExpression, propertyType, [selectProperty], bindings);
-					}
-
-					//NewExpression newExpression = Expression.New(propertyType);
-					//expression = Expression.MemberInit(newExpression, bindings);
-
-					//bindings.Clear();
-				}
-				else
-				{
-					expression = Expression.MakeMemberAccess(expression, property);
-					MemberAssignment binding = Expression.Bind(property, expression);
-					bindings.Add(binding);
-				}
-			}
-
-			return expression;
-		}
-
 		/// <summary>
 		///		Creates a typed selector expression.
 		/// </summary>
@@ -113,10 +62,7 @@
 
 			if(selectQueryOption.Properties.Count > 0)
 			{
-				expression = CreateSelectorExpression(
-					parameter, 
-					parameter.Type, 
-					selectQueryOption.Properties.ToList());
+				expression = CreateSelectorExpression(parameter, parameter.Type, selectQueryOption.Properties);
 			}
 
 			Expression<Func<T, T>> lambda = Expression.Lambda<Func<T, T>>(expression, parameter);
@@ -168,6 +114,55 @@
 			}
 
 			return expressions.AsReadOnly();
+		}
+
+		private static Expression CreateSelectorExpression(Expression expression, Type type, IReadOnlyList<SelectProperty> properties)
+		{
+			IEnumerable<IGrouping<string, SelectProperty>> clauseGroups = properties
+				.OrderByDescending(x => x.Properties.Count)
+				.GroupBy(x => x.Properties[0].Name);
+
+			IList<MemberBinding> bindings = new List<MemberBinding>();
+
+			Expression parameter = expression;
+
+			foreach(IGrouping<string, SelectProperty> clauseGroup in clauseGroups)
+			{
+				string groupName = clauseGroup.Key;
+				PropertyInfo property = type.GetProperty(groupName);
+
+				if(property is null)
+				{
+					throw new InvalidOperationException($"Invalid property name {groupName}.");
+				}
+
+				if(clauseGroup.Any(x => x.Properties.Count == 1))
+				{
+					MemberExpression memberAccess = Expression.MakeMemberAccess(parameter, property);
+					MemberAssignment binding = Expression.Bind(property, memberAccess);
+					bindings.Add(binding);
+				}
+
+				if(clauseGroup.Any(x => x.Properties.Count > 1))
+				{
+					IReadOnlyList<SelectProperty> clauses = clauseGroup
+						.Select(x => new SelectProperty(x.Properties.ToArray()[1..]))
+						.ToList()
+						.AsReadOnly();
+
+					Type propertyType = property.PropertyType;
+					expression = Expression.MakeMemberAccess(parameter, property);
+
+					expression = CreateSelectorExpression(expression, propertyType, clauses);
+					MemberAssignment binding = Expression.Bind(property, expression);
+					bindings.Add(binding);
+				}
+			}
+
+			NewExpression newExpression = Expression.New(type);
+			expression = Expression.MemberInit(newExpression, bindings);
+
+			return expression;
 		}
 
 		private static Expression CreateExpression(QueryNode queryNode, Expression baseExpression)
