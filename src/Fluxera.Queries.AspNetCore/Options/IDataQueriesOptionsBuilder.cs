@@ -4,26 +4,11 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///		Build options for the queries library.
+	///		Build the options for the data queries.
 	/// </summary>
 	[PublicAPI]
 	public interface IDataQueriesOptionsBuilder
 	{
-		/// <summary>
-		///		Configures a complex type.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="complexTypeName"></param>
-		/// <param name="configure"></param>
-		IDataQueriesOptionsBuilder ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class;
-
-		/// <summary>
-		///		Configures a complex type.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="configure"></param>
-		IDataQueriesOptionsBuilder ComplexType<T>(Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class;
-
 		/// <summary>
 		///		Configures an entity set.
 		/// </summary>
@@ -31,7 +16,7 @@
 		/// <param name="name"></param>
 		/// <param name="entityTypeName"></param>
 		/// <param name="configure"></param>
-		IDataQueriesOptionsBuilder EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
+		IEntitySetOptionsBuilder EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
 
 		/// <summary>
 		///		Configures an entity set.
@@ -39,6 +24,21 @@
 		/// <typeparam name="T"></typeparam>
 		/// <param name="name"></param>
 		/// <param name="configure"></param>
-		IDataQueriesOptionsBuilder EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
+		IEntitySetOptionsBuilder EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
+
+		/// <summary>
+		///		Configures a complex type.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="complexTypeName"></param>
+		/// <param name="configure"></param>
+		void ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class;
+
+		/// <summary>
+		///		Configures a complex type.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="configure"></param>
+		void ComplexType<T>(Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class;
 	}
 }
