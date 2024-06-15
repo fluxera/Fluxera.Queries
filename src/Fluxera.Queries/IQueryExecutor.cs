@@ -40,8 +40,8 @@
 	///  <summary>
 	/// 	A contract for a service that executes queries against a data store.
 	///  </summary>
-	///  <typeparam name="T"></typeparam>
 	///  <typeparam name="TKey"></typeparam>
+	///  <typeparam name="T"></typeparam>
 	[PublicAPI]
 	public interface IQueryExecutor<T, in TKey> : IQueryExecutor
 		where T : class

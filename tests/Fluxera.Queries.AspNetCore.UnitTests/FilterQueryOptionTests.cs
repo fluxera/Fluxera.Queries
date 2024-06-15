@@ -1,10 +1,6 @@
 ﻿namespace Fluxera.Queries.AspNetCore.UnitTests
 {
-	using System;
-	using System.Net;
-	using System.Net.Http;
 	using System.Threading.Tasks;
-	using FluentAssertions;
 	using Fluxera.Queries.AspNetCore.UnitTests.Model;
 	using MadEyeMatt.AspNetCore.Endpoints;
 	using Microsoft.AspNetCore.Builder;

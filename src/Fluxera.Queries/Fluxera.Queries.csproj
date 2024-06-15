@@ -37,6 +37,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Fluxera.Queries.Abstractions\Fluxera.Queries.Abstractions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Update="Parsers\Messages.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>

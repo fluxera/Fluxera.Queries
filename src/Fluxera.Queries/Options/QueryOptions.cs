@@ -2,8 +2,8 @@
 {
 	using JetBrains.Annotations;
 	using System.Text;
-	using Fluxera.Queries.Model;
 	using Fluxera.Guards;
+	using Fluxera.Queries.Model;
 
 	/// <summary>
 	///     An object which contains the parsed query options.

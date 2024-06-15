@@ -30,6 +30,12 @@
 	{
 		private static JsonSerializerOptions jsonSerializerOptions;
 
+		//public static RouteHandlerBuilder MapFindQueryEndpoint<T>(this IEndpointRouteBuilder builder)
+		//	where T : class
+		//{
+		//	IOptions<DataQueriesOptions> options = builder.ServiceProvider.GetRequiredService<IOptions<DataQueriesOptions>>();
+		//}
+
 		/// <summary>
 		/// 	Maps endpoints for the configured entity sets.
 		/// </summary>
