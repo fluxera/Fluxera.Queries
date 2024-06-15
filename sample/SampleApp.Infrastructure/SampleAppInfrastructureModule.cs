@@ -5,6 +5,7 @@
 	using Fluxera.Extensions.Hosting.Modules;
 	using Fluxera.Extensions.Hosting.Modules.DataManagement;
 	using Fluxera.Extensions.Hosting.Modules.Infrastructure;
+	using Fluxera.Extensions.Hosting.Modules.Messaging.InMemory;
 	using Fluxera.Extensions.Hosting.Modules.Persistence;
 	using Fluxera.Extensions.Hosting.Modules.Persistence.MongoDB;
 	using JetBrains.Annotations;
@@ -18,6 +19,7 @@
 	/// </summary>
 	[PublicAPI]
 	[DependsOn<MongoPersistenceModule>]
+	[DependsOn<InMemoryMessagingModule>]
 	[DependsOn<DataManagementModule>]
 	[DependsOn<InfrastructureModule>]
 	public sealed class SampleAppInfrastructureModule : ConfigureServicesModule

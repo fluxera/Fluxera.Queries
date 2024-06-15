@@ -7,11 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Fluxera.Extensions.Hosting" Version="8.2.1" />
-		<PackageReference Include="Fluxera.Extensions.Hosting.AspNetCore" Version="8.2.1" />
-		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.AspNetCore.HealthChecks" Version="8.13.1" />
-		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.OpenTelemetry" Version="8.13.1" />
-		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.Serilog" Version="8.13.1" />
+		<PackageReference Include="Fluxera.Extensions.Hosting" Version="8.2.2" />
+		<PackageReference Include="Fluxera.Extensions.Hosting.AspNetCore" Version="8.2.2" />
+		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.AspNetCore.HealthChecks" Version="8.13.2" />
+		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.OpenTelemetry" Version="8.13.2" />
+		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.Serilog" Version="8.13.2" />
 		<PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />

@@ -30,11 +30,44 @@
 	{
 		private static JsonSerializerOptions jsonSerializerOptions;
 
-		//public static RouteHandlerBuilder MapFindQueryEndpoint<T>(this IEndpointRouteBuilder builder)
-		//	where T : class
-		//{
-		//	IOptions<DataQueriesOptions> options = builder.ServiceProvider.GetRequiredService<IOptions<DataQueriesOptions>>();
-		//}
+		/// <summary>
+		///		Maps the 'Find Entities' endpoint.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="builder"></param>
+		/// <returns></returns>
+		public static RouteHandlerBuilder MapFindQueryEndpoint<T>(this IEndpointRouteBuilder builder)
+			where T : class
+		{
+			IOptions<DataQueriesOptions> options = builder.ServiceProvider.GetRequiredService<IOptions<DataQueriesOptions>>();
+			return builder.MapFindQueryEndpoint(typeof(T), options.Value);
+		}
+
+		/// <summary>
+		///		Maps the 'Get Entity' endpoint.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="builder"></param>
+		/// <returns></returns>
+		public static RouteHandlerBuilder MapGetQueryEndpoint<T>(this IEndpointRouteBuilder builder)
+			where T : class
+		{
+			IOptions<DataQueriesOptions> options = builder.ServiceProvider.GetRequiredService<IOptions<DataQueriesOptions>>();
+			return builder.MapGetQueryEndpoint(typeof(T), options.Value);
+		}
+
+		/// <summary>
+		///		Maps the 'Count Entity' endpoint.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="builder"></param>
+		/// <returns></returns>
+		public static RouteHandlerBuilder MapCountQueryEndpoint<T>(this IEndpointRouteBuilder builder)
+			where T : class
+		{
+			IOptions<DataQueriesOptions> options = builder.ServiceProvider.GetRequiredService<IOptions<DataQueriesOptions>>();
+			return builder.MapCountQueryEndpoint(typeof(T), options.Value);
+		}
 
 		/// <summary>
 		/// 	Maps endpoints for the configured entity sets.
@@ -52,65 +85,74 @@
 
 			foreach(EntitySetOptions entitySetOptions in options.Value.EntitySetOptions.Values)
 			{
-				// ReSharper disable once RedundantAssignment
-				RouteHandlerBuilder routeHandlerBuilder = null;
+				Type entityType = entitySetOptions.EntitySet.EdmType.ClrType;
 
 				// Map the endpoint for retrieving multiple entities.
-				routeHandlerBuilder = routeGroupBuilder
-									  .MapGet(entitySetOptions.Name, ExecuteFindManyAsync)
-									  .WithName($"Find {entitySetOptions.Name}")
-									  .WithTags(entitySetOptions.Name)
-									  .WithMetadata(options.Value)
-									  .WithMetadata(entitySetOptions)
-									  .WithDescription("Retrieves multiple entities by the filter predicate.")
-									  .WithOpenApi()
-									  .Produces(200, entitySetOptions.ComplexTypeOptions.ClrType);
+				RouteHandlerBuilder routeHandlerBuilder = routeGroupBuilder.MapFindQueryEndpoint(entityType, options.Value);
 				configure?.Invoke(routeHandlerBuilder);
 
 				// Map the endpoint for retrieving an entity by ID.
-				routeHandlerBuilder = routeGroupBuilder
-									  .MapGet($"{entitySetOptions.Name}/{{id:required}}", ExecuteGetAsync)
-									  .WithName($"Get {entitySetOptions.Name}")
-									  .WithTags(entitySetOptions.Name)
-									  .WithMetadata(options.Value)
-									  .WithMetadata(entitySetOptions)
-									  .WithDescription("Retrieves a single entity by ID.")
-									  .WithOpenApi()
-									  .Produces(200, entitySetOptions.ComplexTypeOptions.ClrType)
-									  .Produces(404);
+				routeHandlerBuilder = routeGroupBuilder.MapGetQueryEndpoint(entityType, options.Value);
 				configure?.Invoke(routeHandlerBuilder);
 
 				// Map the endpoint for retrieving the count of entities.
-				routeHandlerBuilder = routeGroupBuilder
-									  .MapGet($"{entitySetOptions.Name}/$count", ExecuteCountAsync)
-									  .WithName($"Count {entitySetOptions.Name}")
-									  .WithTags(entitySetOptions.Name)
-									  .WithMetadata(options.Value)
-									  .WithMetadata(entitySetOptions)
-									  .WithDescription("Retrieves the count of entities in the data store.")
-									  .WithOpenApi()
-									  .Produces<long>(contentType: "text/plain");
+				routeHandlerBuilder = routeGroupBuilder.MapCountQueryEndpoint(entityType, options.Value);
 				configure?.Invoke(routeHandlerBuilder);
 			}
 
 			return builder;
+		}
 
-			static async Task<IResult> ExecuteFindManyAsync(
-				HttpContext context,
+		private static RouteHandlerBuilder MapFindQueryEndpoint(this IEndpointRouteBuilder builder, Type entityType, DataQueriesOptions options)
+		{
+			EntitySetOptions entitySetOptions = options.GetOptionsByType(entityType);
+
+			// Map the endpoint for retrieving multiple entities.
+			RouteHandlerBuilder routeHandlerBuilder = builder
+				.MapGet(entitySetOptions.Name, ExecuteFindManyAsync)
+				.WithName($"Find {entitySetOptions.Name}")
+				.WithTags(entitySetOptions.Name)
+				.WithMetadata(options)
+				.WithMetadata(entitySetOptions)
+				.WithDescription("Retrieves multiple entities by the filter predicate.")
+				.WithOpenApi()
+				.Produces(200, entitySetOptions.ComplexTypeOptions.ClrType);
+
+			return routeHandlerBuilder;
+
+			static async Task<IResult> ExecuteFindManyAsync(HttpContext context,
 				CancellationToken cancellationToken = default)
 			{
-				DataQueriesOptions dataQueriesOptions = GetDataQueriesOptions(context);
-				EntitySetOptions entitySetOptions = GetEntitySetOptions(context);
+				DataQueriesOptions dataQueriesOptions = context.GetDataQueriesOptions();
+				EntitySetOptions entitySetOptions = context.GetEntitySetOptions();
 				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
-				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
+				IQueryExecutor queryExecutor = context.GetQueryExecutor(entitySetOptions);
 				QueryResult result = await queryExecutor.InternalExecuteFindManyAsync(dataQuery, cancellationToken);
 
 				return Results.Json(result, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200);
 			}
+		}
 
-			static async Task<IResult> ExecuteGetAsync(
-				HttpContext context,
+		private static RouteHandlerBuilder MapGetQueryEndpoint(this IEndpointRouteBuilder builder, Type entityType, DataQueriesOptions options)
+		{
+			EntitySetOptions entitySetOptions = options.GetOptionsByType(entityType);
+
+			// Map the endpoint for retrieving an entity by ID.
+			RouteHandlerBuilder routeHandlerBuilder = builder
+				.MapGet($"{entitySetOptions.Name}/{{id:required}}", ExecuteGetAsync)
+				.WithName($"Get {entitySetOptions.Name}")
+				.WithTags(entitySetOptions.Name)
+				.WithMetadata(options)
+				.WithMetadata(entitySetOptions)
+				.WithDescription("Retrieves a single entity by ID.")
+				.WithOpenApi()
+				.Produces(200, entitySetOptions.ComplexTypeOptions.ClrType)
+				.Produces(404);
+
+			return routeHandlerBuilder;
+
+			static async Task<IResult> ExecuteGetAsync(HttpContext context,
 				[FromRoute] string id,
 				CancellationToken cancellationToken = default)
 			{
@@ -127,49 +169,6 @@
 					: Results.NotFound();
 			}
 
-			static async Task<IResult> ExecuteCountAsync(
-				HttpContext context,
-				CancellationToken cancellationToken = default)
-			{
-				EntitySetOptions entitySetOptions = GetEntitySetOptions(context);
-				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
-
-				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
-				long count = await queryExecutor.InternalExecuteCountAsync(dataQuery, cancellationToken);
-
-				return Results.Text(count.ToString(), statusCode: 200);
-			}
-
-			static DataQueriesOptions GetDataQueriesOptions(HttpContext context)
-			{
-				DataQueriesOptions options = context.GetEndpoint()?.Metadata.GetMetadata<DataQueriesOptions>();
-				if(options is null)
-				{
-					throw new InvalidOperationException("The data queries options metadata was not available.");
-				}
-
-				return options;
-			}
-
-			static EntitySetOptions GetEntitySetOptions(HttpContext context)
-			{
-				EntitySetOptions options = context.GetEndpoint()?.Metadata.GetMetadata<EntitySetOptions>();
-				if(options is null)
-				{
-					throw new InvalidOperationException("The entity set metadata was not available.");
-				}
-
-				return options;
-			}
-
-			static IQueryExecutor GetQueryExecutor(HttpContext context, EntitySetOptions options)
-			{
-				Type queryExecutorType = typeof(IQueryExecutor<,>).MakeGenericType(options.ComplexTypeOptions.ClrType, options.KeyType);
-				IQueryExecutor queryExecutor = (IQueryExecutor)context.RequestServices.GetRequiredService(queryExecutorType);
-
-				return queryExecutor;
-			}
-
 			static object ConvertIdentifier(string id, Type identifierType)
 			{
 				if(identifierType.IsStronglyTypedId())
@@ -184,6 +183,66 @@
 
 				return Convert.ChangeType(id, identifierType);
 			}
+		}
+
+		private static RouteHandlerBuilder MapCountQueryEndpoint(this IEndpointRouteBuilder builder, Type entityType, DataQueriesOptions options)
+		{
+			EntitySetOptions entitySetOptions = options.GetOptionsByType(entityType);
+
+			// Map the endpoint for retrieving the count of entities.
+			RouteHandlerBuilder routeHandlerBuilder = builder
+				.MapGet($"{entitySetOptions.Name}/$count", ExecuteCountAsync)
+				.WithName($"Count {entitySetOptions.Name}")
+				.WithTags(entitySetOptions.Name)
+				.WithMetadata(options)
+				.WithMetadata(entitySetOptions)
+				.WithDescription("Retrieves the count of entities in the data store.")
+				.WithOpenApi()
+				.Produces<long>(contentType: "text/plain");
+
+			return routeHandlerBuilder;
+
+			static async Task<IResult> ExecuteCountAsync(HttpContext context,
+				CancellationToken cancellationToken = default)
+			{
+				EntitySetOptions entitySetOptions = GetEntitySetOptions(context);
+				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
+
+				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
+				long count = await queryExecutor.InternalExecuteCountAsync(dataQuery, cancellationToken);
+
+				return Results.Text(count.ToString(), statusCode: 200);
+			}
+		}
+
+		private static DataQueriesOptions GetDataQueriesOptions(this HttpContext context)
+		{
+			DataQueriesOptions options = context.GetEndpoint()?.Metadata.GetMetadata<DataQueriesOptions>();
+			if(options is null)
+			{
+				throw new InvalidOperationException("The data queries options metadata was not available.");
+			}
+
+			return options;
+		}
+
+		private static EntitySetOptions GetEntitySetOptions(this HttpContext context)
+		{
+			EntitySetOptions options = context.GetEndpoint()?.Metadata.GetMetadata<EntitySetOptions>();
+			if(options is null)
+			{
+				throw new InvalidOperationException("The entity set metadata was not available.");
+			}
+
+			return options;
+		}
+
+		private static IQueryExecutor GetQueryExecutor(this HttpContext context, EntitySetOptions options)
+		{
+			Type queryExecutorType = typeof(IQueryExecutor<,>).MakeGenericType(options.ComplexTypeOptions.ClrType, options.KeyType);
+			IQueryExecutor queryExecutor = (IQueryExecutor)context.RequestServices.GetRequiredService(queryExecutorType);
+
+			return queryExecutor;
 		}
 
 		private static JsonSerializerOptions CreateJsonSerializerOptions(DataQueriesOptions dataQueriesOptions)

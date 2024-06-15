@@ -26,11 +26,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Fluxera.Enumeration.SystemTextJson" Version="8.2.1" />
-		<PackageReference Include="Fluxera.StronglyTypedId.SystemTextJson" Version="8.3.3" />
-		<PackageReference Include="Fluxera.ValueObject.SystemTextJson" Version="8.2.1" />
+		<PackageReference Include="Fluxera.Enumeration.SystemTextJson" Version="8.2.2" />
+		<PackageReference Include="Fluxera.StronglyTypedId.SystemTextJson" Version="8.3.4" />
+		<PackageReference Include="Fluxera.ValueObject.SystemTextJson" Version="8.2.2" />
 		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.20" Condition="'$(TargetFramework)' == 'net7.0'" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="[7.0.20]" Condition="'$(TargetFramework)' == 'net7.0'" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" Condition="'$(TargetFramework)' == 'net8.0'" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 	</ItemGroup>
