@@ -12,17 +12,18 @@
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.Extensions.Logging;
 	using Microsoft.Extensions.Options;
+	using EntitySetOptions = Fluxera.Queries.AspNetCore.Options.EntitySetOptions;
 
 	internal sealed class DataQueryModelBinder : IModelBinder
 	{
 		private readonly IQueryParser parser;
-		private readonly IOptions<DataQueriesOptions> options;
+		private readonly IOptions<DataQueriesOptions> dataQueryOptions;
 		private readonly ILogger<DataQueryModelBinder> logger;
 
-		public DataQueryModelBinder(IQueryParser parser, IOptions<DataQueriesOptions> options, ILogger<DataQueryModelBinder> logger)
+		public DataQueryModelBinder(IQueryParser parser, IOptions<DataQueriesOptions> dataQueryOptions, ILogger<DataQueryModelBinder> logger)
 		{
 			this.parser = parser;
-			this.options = options;
+			this.dataQueryOptions = dataQueryOptions;
 			this.logger = logger;
 		}
 
@@ -55,8 +56,15 @@
 					dataQuery.Count = DataQuery.GetCountParameterValue(bindingContext.HttpContext.Request.Query);
 					dataQuery.Select = DataQuery.GetSelectParameterValue(bindingContext.HttpContext.Request.Query);
 
-					EntitySet entitySet = this.options.Value.GetByType(entityType);
-					QueryOptions queryOptions = this.parser.ParseQueryOptions(entitySet, dataQuery.ToString());
+					EntitySet entitySet = this.dataQueryOptions.Value.GetByType(entityType);
+					EntitySetOptions entitySetOptions = this.dataQueryOptions.Value.GetOptionsByType(entityType);
+
+					Queries.Options.EntitySetOptions options = new Queries.Options.EntitySetOptions
+					{
+						AlwaysIncludeCount = entitySetOptions.AlwaysIncludeCount
+					};
+
+					QueryOptions queryOptions = this.parser.ParseQueryOptions(entitySet, options, dataQuery.ToString());
 					dataQuery.QueryOptions = queryOptions;
 				}
 

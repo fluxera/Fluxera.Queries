@@ -14,8 +14,9 @@
 		/// 	Parses the given query string options to <see cref="QueryOptions"/>.
 		///  </summary>
 		///  <param name="entitySet">The entity set of the query.</param>
+		///  <param name="options">The entity set options.</param>
 		///  <param name="queryString">The query parameter string of the request.</param>
 		///  <returns></returns>
-		QueryOptions ParseQueryOptions(EntitySet entitySet, string queryString);
+		QueryOptions ParseQueryOptions(EntitySet entitySet, EntitySetOptions options, string queryString);
 	}
 }

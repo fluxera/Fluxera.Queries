@@ -14,35 +14,31 @@
 		}
 
 		/// <inheritdoc />
-		public IDataQueriesOptionsBuilder ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class
+		public IEntitySetOptionsBuilder EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class
+		{
+			EntitySetOptions entitySetOptions = this.options.EntitySet(name, entityTypeName, configure);
+
+			return new EntitySetOptionsBuilder(entitySetOptions);
+		}
+
+		/// <inheritdoc />
+		public IEntitySetOptionsBuilder EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class
+		{
+			EntitySetOptions entitySetOptions = this.options.EntitySet(name, configure);
+
+			return new EntitySetOptionsBuilder(entitySetOptions);
+		}
+
+		/// <inheritdoc />
+		public void ComplexType<T>(string complexTypeName, Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class
 		{
 			this.options.ComplexType(complexTypeName, configure);
-
-			return this;
 		}
 
 		/// <inheritdoc />
-		public IDataQueriesOptionsBuilder ComplexType<T>(Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class
+		public void ComplexType<T>(Action<IComplexTypeOptionsBuilder<T>> configure = null) where T : class
 		{
 			this.options.ComplexType(configure);
-
-			return this;
-		}
-
-		/// <inheritdoc />
-		public IDataQueriesOptionsBuilder EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class
-		{
-			this.options.EntitySet(name, entityTypeName, configure);
-
-			return this;
-		}
-
-		/// <inheritdoc />
-		public IDataQueriesOptionsBuilder EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class
-		{
-			this.options.EntitySet(name, configure);
-
-			return this;
 		}
 	}
 }

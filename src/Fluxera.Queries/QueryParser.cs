@@ -16,12 +16,14 @@
 		}
 
 		/// <inheritdoc />
-		public QueryOptions ParseQueryOptions(EntitySet entitySet, string queryString)
+		public QueryOptions ParseQueryOptions(EntitySet entitySet, EntitySetOptions options, string queryString)
 		{
 			Guard.Against.Null(entitySet);
 			Guard.Against.Null(queryString);
 
-			QueryStringParameters parameters = QueryStringParameters.Create(queryString);
+			options ??= new EntitySetOptions();
+
+			QueryStringParameters parameters = QueryStringParameters.Create(queryString, options);
 			return new QueryOptions(parameters, entitySet, this.typeProvider);
 		}
 	}

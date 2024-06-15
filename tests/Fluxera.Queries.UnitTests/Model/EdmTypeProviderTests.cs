@@ -121,10 +121,10 @@
 			EdmType edmType = provider.GetByType(typeof(CustomerId));
 
 			edmType.Should().NotBeNull();
-			edmType.Should().BeOfType<EdmPrimitiveType>();
-			edmType.ClrType.Should().Be(typeof(string));
-			edmType.Name.Should().Be("String");
-			edmType.FullName.Should().Be("Edm.String");
+			edmType.Should().BeOfType<EdmComplexType>();
+			edmType.ClrType.Should().Be(typeof(CustomerId));
+			edmType.Name.Should().Be("CustomerId");
+			edmType.FullName.Should().Be("Fluxera.Queries.UnitTests.CustomerId");
 		}
 
 		[Test]
@@ -135,10 +135,10 @@
 			EdmType edmType = provider.GetByType(typeof(Age));
 
 			edmType.Should().NotBeNull();
-			edmType.Should().BeOfType<EdmPrimitiveType>();
-			edmType.ClrType.Should().Be(typeof(int));
-			edmType.Name.Should().Be("Int32");
-			edmType.FullName.Should().Be("Edm.Int32");
+			edmType.Should().BeOfType<EdmComplexType>();
+			edmType.ClrType.Should().Be(typeof(Age));
+			edmType.Name.Should().Be("Age");
+			edmType.FullName.Should().Be("Fluxera.Queries.UnitTests.Age");
 		}
 
 		[Test]

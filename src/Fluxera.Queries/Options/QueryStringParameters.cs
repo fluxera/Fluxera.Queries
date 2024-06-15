@@ -1,6 +1,7 @@
 ﻿namespace Fluxera.Queries.Options
 {
 	using System;
+	using System.Runtime.CompilerServices;
 	using System.Text;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Parsers;
@@ -49,7 +50,7 @@
 		/// </summary>
 		/// <param name="queryString">The complete query string.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public static QueryStringParameters Create(string queryString)
+		public static QueryStringParameters Create(string queryString, EntitySetOptions options)
 		{
 			Guard.Against.Null(queryString);
 
@@ -121,6 +122,11 @@
 						}
 					}
 				}
+			}
+
+			if(options.AlwaysIncludeCount)
+			{
+				parameters.Count = options.AlwaysIncludeCount.ToString();
 			}
 
 			return parameters;

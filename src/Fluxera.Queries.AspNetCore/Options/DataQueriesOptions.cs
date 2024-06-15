@@ -77,7 +77,7 @@
 		/// <param name="entityTypeName"></param>
 		/// <param name="configure"></param>
 		/// <returns></returns>
-		public void EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null)
+		public EntitySetOptions EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null)
 			where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(entityTypeName);
@@ -90,6 +90,8 @@
 			EntitySetOptions entitySet = this.EntitySet(name, configure);
 
 			entitySet.ComplexTypeOptions.TypeName = entityTypeName;
+
+			return entitySet;
 		}
 
 		///  <summary>
@@ -159,6 +161,28 @@
 		{
 			return this.entitySetsByType.TryGetValue(entityType, out EntitySetOptions options)
 				? options.EntitySet
+				: null;
+		}
+
+		/// <summary>
+		///		Gets the configured entity set options for the given entity type.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public EntitySetOptions GetOptionsByType<T>()
+		{
+			return GetOptionsByType(typeof(T));
+		}
+
+		/// <summary>
+		///		Gets the configured entity set options for the given entity type.
+		/// </summary>
+		/// <param name="entityType"></param>
+		/// <returns></returns>
+		public EntitySetOptions GetOptionsByType(Type entityType)
+		{
+			return this.entitySetsByType.TryGetValue(entityType, out EntitySetOptions options)
+				? options
 				: null;
 		}
 
