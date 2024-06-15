@@ -8,8 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="35.5.1" />
-    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Infrastructure" Version="8.13.1" />
-    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Persistence.MongoDB" Version="8.13.1" />
+    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Infrastructure" Version="8.13.2" />
+    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Messaging.InMemory" Version="8.13.2" />
+    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Persistence.MongoDB" Version="8.13.2" />
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
   </ItemGroup>
 

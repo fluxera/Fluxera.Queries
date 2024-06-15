@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Application" Version="8.13.1" />
+    <PackageReference Include="Fluxera.Extensions.Hosting.Modules.Application" Version="8.13.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,15 +8,13 @@
 	using SampleApp.Application.Contracts.Customers;
 
 	[PublicAPI]
-    [EndpointGroup("Customers")]
     public sealed class FindCustomersEndpoint : EndpointBase
     {
         /// <inheritdoc />
         public override void Map(IEndpointRouteBuilder endpoints)
         {
             endpoints
-                //.MapFindQueryEndpoint<CustomerDto>()
-				.MapGet(null)
+                .MapFindQueryEndpoint<CustomerDto>()
                 .AllowAnonymous();
         }
     }
