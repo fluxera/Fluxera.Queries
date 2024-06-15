@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Title>Fluxera.Queries</Title>
+		<Description>An OData v4 query parser and runtime for ASP.NET Core controllers and minimal APIs.</Description>
+		<PackageTags>fluxera;library;queries;odata;aspnet</PackageTags>
+		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions",""))</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md" Link="Properties\README.md">
+			<Pack>true</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\icon.png" Link="Properties\icon.png">
+			<Pack>true</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Fluxera.Queries" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Fluxera.Guards" Version="8.1.1" />
+		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" PrivateAssets="All" />
+	</ItemGroup>
+
+</Project>

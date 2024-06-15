@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,10 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SampleApp.Application.Contracts\SampleApp.Application.Contracts.csproj" />
     <ProjectReference Include="..\SampleApp.Domain\SampleApp.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Customers\" />
   </ItemGroup>
 
 </Project>

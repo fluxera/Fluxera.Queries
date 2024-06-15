@@ -36,7 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Fluxera.Queries\Fluxera.Queries.csproj" />
+	  <ProjectReference Include="..\Fluxera.Queries\Fluxera.Queries.csproj" />
 	</ItemGroup>
 
 </Project>

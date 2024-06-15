@@ -1,37 +1,37 @@
-﻿namespace Fluxera.Queries.Repository
-{
-	using JetBrains.Annotations;
-	using Microsoft.Extensions.DependencyInjection;
-	using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿//namespace Fluxera.Queries.Repository
+//{
+//	using JetBrains.Annotations;
+//	using Microsoft.Extensions.DependencyInjection;
+//	using Microsoft.Extensions.DependencyInjection.Extensions;
 
-	/// <summary>
-	///		Extensions methods for the <see cref="IServiceCollection"/> type.
-	/// </summary>
-	[PublicAPI]
-	public static class ServiceCollectionExtensions
-	{
-		/// <summary>
-		///		Adds the repository query executor service.
-		/// </summary>
-		/// <param name="services"></param>
-		/// <returns></returns>
-		public static IServiceCollection AddRepositoryQueryExecutor(this IServiceCollection services)
-		{
-			services.TryAddTransient(typeof(IQueryExecutor<,>), typeof(RepositoryQueryExecutor<,>));
+//	/// <summary>
+//	///		Extensions methods for the <see cref="IServiceCollection"/> type.
+//	/// </summary>
+//	[PublicAPI]
+//	public static class ServiceCollectionExtensions
+//	{
+//		/// <summary>
+//		///		Adds the repository query executor service.
+//		/// </summary>
+//		/// <param name="services"></param>
+//		/// <returns></returns>
+//		public static IServiceCollection AddRepositoryQueryExecutor(this IServiceCollection services)
+//		{
+//			services.TryAddTransient(typeof(IQueryExecutor<,>), typeof(RepositoryQueryExecutor<,>));
 
-			return services;
-		}
+//			return services;
+//		}
 
-		/// <summary>
-		///		Adds the repository query executor service.
-		/// </summary>
-		/// <param name="services"></param>
-		/// <returns></returns>
-		public static IServiceCollection AddMappingRepositoryQueryExecutor(this IServiceCollection services)
-		{
-			services.TryAddTransient(typeof(IQueryExecutor<,>), typeof(MappingRepositoryQueryExecutor<,,>));
+//		/// <summary>
+//		///		Adds the repository query executor service.
+//		/// </summary>
+//		/// <param name="services"></param>
+//		/// <returns></returns>
+//		public static IServiceCollection AddMappingRepositoryQueryExecutor(this IServiceCollection services)
+//		{
+//			services.TryAddTransient(typeof(IQueryExecutor<,>), typeof(MappingRepositoryQueryExecutor<,,>));
 
-			return services;
-		}
-	}
-}
+//			return services;
+//		}
+//	}
+//}

@@ -7,13 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Bogus" Version="35.5.1" />
-		<PackageReference Include="Fluxera.Repository.MongoDB" Version="8.6.4" />
-		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Fluxera.Extensions.Hosting" Version="8.2.1" />
 		<PackageReference Include="Fluxera.Extensions.Hosting.AspNetCore" Version="8.2.1" />
 		<PackageReference Include="Fluxera.Extensions.Hosting.Modules.AspNetCore.HealthChecks" Version="8.13.1" />
@@ -26,8 +19,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Fluxera.Queries.Repository\Fluxera.Queries.Repository.csproj" />
-		<ProjectReference Include="..\..\src\Fluxera.Queries\Fluxera.Queries.csproj" />
 		<ProjectReference Include="..\SampleApp.Application\SampleApp.Application.csproj" />
 		<ProjectReference Include="..\SampleApp.Domain\SampleApp.Domain.csproj" />
 		<ProjectReference Include="..\SampleApp.HttpApi\SampleApp.HttpApi.csproj" />

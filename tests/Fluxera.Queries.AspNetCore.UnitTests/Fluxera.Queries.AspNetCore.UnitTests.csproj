@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="6.12.0" />
+		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
 		<PackageReference Include="MadEyeMatt.AspNetCore.Endpoints" Version="8.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.6" />
