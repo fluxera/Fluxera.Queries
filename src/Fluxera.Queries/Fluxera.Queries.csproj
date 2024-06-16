@@ -34,10 +34,7 @@
 		<PackageReference Include="Fluxera.ValueObject" Version="8.2.2" />
 		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Fluxera.Queries.Abstractions\Fluxera.Queries.Abstractions.csproj" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>

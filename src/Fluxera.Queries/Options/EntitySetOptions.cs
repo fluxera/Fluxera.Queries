@@ -1,5 +1,8 @@
 ﻿namespace Fluxera.Queries.Options
 {
+	using System;
+	using System.Collections.Generic;
+	using Fluxera.Queries.Model;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -9,9 +12,45 @@
 	public sealed class EntitySetOptions
 	{
 		/// <summary>
+		///		Gets the entity set name.
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		///		Gets the ID type.
+		/// </summary>
+		internal Type KeyType { get; set; }
+
+		/// <summary>
+		///		Gets the entity set.
+		/// </summary>
+		internal EntitySet EntitySet { get; set; }
+
+		/// <summary>
+		///		Gets the complex type options of the entity.
+		/// </summary>
+		internal ComplexTypeOptions ComplexTypeOptions { get; } = new ComplexTypeOptions();
+
+		/// <summary>
 		///		Flag, indicating if the @odata.count value is always written in
 		///		the response, overriding the value provided in the query string.
 		/// </summary>
-		public bool AlwaysIncludeCount { get; set; }
+		internal bool AlwaysIncludeCount { get; set; }
+
+		/// <summary>
+		///		Gets the registered metadata for the entity set.
+		/// </summary>
+		internal IDictionary<string, object> Metadata { get; private set; } = new Dictionary<string, object>();
+
+		/// <summary>
+		///		Gets a metadata entry.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public object GetMetadata(string key)
+		{
+			this.Metadata.TryGetValue(key, out object entry);
+			return entry;
+		}
 	}
 }

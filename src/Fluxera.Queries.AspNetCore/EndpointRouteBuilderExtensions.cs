@@ -10,7 +10,7 @@
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Fluxera.Enumeration.SystemTextJson;
-	using Fluxera.Queries.AspNetCore.Options;
+	using Fluxera.Queries.Options;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.StronglyTypedId.SystemTextJson;
 	using Fluxera.ValueObject.SystemTextJson;
@@ -128,7 +128,7 @@
 				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = context.GetQueryExecutor(entitySetOptions);
-				QueryResult result = await queryExecutor.InternalExecuteFindManyAsync(dataQuery, cancellationToken);
+				QueryResult result = await queryExecutor.ExecuteFindManyAsync(dataQuery, cancellationToken);
 
 				return Results.Json(result, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200);
 			}
@@ -162,7 +162,7 @@
 				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
-				SingleResult result = await queryExecutor.InternalExecuteGetAsync(identifier, dataQuery, cancellationToken);
+				SingleResult result = await queryExecutor.ExecuteGetAsync(identifier, dataQuery, cancellationToken);
 
 				return result.HasValue
 					? Results.Json(result.Item, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200)
@@ -209,7 +209,7 @@
 				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
-				long count = await queryExecutor.InternalExecuteCountAsync(dataQuery, cancellationToken);
+				long count = await queryExecutor.ExecuteCountAsync(dataQuery, cancellationToken);
 
 				return Results.Text(count.ToString(), statusCode: 200);
 			}
@@ -239,8 +239,8 @@
 
 		private static IQueryExecutor GetQueryExecutor(this HttpContext context, EntitySetOptions options)
 		{
-			Type queryExecutorType = typeof(IQueryExecutor<,>).MakeGenericType(options.ComplexTypeOptions.ClrType, options.KeyType);
-			IQueryExecutor queryExecutor = (IQueryExecutor)context.RequestServices.GetRequiredService(queryExecutorType);
+			IQueryExecutorFactory queryExecutorFactory = context.RequestServices.GetRequiredService<IQueryExecutorFactory>();
+			IQueryExecutor queryExecutor = queryExecutorFactory.Create(options.ComplexTypeOptions.ClrType, options.KeyType);
 
 			return queryExecutor;
 		}

@@ -10,7 +10,7 @@
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	[PublicAPI]
-	public struct OrderByExpression<T>
+	public readonly struct OrderByExpression<T>
 	{
 		/// <summary>
 		///		Initializes a new instance of the <see cref="OrderByExpression{T}"/> type.
