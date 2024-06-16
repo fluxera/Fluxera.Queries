@@ -16,8 +16,8 @@
 
 	<PropertyGroup>
 		<Authors>Matthias Gernand</Authors>
-		<RepositoryUrl>https://github.com/fluxera/Fluxera.Guard</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/fluxera/Fluxera.Guard</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/fluxera/Fluxera.Queries</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/fluxera/Fluxera.Queries</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -27,12 +27,6 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
-
-	<Target Name="Update Version" BeforeTargets="Build"
-			Condition="'$(TF_BUILD)' == 'true' and '$(TargetFramework)' == 'net6.0'">
-		<Message Text="Version = $(GITVERSION_FullSemVer)" Importance="High" />
-		<Message Text="##vso[build.updatebuildnumber]$(GITVERSION_FullSemVer)" Importance="High" />
-	</Target>
 
 	<Target Name="Update Version" BeforeTargets="Build"
 			Condition="'$(TF_BUILD)' == 'true' and '$(TargetFramework)' == 'net7.0'">
