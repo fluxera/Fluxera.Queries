@@ -32,6 +32,10 @@
 		<PackageReference Include="Fluxera.StronglyTypedId" Version="8.3.4" />
 		<PackageReference Include="Fluxera.Utilities" Version="8.2.1" />
 		<PackageReference Include="Fluxera.ValueObject" Version="8.2.2" />
+		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
