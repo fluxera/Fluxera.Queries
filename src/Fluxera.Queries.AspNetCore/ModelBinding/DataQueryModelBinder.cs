@@ -6,13 +6,11 @@
 	using Fluxera.Guards;
 	using Fluxera.Queries;
 	using Fluxera.Queries.AspNetCore;
-	using Fluxera.Queries.AspNetCore.Options;
 	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Options;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.Extensions.Logging;
 	using Microsoft.Extensions.Options;
-	using EntitySetOptions = Fluxera.Queries.AspNetCore.Options.EntitySetOptions;
 
 	internal sealed class DataQueryModelBinder : IModelBinder
 	{
@@ -57,14 +55,7 @@
 					dataQuery.Select = DataQuery.GetSelectParameterValue(bindingContext.HttpContext.Request.Query);
 
 					EntitySet entitySet = this.dataQueryOptions.Value.GetByType(entityType);
-					EntitySetOptions entitySetOptions = this.dataQueryOptions.Value.GetOptionsByType(entityType);
-
-					Queries.Options.EntitySetOptions options = new Queries.Options.EntitySetOptions
-					{
-						AlwaysIncludeCount = entitySetOptions.AlwaysIncludeCount
-					};
-
-					QueryOptions queryOptions = this.parser.ParseQueryOptions(entitySet, options, dataQuery.ToString());
+					QueryOptions queryOptions = this.parser.ParseQueryOptions(entitySet, dataQuery.ToString());
 					dataQuery.QueryOptions = queryOptions;
 				}
 

@@ -1,9 +1,9 @@
 ﻿namespace Fluxera.Queries.Options
 {
-	using JetBrains.Annotations;
 	using System.Text;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Model;
+	using JetBrains.Annotations;
 
 	/// <summary>
 	///     An object which contains the parsed query options.

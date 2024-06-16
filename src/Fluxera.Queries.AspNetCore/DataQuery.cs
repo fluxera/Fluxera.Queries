@@ -6,7 +6,6 @@ namespace Fluxera.Queries.AspNetCore
 	using JetBrains.Annotations;
 	using Microsoft.AspNetCore.Mvc;
 	using System.Text;
-	using Fluxera.Queries.Options;
 	using Microsoft.AspNetCore.Http;
 	using System.Reflection;
 	using System.Threading.Tasks;
@@ -16,8 +15,7 @@ namespace Fluxera.Queries.AspNetCore
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
 	using Microsoft.Extensions.Primitives;
-	using Fluxera.Queries.AspNetCore.Options;
-	using EntitySetOptions = Fluxera.Queries.AspNetCore.Options.EntitySetOptions;
+	using Fluxera.Queries.Options;
 
 	/// <summary>
 	///		A class that should be used in controller actions and endpoint delegates
@@ -48,15 +46,9 @@ namespace Fluxera.Queries.AspNetCore
 
 			IOptions<DataQueriesOptions> dataQueryOptions = context.RequestServices.GetRequiredService<IOptions<DataQueriesOptions>>();
 			EntitySet entitySet = dataQueryOptions.Value.GetByType<T>();
-			EntitySetOptions entitySetOptions = dataQueryOptions.Value.GetOptionsByType<T>();
-
-			Queries.Options.EntitySetOptions options = new Queries.Options.EntitySetOptions
-			{
-				AlwaysIncludeCount = entitySetOptions.AlwaysIncludeCount
-			};
 
 			IQueryParser parser = context.RequestServices.GetRequiredService<IQueryParser>();
-			QueryOptions queryOptions = parser.ParseQueryOptions(entitySet, options, dataQuery.ToString());
+			QueryOptions queryOptions = parser.ParseQueryOptions(entitySet, dataQuery.ToString());
 			dataQuery.QueryOptions = queryOptions;
 
 			return ValueTask.FromResult(dataQuery);
@@ -143,15 +135,9 @@ namespace Fluxera.Queries.AspNetCore
 
 			IOptions<DataQueriesOptions> dataQueryOptions = context.RequestServices.GetRequiredService<IOptions<DataQueriesOptions>>();
 			EntitySet entitySet = dataQueryOptions.Value.GetByType(entityType);
-			EntitySetOptions entitySetOptions = dataQueryOptions.Value.GetOptionsByType(entityType);
-
-			Queries.Options.EntitySetOptions options = new Queries.Options.EntitySetOptions
-			{
-				AlwaysIncludeCount = entitySetOptions.AlwaysIncludeCount
-			};
 
 			IQueryParser parser = context.RequestServices.GetRequiredService<IQueryParser>();
-			QueryOptions queryOptions = parser.ParseQueryOptions(entitySet, options, dataQuery.ToString());
+			QueryOptions queryOptions = parser.ParseQueryOptions(entitySet, dataQuery.ToString());
 			dataQuery.QueryOptions = queryOptions;
 
 			return dataQuery;

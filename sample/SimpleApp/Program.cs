@@ -3,6 +3,7 @@ namespace SimpleApp
 {
 	using System.Reflection;
 	using System.Threading.Tasks;
+	using Fluxera.Queries;
 	using Fluxera.Queries.AspNetCore;
 	using Fluxera.Repository;
 	using Fluxera.Repository.MongoDB;
@@ -55,7 +56,7 @@ namespace SimpleApp
 				options.ComplexType<Country>();
 			});
 
-			//builder.Services.AddRepositoryQueryExecutor();
+			builder.Services.AddDataQueriesSwagger();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

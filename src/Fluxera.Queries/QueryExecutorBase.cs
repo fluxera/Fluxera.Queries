@@ -6,12 +6,12 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///		An abstract base class for executor service implementation.
+	///		An abstract base class for an executor service implementation.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TKey"></typeparam>
 	[PublicAPI]
-	public abstract class QueryExecutorBase<T, TKey> : IQueryExecutor<T, TKey> 
+	public abstract class QueryExecutorBase<T, TKey> : IQueryExecutor<T, TKey>
 		where T : class
 	{
 		/// <inheritdoc />

@@ -1,7 +1,6 @@
 ﻿namespace Fluxera.Queries.Options
 {
 	using System;
-	using System.Runtime.CompilerServices;
 	using System.Text;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Parsers;
@@ -49,6 +48,7 @@
 		///     Initializes a new instance of the <see cref="QueryStringParameters" /> class.
 		/// </summary>
 		/// <param name="queryString">The complete query string.</param>
+		/// <param name="options">The entity set options.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		public static QueryStringParameters Create(string queryString, EntitySetOptions options)
 		{

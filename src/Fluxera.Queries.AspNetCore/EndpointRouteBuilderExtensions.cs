@@ -10,7 +10,7 @@
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Fluxera.Enumeration.SystemTextJson;
-	using Fluxera.Queries.AspNetCore.Options;
+	using Fluxera.Queries.Options;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.StronglyTypedId.SystemTextJson;
 	using Fluxera.ValueObject.SystemTextJson;
@@ -239,8 +239,8 @@
 
 		private static IQueryExecutor GetQueryExecutor(this HttpContext context, EntitySetOptions options)
 		{
-			Type queryExecutorType = typeof(IQueryExecutor<,>).MakeGenericType(options.ComplexTypeOptions.ClrType, options.KeyType);
-			IQueryExecutor queryExecutor = (IQueryExecutor)context.RequestServices.GetRequiredService(queryExecutorType);
+			IQueryExecutorFactory queryExecutorFactory = context.RequestServices.GetRequiredService<IQueryExecutorFactory>();
+			IQueryExecutor queryExecutor = queryExecutorFactory.Create(options.ComplexTypeOptions.ClrType, options.KeyType);
 
 			return queryExecutor;
 		}

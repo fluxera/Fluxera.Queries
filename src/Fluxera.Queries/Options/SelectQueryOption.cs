@@ -1,10 +1,10 @@
 ﻿namespace Fluxera.Queries.Options
 {
-	using JetBrains.Annotations;
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
 	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Parsers;
+	using JetBrains.Annotations;
 
 	/// <summary>
 	///     A class containing de-serialized values from the $select query option.

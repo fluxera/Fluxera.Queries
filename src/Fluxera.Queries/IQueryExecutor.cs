@@ -17,7 +17,7 @@
 		/// <param name="queryOptions"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		internal Task<QueryResult> InternalExecuteFindManyAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
+		Task<QueryResult> InternalExecuteFindManyAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		///		Executes the get query defined by the given ID and <see cref="QueryOptions"/>.
@@ -26,7 +26,7 @@
 		/// <param name="queryOptions"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		internal Task<SingleResult> InternalExecuteGetAsync(object id, QueryOptions queryOptions, CancellationToken cancellationToken = default);
+		Task<SingleResult> InternalExecuteGetAsync(object id, QueryOptions queryOptions, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		///		Executes the count query defined by the given <see cref="QueryOptions"/>.
@@ -34,7 +34,7 @@
 		/// <param name="queryOptions"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		internal Task<long> InternalExecuteCountAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
+		Task<long> InternalExecuteCountAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
 	}
 
 	///  <summary>
