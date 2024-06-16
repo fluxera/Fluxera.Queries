@@ -1,4 +1,4 @@
-﻿namespace SimpleApp.Contexts
+﻿namespace SampleApp.Contexts
 {
 	using Fluxera.Repository.MongoDB;
 	using JetBrains.Annotations;

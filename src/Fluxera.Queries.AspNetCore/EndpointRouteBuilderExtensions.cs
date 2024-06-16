@@ -128,7 +128,7 @@
 				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = context.GetQueryExecutor(entitySetOptions);
-				QueryResult result = await queryExecutor.InternalExecuteFindManyAsync(dataQuery, cancellationToken);
+				QueryResult result = await queryExecutor.ExecuteFindManyAsync(dataQuery, cancellationToken);
 
 				return Results.Json(result, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200);
 			}
@@ -162,7 +162,7 @@
 				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
-				SingleResult result = await queryExecutor.InternalExecuteGetAsync(identifier, dataQuery, cancellationToken);
+				SingleResult result = await queryExecutor.ExecuteGetAsync(identifier, dataQuery, cancellationToken);
 
 				return result.HasValue
 					? Results.Json(result.Item, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200)
@@ -209,7 +209,7 @@
 				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
 
 				IQueryExecutor queryExecutor = GetQueryExecutor(context, entitySetOptions);
-				long count = await queryExecutor.InternalExecuteCountAsync(dataQuery, cancellationToken);
+				long count = await queryExecutor.ExecuteCountAsync(dataQuery, cancellationToken);
 
 				return Results.Text(count.ToString(), statusCode: 200);
 			}

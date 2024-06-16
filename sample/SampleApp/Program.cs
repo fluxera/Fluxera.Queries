@@ -1,5 +1,5 @@
 
-namespace SimpleApp
+namespace SampleApp
 {
 	using System.Reflection;
 	using System.Threading.Tasks;
@@ -11,8 +11,8 @@ namespace SimpleApp
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Hosting;
-	using SimpleApp.Contexts;
-	using SimpleApp.Model;
+	using SampleApp.Contexts;
+	using SampleApp.Model;
 
 	public static class Program
 	{
@@ -57,6 +57,7 @@ namespace SimpleApp
 			});
 
 			builder.Services.AddDataQueriesSwagger();
+			builder.Services.AddRepositoryQueryExecutor();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

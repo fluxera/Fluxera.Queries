@@ -1,4 +1,4 @@
-﻿namespace SimpleApp.Model
+﻿namespace SampleApp.Model
 {
 	using System.Runtime.CompilerServices;
 	using Fluxera.Enumeration;

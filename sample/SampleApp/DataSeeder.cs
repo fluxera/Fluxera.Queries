@@ -1,4 +1,4 @@
-﻿namespace SimpleApp
+﻿namespace SampleApp
 {
 	using System;
 	using System.Linq;
@@ -8,7 +8,7 @@
 	using Fluxera.Utilities.Extensions;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.Extensions.DependencyInjection;
-	using SimpleApp.Model;
+	using SampleApp.Model;
 
 	internal static class DataSeeder
 	{

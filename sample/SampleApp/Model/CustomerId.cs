@@ -1,4 +1,4 @@
-﻿namespace SimpleApp.Model
+﻿namespace SampleApp.Model
 {
 	using Fluxera.StronglyTypedId;
 	using JetBrains.Annotations;

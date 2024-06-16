@@ -14,11 +14,12 @@
 	[PublicAPI]
 	public static class ServiceCollectionExtensions
 	{
-		/// <summary>
-		///		Adds the query parser services.
-		/// </summary>
-		/// <param name="services"></param>
-		/// <returns></returns>
+		///  <summary>
+		/// 		Adds the query parser services.
+		///  </summary>
+		///  <param name="services"></param>
+		///  <param name="configure"></param>
+		///  <returns></returns>
 		public static IServiceCollection AddDataQueries(this IServiceCollection services, Action<IDataQueriesOptionsBuilder> configure)
 		{
 			services.TryAddTransient<IQueryParser, QueryParser>();

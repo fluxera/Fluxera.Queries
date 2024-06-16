@@ -14,29 +14,45 @@
 	public abstract class QueryExecutorBase<T, TKey> : IQueryExecutor<T, TKey>
 		where T : class
 	{
-		/// <inheritdoc />
+		/// <summary>
+		///		Executes the find many query defined by the given <see cref="QueryOptions"/>.
+		/// </summary>
+		/// <param name="queryOptions"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		public abstract Task<QueryResult> ExecuteFindManyAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
 
-		/// <inheritdoc />
+		/// <summary>
+		///		Executes the get query defined by the given ID and <see cref="QueryOptions"/>.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="queryOptions"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		public abstract Task<SingleResult> ExecuteGetAsync(TKey id, QueryOptions queryOptions, CancellationToken cancellationToken = default);
 
-		/// <inheritdoc />
+		/// <summary>
+		///		Executes the count query defined by the given <see cref="QueryOptions"/>.
+		/// </summary>
+		/// <param name="queryOptions"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		public abstract Task<long> ExecuteCountAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
 
 		/// <inheritdoc />
-		Task<QueryResult> IQueryExecutor.InternalExecuteFindManyAsync(QueryOptions queryOptions, CancellationToken cancellationToken)
+		Task<QueryResult> IQueryExecutor.ExecuteFindManyAsync(QueryOptions queryOptions, CancellationToken cancellationToken)
 		{
 			return this.ExecuteFindManyAsync(queryOptions, cancellationToken);
 		}
 
 		/// <inheritdoc />
-		Task<SingleResult> IQueryExecutor.InternalExecuteGetAsync(object id, QueryOptions queryOptions, CancellationToken cancellationToken)
+		Task<SingleResult> IQueryExecutor.ExecuteGetAsync(object id, QueryOptions queryOptions, CancellationToken cancellationToken)
 		{
 			return this.ExecuteGetAsync((TKey)id, queryOptions, cancellationToken);
 		}
 
 		/// <inheritdoc />
-		Task<long> IQueryExecutor.InternalExecuteCountAsync(QueryOptions queryOptions, CancellationToken cancellationToken)
+		Task<long> IQueryExecutor.ExecuteCountAsync(QueryOptions queryOptions, CancellationToken cancellationToken)
 		{
 			return this.ExecuteCountAsync(queryOptions, cancellationToken);
 		}
