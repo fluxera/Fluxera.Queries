@@ -5,16 +5,37 @@
 	using System;
 	using FluentAssertions;
 	using Fluxera.Queries.Options;
+	using Microsoft.Extensions.DependencyInjection;
 
 	[TestFixture]
 	public class QueryParserTests
 	{
+		private IQueryParser queryParser;
+		private IEdmTypeProvider typeProvider;
+
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			IServiceCollection services = new ServiceCollection();
+
+			services.AddDataQueries(builder =>
+			{
+				builder.EntitySet<Customer>("Customers", entitySet =>
+				{
+					entitySet.HasKey(x => x.Id);
+				});
+			});
+
+			IServiceProvider serviceProvider = services.BuildServiceProvider();
+
+			this.queryParser = serviceProvider.GetRequiredService<IQueryParser>();
+			this.typeProvider = serviceProvider.GetRequiredService<IEdmTypeProvider>();
+		}
+
 		[Test]
 		public void ShouldThrowWhen_EntityTypeNull()
 		{
-			IQueryParser queryParser = new QueryParser(new EdmTypeProvider(), null);
-			
-			Action action = () => queryParser.ParseQueryOptions(null, "$filter=FirstName eq 'James'");
+			Action action = () => this.queryParser.ParseQueryOptions(null, "$filter=FirstName eq 'James'");
 
 			action.Should().Throw<ArgumentNullException>();
 		}
@@ -22,13 +43,10 @@
 		[Test]
 		public void ShouldThrowWhen_QueryStringNull()
 		{
-			IEdmTypeProvider typeProvider = new EdmTypeProvider();
-			IQueryParser queryParser = new QueryParser(typeProvider, null);
-
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)this.typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
-			Action action = () => queryParser.ParseQueryOptions(entitySet, null);
+			Action action = () => this.queryParser.ParseQueryOptions(entitySet, null);
 
 			action.Should().Throw<ArgumentNullException>();
 		}
@@ -38,13 +56,10 @@
 		[TestCase("$filter=FirstName eq 'James'")]
 		public void ShouldParseFilterOptions(string queryString)
 		{
-			IEdmTypeProvider typeProvider = new EdmTypeProvider();
-			IQueryParser queryParser = new QueryParser(typeProvider, null);
-
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)this.typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
-			QueryOptions queryOptions = queryParser.ParseQueryOptions(entitySet, queryString);
+			QueryOptions queryOptions = this.queryParser.ParseQueryOptions(entitySet, queryString);
 
 			queryOptions.Should().NotBeNull();
 			queryOptions.Filter.Should().NotBeNull();
@@ -57,13 +72,10 @@
 		[TestCase("")]
 		public void ShouldNotParseFilterOptions(string queryString)
 		{
-			IEdmTypeProvider typeProvider = new EdmTypeProvider();
-			IQueryParser queryParser = new QueryParser(typeProvider, null);
-
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)this.typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
-			QueryOptions queryOptions = queryParser.ParseQueryOptions(entitySet, queryString);
+			QueryOptions queryOptions = this.queryParser.ParseQueryOptions(entitySet, queryString);
 
 			queryOptions.Should().NotBeNull();
 			queryOptions.Filter.Should().BeNull();
@@ -74,13 +86,10 @@
 		[TestCase("$orderby=Age desc")]
 		public void ShouldParseOrderByOptions(string queryString)
 		{
-			IEdmTypeProvider typeProvider = new EdmTypeProvider();
-			IQueryParser queryParser = new QueryParser(typeProvider, null);
-
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)this.typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
-			QueryOptions queryOptions = queryParser.ParseQueryOptions(entitySet, queryString);
+			QueryOptions queryOptions = this.queryParser.ParseQueryOptions(entitySet, queryString);
 
 			queryOptions.Should().NotBeNull();
 			queryOptions.OrderBy.Should().NotBeNull();
@@ -93,13 +102,10 @@
 		[TestCase("")]
 		public void ShouldNotParseOrderByOptions(string queryString)
 		{
-			IEdmTypeProvider typeProvider = new EdmTypeProvider();
-			IQueryParser queryParser = new QueryParser(typeProvider, null);
-
-			EdmComplexType edmType = (EdmComplexType)typeProvider.GetByType(typeof(Customer));
+			EdmComplexType edmType = (EdmComplexType)this.typeProvider.GetByType(typeof(Customer));
 			EntitySet entitySet = new EntitySet("Customers", edmType);
 
-			QueryOptions queryOptions = queryParser.ParseQueryOptions(entitySet, queryString);
+			QueryOptions queryOptions = this.queryParser.ParseQueryOptions(entitySet, queryString);
 
 			queryOptions.Should().NotBeNull();
 			queryOptions.OrderBy.Should().BeNull();
