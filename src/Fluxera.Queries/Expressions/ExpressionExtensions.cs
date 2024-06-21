@@ -10,13 +10,11 @@
 	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Nodes;
 	using Fluxera.Queries.Options;
-	using JetBrains.Annotations;
 
 	/// <summary>
 	///		Extension methods for the query option types.
 	/// </summary>
-	[PublicAPI]
-	public static class ExpressionExtensions
+	internal static class ExpressionExtensions
 	{
 		private static readonly IDictionary<string, QueryableFunction> AvailableFunctions = typeof(QueryableFunction)
 			.Assembly
@@ -33,15 +31,39 @@
 		/// <param name="filterQueryOption"></param>
 		/// <returns></returns>
 		public static Expression<Func<T, bool>> ToPredicateExpression<T>(this FilterQueryOption filterQueryOption)
+			where T : class
 		{
 			Guard.Against.Null(filterQueryOption);
 			Guard.Against.Null(filterQueryOption.Expression, nameof(filterQueryOption.Expression));
 
 			ParameterExpression parameter = Expression.Parameter(typeof(T), "x");
 
-			Expression filterClause = CreateExpression(filterQueryOption.Expression, parameter);
+			Expression filterClause = CreateFilterExpression(filterQueryOption.Expression, parameter);
 
 			Expression<Func<T, bool>> lambda = Expression.Lambda<Func<T, bool>>(filterClause, parameter);
+
+			return lambda;
+		}
+
+		///  <summary>
+		/// 	Creates a search predicate expression.
+		///  </summary>
+		///  <typeparam name="T"></typeparam>
+		///  <param name="searchQueryOption"></param>
+		///  <param name="searchPredicate"></param>
+		///  <returns></returns>
+		public static Expression<Func<T, bool>> ToPredicateExpression<T>(this SearchQueryOption searchQueryOption, Expression<Func<T, string, bool>> searchPredicate)
+			where T : class
+		{
+			Guard.Against.Null(searchQueryOption);
+			Guard.Against.Null(searchQueryOption.Expression, nameof(searchQueryOption.Expression));
+			Guard.Against.Null(searchPredicate);
+
+			ParameterExpression parameter = searchPredicate.Parameters[0];
+
+			Expression searchClause = CreateSearchExpression(searchQueryOption.Expression, searchPredicate);
+
+			Expression<Func<T, bool>> lambda = Expression.Lambda<Func<T, bool>>(searchClause, parameter);
 
 			return lambda;
 		}
@@ -54,6 +76,7 @@
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
 		public static Expression<Func<T, T>> ToSelectorExpression<T>(this SelectQueryOption selectQueryOption)
+			where T : class
 		{
 			Guard.Against.Null(selectQueryOption);
 			
@@ -66,6 +89,7 @@
 			}
 
 			Expression<Func<T, T>> lambda = Expression.Lambda<Func<T, T>>(expression, parameter);
+
 			return lambda;
 		}
 
@@ -77,6 +101,7 @@
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
 		public static IReadOnlyCollection<OrderByExpression<T>> ToOrderByExpressions<T>(this OrderByQueryOption orderByQueryOption)
+			where T : class
 		{
 			Guard.Against.Null(orderByQueryOption);
 
@@ -165,18 +190,74 @@
 			return expression;
 		}
 
-		private static Expression CreateExpression(QueryNode queryNode, Expression baseExpression)
+		private static Expression CreateSearchExpression<T>(QueryNode queryNode, Expression<Func<T, string, bool>> searchPredicate) 
+			where T : class
 		{
 			return queryNode switch
 			{
-				ValueNode valueNode =>
-					CreateValueExpression(valueNode, baseExpression),
+				ConstantNode constant =>
+					CreateConstantSearchExpression(constant, searchPredicate),
+
+				BinaryOperatorNode binaryOperator =>
+					CreateBinaryOperatorSearchExpression(binaryOperator, searchPredicate),
+
+				UnaryOperatorNode { OperatorKind: UnaryOperatorKind.Not } unaryOperator =>
+					Expression.Not(CreateSearchExpression(unaryOperator.Operand, searchPredicate)),
+
+				_ => throw new InvalidOperationException($"Invalid query {queryNode.Kind}.")
+			};
+		}
+
+		private static Expression CreateConstantSearchExpression<T>(ConstantNode constant, Expression<Func<T, string, bool>> searchPredicate)
+			where T : class
+		{
+			// Transforming a generic expression with two arguments into a single argument expression
+			// that uses a constant value instead of a parameter.
+			// 
+			// Original:
+			//				  (element, searchTerm) => element.MyValue.Contains(searchTerm)
+			// 
+			// Transformed:
+			//                string searchTerm = "my current search text";
+			//                element => element.MyValue.Contains(searchTerm);
+
+			Expression argumentBoundSearchPredicate = ExpressionHelper.BindSecondArgument(searchPredicate, constant.Value.ToString());
+			return argumentBoundSearchPredicate;
+		}
+
+		private static Expression CreateBinaryOperatorSearchExpression<T>(BinaryOperatorNode binaryOperatorNode, Expression<Func<T, string, bool>> searchPredicate)
+			where T : class
+		{
+			Expression left = CreateSearchExpression(binaryOperatorNode.Left, searchPredicate);
+			Expression right = CreateSearchExpression(binaryOperatorNode.Right, searchPredicate);
+			BinaryOperatorKind kind = binaryOperatorNode.OperatorKind;
+
+			// Boolean operations
+			if(kind == BinaryOperatorKind.Or)
+			{
+				return Expression.OrElse(left, right);
+			}
+
+			if(kind == BinaryOperatorKind.And)
+			{
+				return Expression.AndAlso(left, right);
+			}
+
+			throw new InvalidOperationException("Unknown binary operator for $select.");
+		}
+
+		private static Expression CreateFilterExpression(QueryNode queryNode, Expression baseExpression)
+		{
+			return queryNode switch
+			{
+				ValueNode value =>
+					CreateValueExpression(value, baseExpression),
 
 				FunctionCallNode functionCall =>
 					CreateFunctionCallExpression(functionCall.Name, functionCall.Parameters.CreateExpressions(baseExpression)),
 
 				UnaryOperatorNode { OperatorKind: UnaryOperatorKind.Not } unaryOperator =>
-					Expression.Not(CreateExpression(unaryOperator.Operand, baseExpression)),
+					Expression.Not(CreateFilterExpression(unaryOperator.Operand, baseExpression)),
 
 				BinaryOperatorNode binaryOperator =>
 					CreateBinaryOperatorExpression(binaryOperator, baseExpression),
@@ -187,13 +268,13 @@
 
 		private static IList<Expression> CreateExpressions(this IEnumerable<QueryNode> nodes, Expression baseExpression)
 		{
-			return nodes.Select(n => CreateExpression(n, baseExpression)).ToArray();
+			return nodes.Select(n => CreateFilterExpression(n, baseExpression)).ToArray();
 		}
 
 		private static Expression CreateBinaryOperatorExpression(BinaryOperatorNode binaryOperator, Expression baseExpression)
 		{
-			Expression left = CreateExpression(binaryOperator.Left, baseExpression);
-			Expression right = CreateExpression(binaryOperator.Right, baseExpression);
+			Expression left = CreateFilterExpression(binaryOperator.Left, baseExpression);
+			Expression right = CreateFilterExpression(binaryOperator.Right, baseExpression);
 			BinaryOperatorKind kind = binaryOperator.OperatorKind;
 
 			// Boolean operations

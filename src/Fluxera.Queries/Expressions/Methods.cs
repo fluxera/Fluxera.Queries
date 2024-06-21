@@ -130,6 +130,9 @@
 		public static readonly MemberInfo TimeSpanTotalMinutes =
 			ReflectionHelper.GetMember<TimeSpan, double>(x => x.TotalMinutes);
 
+		public static readonly MemberInfo TimeSpanTotalSeconds =
+			ReflectionHelper.GetMember<TimeSpan, double>(x => x.TotalSeconds);
+
 		public static readonly MethodInfo MathCeiling =
 			ReflectionHelper.GetMethod(() => Math.Ceiling((double)1));
 

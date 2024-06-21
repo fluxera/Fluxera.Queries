@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq.Expressions;
 	using Fluxera.Queries.Model;
 	using JetBrains.Annotations;
 
@@ -41,6 +42,11 @@
 		///		Gets the registered metadata for the entity set.
 		/// </summary>
 		internal IDictionary<string, object> Metadata { get; private set; } = new Dictionary<string, object>();
+
+		/// <summary>
+		///		Gets the search predicate expression.
+		/// </summary>
+		internal LambdaExpression SearchPredicate { get; set; }
 
 		/// <summary>
 		///		Gets a metadata entry.

@@ -5,20 +5,20 @@
 	using JetBrains.Annotations;
 
 	[UsedImplicitly]
-	internal sealed class TrimFunction : QueryableFunction
+	internal sealed class TotalSecondsFunction : QueryableFunction
 	{
-		public override string FunctionName => "trim";
+		public override string FunctionName => "totalseconds";
 
 		public override Expression CreateExpression(IList<Expression> arguments)
 		{
 			this.ValidateParameterCount(arguments, 1);
 
-			if(arguments[0].Type != TypeUtilities.StringType)
+			if(arguments[0].Type == TypeUtilities.TimeSpanType)
 			{
-				return this.InvalidParameterTypes("strings");
+				return Expression.MakeMemberAccess(arguments[0], Methods.TimeSpanTotalSeconds);
 			}
 
-			return Expression.Call(arguments[0], Methods.StringTrim);
+			return this.InvalidParameterTypes("TimeSpan");
 		}
 	}
 }

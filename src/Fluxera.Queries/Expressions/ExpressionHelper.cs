@@ -5,22 +5,41 @@
 	using System.Reflection;
 	using System.Runtime.Serialization;
 	using Fluxera.Enumeration;
+	using Fluxera.Guards;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.ValueObject;
 
 	internal static class ExpressionHelper
 	{
+		///// <summary>
+		/////	Rewrites an expression by substituting the argument in the expression with a constant value.
+		///// </summary>
+		///// <param name="source">Source expression</param>
+		///// <param name="argument">Constant value to bind</param>
+		//public static Expression<Func<T1, TResult>> BindSecondArgument<T1, T2, TResult>(Expression<Func<T1, T2, TResult>> source, T2 argument)
+		//{
+		//	ConstantExpression arg2 = Expression.Constant(argument, typeof(T2));
+
+		//	Rewriter rewriter = new Rewriter(source.Parameters[1], arg2);
+		//	Expression newBody = rewriter.Visit(source.Body);
+		//	return Expression.Lambda<Func<T1, TResult>>(newBody, source.Parameters[0]);
+		//}
+
 		/// <summary>
 		///		Rewrites an expression by substituting the argument in the expression with a constant value.
 		/// </summary>
-		/// <param name="source">Source expression</param>
-		/// <param name="argument">Constant value to bind</param>
-		public static Expression<Func<T1, TResult>> BindSecondArgument<T1, T2, TResult>(Expression<Func<T1, T2, TResult>> source, T2 argument)
+		/// <param name="source">Source expression.</param>
+		/// <param name="argument">Constant value to bind.</param>
+		public static Expression BindSecondArgument(LambdaExpression source, object argument)
 		{
-			ConstantExpression arg2 = Expression.Constant(argument, typeof(T2));
+			Guard.Against.False(source.Parameters.Count == 2, message: "The lambda expression needs to have exactly two parameters.");
+
+			ConstantExpression arg2 = Expression.Constant(argument, argument.GetType());
+
 			Rewriter rewriter = new Rewriter(source.Parameters[1], arg2);
 			Expression newBody = rewriter.Visit(source.Body);
-			return Expression.Lambda<Func<T1, TResult>>(newBody!, source.Parameters[0]);
+
+			return newBody;
 		}
 
 		private class Rewriter : ExpressionVisitor
@@ -30,8 +49,8 @@
 
 			public Rewriter(Expression candidate, Expression replacement)
 			{
-				this.candidate = candidate ?? throw new ArgumentNullException(nameof(candidate));
-				this.replacement = replacement ?? throw new ArgumentNullException(nameof(replacement));
+				this.candidate = Guard.Against.Null(candidate);
+				this.replacement = Guard.Against.Null(replacement);
 			}
 
 			public override Expression Visit(Expression node)

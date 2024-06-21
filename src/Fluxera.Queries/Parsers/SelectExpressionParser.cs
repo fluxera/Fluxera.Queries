@@ -13,7 +13,13 @@
 		{
 			SelectProperty[] properties;
 
-			if(expression.Contains(','))
+			if(expression == "*")
+			{
+				properties = model.Properties
+					.Select(property=> new SelectProperty(property))
+					.ToArray();
+			}
+			else if(expression.Contains(','))
 			{
 				properties = expression.Split(SplitCharacter.Comma, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
 					.Select(propertyString => ParseSelectProperty(propertyString, model))

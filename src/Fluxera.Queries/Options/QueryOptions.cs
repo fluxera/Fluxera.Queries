@@ -17,8 +17,10 @@
 		private TopQueryOption top;
 		private CountQueryOption count;
 		private SelectQueryOption select;
+		private SearchQueryOption search;
 
 		private readonly QueryStringParameters parameters;
+		private readonly EntitySetOptions entitySetOptions;
 		private readonly IEdmTypeProvider typeProvider;
 
 		/// <summary>
@@ -26,13 +28,16 @@
 		/// </summary>
 		/// <param name="parameters">The query string parameters of the request.</param>
 		/// <param name="entitySet">The entity set of the query.</param>
+		/// <param name="entitySetOptions">The options of the entity set.</param>
 		/// <param name="typeProvider">The type provider.</param>
 		internal QueryOptions(
 			QueryStringParameters parameters, 
 			EntitySet entitySet,
+			EntitySetOptions entitySetOptions,
 			IEdmTypeProvider typeProvider)
 		{
 			this.parameters = parameters;
+			this.entitySetOptions = entitySetOptions;
 			this.typeProvider = typeProvider;
 
 			this.EntitySet = Guard.Against.Null(entitySet);
@@ -140,6 +145,22 @@
 			}
 		}
 
+		/// <summary>
+		///     Gets the $search query option.
+		/// </summary>
+		public SearchQueryOption Search
+		{
+			get
+			{
+				if(this.search == null && this.parameters.Search != null)
+				{
+					this.search = new SearchQueryOption(this.parameters.Search);
+				}
+
+				return this.search;
+			}
+		}
+
 		/// <inheritdoc />
 		public override string ToString()
 		{
@@ -175,14 +196,14 @@
 				builder.Append($"{this.Select}; ");
 			}
 
-			//if(this.Search is not null)
-			//{
-			//	builder.Append($"Search={this.Search}; ");
-			//}
+			if(this.Search is not null)
+			{
+				builder.Append($"{this.Search}; ");
+			}
 
 			//if(this.SkipToken is not null)
 			//{
-			//	builder.Append($"SkipToken={this.SkipToken}; ");
+			//	builder.Append($"{this.SkipToken}; ");
 			//}
 
 			return builder.ToString().TrimEnd();

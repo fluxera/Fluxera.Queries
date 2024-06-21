@@ -133,6 +133,15 @@ namespace Fluxera.Queries.Parsers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The $search query option could not be parsed by this service..
+        /// </summary>
+        internal static string UnableToParseSearch {
+            get {
+                return ResourceManager.GetString("UnableToParseSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &apos;{0}&apos; operator is not a valid operator..
         /// </summary>
         internal static string UnknownOperator {

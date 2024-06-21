@@ -45,6 +45,11 @@
 		public string Select { get; private set; }
 
 		/// <summary>
+		///     Gets the string $search parameter value from the incoming request.
+		/// </summary>
+		public string Search { get; private set; }
+
+		/// <summary>
 		///     Initializes a new instance of the <see cref="QueryStringParameters" /> class.
 		/// </summary>
 		/// <param name="queryString">The complete query string.</param>
@@ -60,6 +65,7 @@
 			const string topParameterPrefix = ParameterNames.Top + "=";
 			const string countParameterPrefix = ParameterNames.Count + "=";
 			const string selectParameterPrefix = ParameterNames.Select + "=";
+			const string searchParameterPrefix = ParameterNames.Search + "=";
 
 			QueryStringParameters parameters = new QueryStringParameters();
 
@@ -119,6 +125,13 @@
 						if(decodedQueryOption.Length != selectParameterPrefix.Length)
 						{
 							parameters.Select = decodedQueryOption.Substring(selectParameterPrefix.Length);
+						}
+					}
+					else if(decodedQueryOption.StartsWith(searchParameterPrefix, StringComparison.Ordinal))
+					{
+						if(decodedQueryOption.Length != searchParameterPrefix.Length)
+						{
+							parameters.Search = decodedQueryOption.Substring(searchParameterPrefix.Length);
 						}
 					}
 				}
@@ -185,17 +198,17 @@
 				builder.Append('&');
 			}
 
-			//if(this.Search != null)
-			//{
-			//	builder.Append(SearchParamName);
-			//	builder.Append('=');
-			//	builder.Append(this.Search);
-			//	builder.Append('&');
-			//}
+			if(this.Search != null)
+			{
+				builder.Append(ParameterNames.Search);
+				builder.Append('=');
+				builder.Append(this.Search);
+				builder.Append('&');
+			}
 
 			//if(this.SkipToken != null)
 			//{
-			//	builder.Append(SkipTokenParamName);
+			//	builder.Append(ParameterNames.SkipToken);
 			//	builder.Append('=');
 			//	builder.Append(this.SkipToken);
 			//	builder.Append('&');

@@ -6,14 +6,15 @@
 	using JetBrains.Annotations;
 
 	[UsedImplicitly]
-	internal sealed class MaxDateTimeFunction : QueryableFunction
+	internal sealed class CaseFunction : QueryableFunction
 	{
-		public override string FunctionName => "maxdatetime";
+		/// <inheritdoc />
+		public override string FunctionName => "case";
 
+		/// <inheritdoc />
 		public override Expression CreateExpression(IList<Expression> arguments)
 		{
-			this.ValidateParameterCount(arguments, 0);
-			return Expression.Constant(DateTimeOffset.MaxValue);
+			throw new NotSupportedException($"The function {this.FunctionName} is not supported.");
 		}
 	}
 }

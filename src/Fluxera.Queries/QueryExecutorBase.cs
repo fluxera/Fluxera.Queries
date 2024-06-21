@@ -14,12 +14,12 @@
 	public abstract class QueryExecutorBase<T, TKey> : IQueryExecutor<T, TKey>
 		where T : class
 	{
-		/// <summary>
-		///		Executes the find many query defined by the given <see cref="QueryOptions"/>.
-		/// </summary>
-		/// <param name="queryOptions"></param>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
+		///  <summary>
+		/// 	Executes the find many query defined by the given <see cref="QueryOptions"/> and the (optional) search predicate.
+		///  </summary>
+		///  <param name="queryOptions"></param>
+		///  <param name="cancellationToken"></param>
+		///  <returns></returns>
 		public abstract Task<QueryResult> ExecuteFindManyAsync(QueryOptions queryOptions, CancellationToken cancellationToken = default);
 
 		/// <summary>

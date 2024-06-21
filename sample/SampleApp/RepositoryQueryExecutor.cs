@@ -35,7 +35,8 @@
 			IQueryOptions<T> options = queryOptions.ToQueryOptions<T>();
 
 			// 2. Build the query predicate.
-			Expression<Func<T, bool>> predicate = queryOptions.ToPredicate<T>();
+			// TODO: Get the search predicate from somewhere
+			Expression<Func<T, bool>> predicate = queryOptions.ToPredicate<T>((x, s) => "Hallo".Contains(s));
 
 			// 3. Build the selector expression (optional).
 			Expression<Func<T, T>> selector = queryOptions.ToSelector<T>();

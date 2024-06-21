@@ -53,6 +53,7 @@
 					dataQuery.Top = DataQuery.GetTopParameterValue(bindingContext.HttpContext.Request.Query);
 					dataQuery.Count = DataQuery.GetCountParameterValue(bindingContext.HttpContext.Request.Query);
 					dataQuery.Select = DataQuery.GetSelectParameterValue(bindingContext.HttpContext.Request.Query);
+					dataQuery.Search = DataQuery.GetSearchParameterValue(bindingContext.HttpContext.Request.Query);
 
 					EntitySet entitySet = this.dataQueryOptions.Value.GetByType(entityType);
 					QueryOptions queryOptions = this.parser.ParseQueryOptions(entitySet, dataQuery.ToString());

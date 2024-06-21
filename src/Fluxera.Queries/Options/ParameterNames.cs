@@ -35,7 +35,11 @@
 		/// </summary>
 		public const string Select = "$select";
 
-		//public const string SearchParameterName = "$search";
-		//public const string SkipTokenParameterName = "$skiptoken";
+		/// <summary>
+		///		The $search parameter name.
+		/// </summary>
+		public const string Search = "$search";
+
+		//public const string SkipToken = "$skiptoken";
 	}
 }

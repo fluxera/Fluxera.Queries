@@ -16,6 +16,7 @@
 			Expression roundArg = arguments[0].Type == TypeUtilities.DoubleType
 				? arguments[0]
 				: Expression.Convert(arguments[0], TypeUtilities.DoubleType);
+
 			return Expression.Call(null, Methods.MathRound, roundArg);
 		}
 	}
