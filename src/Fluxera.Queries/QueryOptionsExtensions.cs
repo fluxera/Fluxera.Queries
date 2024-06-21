@@ -50,9 +50,11 @@
 
 			Expression<Func<T, bool>> search = queryOptions.Search.ToPredicate(searchPredicate);
 
-			ParameterExpression parameter = search.Parameters[0];
+			ParameterExpression parameter = Expression.Parameter(typeof(T), "x");
 
-			Expression combined = Expression.AndAlso(filter.Body, search.Body);
+			Expression left = filter.UpdateParameter(parameter).Body;
+			Expression right = search.UpdateParameter(parameter).Body;
+			Expression combined = Expression.AndAlso(left, right);
 
 			Expression<Func<T, bool>> lambda = Expression.Lambda<Func<T, bool>>(combined, parameter);
 
@@ -134,6 +136,32 @@
 			where T : class
 		{
 			return orderByQueryOption?.ToOrderByExpressions<T>() ?? [];
+		}
+
+		private static Expression<Func<T, bool>> UpdateParameter<T>(this Expression<Func<T, bool>> expression, ParameterExpression parameter)
+			where T : class
+		{
+			ExpressionVisitor visitor = new ParameterUpdateVisitor(parameter);
+
+			Expression body = visitor.Visit(expression.Body);
+
+			return Expression.Lambda<Func<T, bool>>(body, parameter);
+		}
+
+		private sealed class ParameterUpdateVisitor : ExpressionVisitor
+		{
+			private readonly ParameterExpression parameter;
+
+			public ParameterUpdateVisitor(ParameterExpression parameter)
+			{
+				this.parameter = parameter;
+			}
+
+			/// <inheritdoc />
+			protected override Expression VisitParameter(ParameterExpression node)
+			{
+				return this.parameter;
+			}
 		}
 	}
 }
