@@ -25,7 +25,8 @@
 		{
 			Guard.Against.Null(queryOptions);
 
-			return queryOptions.ToPredicate<T>(null);
+			Expression<Func<T, string, bool>> searchPredicate = (Expression<Func<T, string, bool>>)queryOptions.Search?.SearchPredicate;
+			return queryOptions.ToPredicate(searchPredicate);
 		}
 
 		///  <summary>
@@ -49,7 +50,7 @@
 
 			Expression<Func<T, bool>> search = queryOptions.Search.ToPredicate(searchPredicate);
 
-			ParameterExpression parameter = Expression.Parameter(typeof(T), "x");
+			ParameterExpression parameter = search.Parameters[0];
 
 			Expression combined = Expression.AndAlso(filter.Body, search.Body);
 

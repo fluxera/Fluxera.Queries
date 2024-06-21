@@ -14,19 +14,19 @@
 		}
 
 		/// <inheritdoc />
-		public IEntitySetOptionsBuilder EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class
+		public IEntitySetOptionsBuilder<T> EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class
 		{
 			EntitySetOptions entitySetOptions = this.options.EntitySet(name, entityTypeName, configure);
 
-			return new EntitySetOptionsBuilder(entitySetOptions);
+			return new EntitySetOptionsBuilder<T>(entitySetOptions);
 		}
 
 		/// <inheritdoc />
-		public IEntitySetOptionsBuilder EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class
+		public IEntitySetOptionsBuilder<T> EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class
 		{
 			EntitySetOptions entitySetOptions = this.options.EntitySet(name, configure);
 
-			return new EntitySetOptionsBuilder(entitySetOptions);
+			return new EntitySetOptionsBuilder<T>(entitySetOptions);
 		}
 
 		/// <inheritdoc />

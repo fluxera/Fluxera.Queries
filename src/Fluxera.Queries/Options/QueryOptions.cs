@@ -154,7 +154,7 @@
 			{
 				if(this.search == null && this.parameters.Search != null)
 				{
-					this.search = new SearchQueryOption(this.parameters.Search);
+					this.search = new SearchQueryOption(this.parameters.Search, this.entitySetOptions.SearchPredicate);
 				}
 
 				return this.search;
