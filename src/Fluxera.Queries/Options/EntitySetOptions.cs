@@ -49,14 +49,49 @@
 		internal bool AlwaysIncludeCount { get; set; }
 
 		/// <summary>
-		///		Gets the max top value.
+		///		Gets the max $top value.
 		/// </summary>
 		internal int? MaxTop { get; set; }
 
 		/// <summary>
-		///		Gets the default top value.
+		///		Gets the default $top value.
 		/// </summary>
 		internal int? DefaultTop { get; set; }
+
+		/// <summary>
+		///		Flag, indicating if $filter is allowed.
+		/// </summary>
+		internal bool AllowFilter { get; set; } = true;
+
+		/// <summary>
+		///		Flag, indicating if $orderby is allowed.
+		/// </summary>
+		internal bool AllowOrderBy { get; set; } = true;
+
+		/// <summary>
+		///		Flag, indicating if $skip is allowed.
+		/// </summary>
+		internal bool AllowSkip { get; set; } = true;
+
+		/// <summary>
+		///		Flag, indicating if $top is allowed.
+		/// </summary>
+		internal bool AllowTop { get; set; } = true;
+
+		/// <summary>
+		///		Flag, indicating if $count is allowed.
+		/// </summary>
+		internal bool AllowCount { get; set; } = true;
+
+		/// <summary>
+		///		Flag, indicating if $select is allowed.
+		/// </summary>
+		internal bool AllowSelect { get; set; } = true;
+
+		/// <summary>
+		///		Flag, indicating if $search is allowed.
+		/// </summary>
+		internal bool AllowSearch { get; set; }
 
 		/// <summary>
 		///		Gets a metadata entry.

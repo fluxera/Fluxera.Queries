@@ -160,6 +160,41 @@
 				parameters.Top = top.Value.ToString();
 			}
 
+			if(!options.AllowFilter && parameters.Filter != null)
+			{
+				throw new InvalidOperationException($"The $filter query option parameter is now allowed for the '{options.Name}' entity set.");
+			}
+
+			if(!options.AllowOrderBy && parameters.OrderBy != null)
+			{
+				throw new InvalidOperationException($"The $orderby query option parameter is now allowed for the '{options.Name}' entity set.");
+			}
+
+			if(!options.AllowSkip && parameters.Skip != null)
+			{
+				throw new InvalidOperationException($"The $skip query option parameter is now allowed for the '{options.Name}' entity set.");
+			}
+
+			if(!options.AllowTop && parameters.Top != null)
+			{
+				throw new InvalidOperationException($"The $top query option parameter is now allowed for the '{options.Name}' entity set.");
+			}
+
+			if(!options.AllowCount && parameters.Count != null)
+			{
+				throw new InvalidOperationException($"The $count query option parameter is now allowed for the '{options.Name}' entity set.");
+			}
+
+			if(!options.AllowSelect && parameters.Select != null)
+			{
+				throw new InvalidOperationException($"The $select query option parameter is now allowed for the '{options.Name}' entity set.");
+			}
+
+			if(!options.AllowSearch && parameters.Search != null)
+			{
+				throw new InvalidOperationException($"The $search query option parameter is now allowed for the '{options.Name}' entity set.");
+			}
+
 			return parameters;
 		}
 
