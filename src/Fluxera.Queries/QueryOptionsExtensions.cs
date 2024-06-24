@@ -62,7 +62,7 @@
 		}
 
 		///  <summary>
-		/// 	Creates a search predicate from the given <see cref="FilterQueryOption"/>.
+		/// 	Creates a search predicate from the given <see cref="SearchQueryOption"/>.
 		///  </summary>
 		///  <typeparam name="T"></typeparam>
 		///  <param name="searchQueryOption"></param>
@@ -72,6 +72,19 @@
 			where T : class
 		{
 			return searchQueryOption?.ToPredicateExpression(searchPredicate) ?? (x => true);
+		}
+
+		///  <summary>
+		/// 	Creates a search predicate from the given <see cref="SearchQueryOption"/>.
+		///  </summary>
+		///  <typeparam name="T"></typeparam>
+		///  <param name="searchQueryOption"></param>
+		///  <returns></returns>
+		public static Expression<Func<T, bool>> ToPredicate<T>(this SearchQueryOption searchQueryOption)
+			where T : class
+		{
+			Expression<Func<T, string, bool>> searchPredicate = searchQueryOption?.SearchPredicate as Expression<Func<T, string, bool>>;
+			return searchQueryOption?.ToPredicate(searchPredicate) ?? (x => true);
 		}
 
 		/// <summary>
