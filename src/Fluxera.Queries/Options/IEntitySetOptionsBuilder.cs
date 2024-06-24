@@ -18,6 +18,20 @@
 		IEntitySetOptionsBuilder<T> AlwaysIncludeCount();
 
 		/// <summary>
+		///		Configure the entity set to use this max top value, even if a higher values
+		///		was requested in the $top query option.
+		/// </summary>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> SetMaxTop(int maxTop);
+
+		/// <summary>
+		///		Configure the default top value, if none was provided.
+		/// </summary>
+		/// <param name="defaultTop"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> SetDefaultTop(int defaultTop);
+
+		/// <summary>
 		///		Adds a metadata entry for the entity set.
 		/// </summary>
 		/// <param name="key"></param>
@@ -30,6 +44,6 @@
 		/// </summary>
 		/// <param name="searchPredicate"></param>
 		/// <returns></returns>
-		IEntitySetOptionsBuilder<T> DefaultSearchPredicate(Expression<Func<T, string, bool>> searchPredicate);
+		IEntitySetOptionsBuilder<T> EnableSearch(Expression<Func<T, string, bool>> searchPredicate);
 	}
 }

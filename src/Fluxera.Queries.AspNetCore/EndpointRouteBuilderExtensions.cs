@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
+	using System.Text;
 	using System.Text.Json;
 	using System.Text.Json.Serialization;
 	using System.Text.Json.Serialization.Metadata;
@@ -13,14 +14,18 @@
 	using Fluxera.Queries.Options;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.StronglyTypedId.SystemTextJson;
+	using Fluxera.Utilities.Extensions;
 	using Fluxera.ValueObject.SystemTextJson;
 	using JetBrains.Annotations;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Http;
+	using Microsoft.AspNetCore.Http.Extensions;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Routing;
+	using Microsoft.AspNetCore.WebUtilities;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
+	using Microsoft.Extensions.Primitives;
 
 	/// <summary>
 	/// 	Extension methods for the <see cref="IEndpointRouteBuilder" /> type.
@@ -120,8 +125,7 @@
 
 			return routeHandlerBuilder;
 
-			static async Task<IResult> ExecuteFindManyAsync(HttpContext context,
-				CancellationToken cancellationToken = default)
+			static async Task<IResult> ExecuteFindManyAsync(HttpContext context, CancellationToken cancellationToken = default)
 			{
 				DataQueriesOptions dataQueriesOptions = context.GetDataQueriesOptions();
 				EntitySetOptions entitySetOptions = context.GetEntitySetOptions();
@@ -129,6 +133,8 @@
 
 				IQueryExecutor queryExecutor = context.GetQueryExecutor(entitySetOptions);
 				QueryResult result = await queryExecutor.ExecuteFindManyAsync(dataQuery, cancellationToken);
+
+				//result.NextLink = context.Request.GetNextLinkUrl(entitySetOptions);
 
 				return Results.Json(result, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200);
 			}
@@ -152,9 +158,7 @@
 
 			return routeHandlerBuilder;
 
-			static async Task<IResult> ExecuteGetAsync(HttpContext context,
-				[FromRoute] string id,
-				CancellationToken cancellationToken = default)
+			static async Task<IResult> ExecuteGetAsync(HttpContext context, [FromRoute] string id, CancellationToken cancellationToken = default)
 			{
 				DataQueriesOptions dataQueriesOptions = GetDataQueriesOptions(context);
 				EntitySetOptions entitySetOptions = GetEntitySetOptions(context);
@@ -202,8 +206,7 @@
 
 			return routeHandlerBuilder;
 
-			static async Task<IResult> ExecuteCountAsync(HttpContext context,
-				CancellationToken cancellationToken = default)
+			static async Task<IResult> ExecuteCountAsync(HttpContext context, CancellationToken cancellationToken = default)
 			{
 				EntitySetOptions entitySetOptions = GetEntitySetOptions(context);
 				DataQuery dataQuery = DataQuery.Create(context, entitySetOptions.ComplexTypeOptions.ClrType);
@@ -245,6 +248,57 @@
 			return queryExecutor;
 		}
 
+		//private static string GetNextLinkUrl(this HttpRequest request, EntitySetOptions options)
+		//{
+		//	string scheme = request.Scheme ?? string.Empty;
+		//	string host = request.Host.Value ?? string.Empty;
+		//	string pathBase = request.PathBase.Value ?? string.Empty;
+		//	string path = request.Path.Value ?? string.Empty;
+
+		//	IDictionary<string, StringValues> query = QueryHelpers.ParseQuery(request.QueryString.Value ?? string.Empty);
+
+		//	int skip = 0;
+		//	if(query.TryGetValue("$skip", out StringValues skipValue))
+		//	{
+		//		skip = skipValue.LastOrDefault().Convert().ToInt();
+		//	}
+
+		//	int top = 0;
+		//	if(query.TryGetValue("$top", out StringValues topValue))
+		//	{
+		//		top = topValue.LastOrDefault().Convert().ToInt();
+		//	}
+
+		//	// If a max top value is configured, and it has overridden the original value, 
+		//	// we calculate the set the next $skip and $top values.
+		//	if(options.MaxTop.HasValue && top > options.MaxTop.GetValueOrDefault())
+		//	{
+		//		// TODO: only continue this would yield a partial page until the total count is reached.
+
+		//		// $top must be the max top value.
+		//		top = options.MaxTop.GetValueOrDefault();
+		//	}
+
+		//	// $skip must be the provided skip value plus applied top value.
+		//	skip += top;
+
+		//	query["$skip"] = skip.ToString();
+		//	query["$top"] = top.ToString();
+		//	string queryString = QueryHelpers.AddQueryString(string.Empty, query);
+
+		//	// PERF: Calculate string length to allocate correct buffer size for StringBuilder.
+		//	int length = scheme.Length + Uri.SchemeDelimiter.Length + host.Length + pathBase.Length + path.Length + queryString.Length;
+
+		//	return new StringBuilder(length)
+		//		.Append(scheme)
+		//		.Append(Uri.SchemeDelimiter)
+		//		.Append(host)
+		//		.Append(pathBase)
+		//		.Append(path)
+		//		.Append(queryString)
+		//		.ToString();
+		//}
+
 		private static JsonSerializerOptions CreateJsonSerializerOptions(DataQueriesOptions dataQueriesOptions)
 		{
 			if(jsonSerializerOptions is not null)
@@ -266,7 +320,7 @@
 				{
 					Modifiers =
 					{
-						CustomModifier
+						RemoveIgnoredProperties
 					}
 				}
 			};
@@ -278,7 +332,7 @@
 
 			return jsonSerializerOptions;
 
-			void CustomModifier(JsonTypeInfo jsonTypeInfo)
+			void RemoveIgnoredProperties(JsonTypeInfo jsonTypeInfo)
 			{
 				if(jsonTypeInfo.Type.IsClass)
 				{

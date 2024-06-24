@@ -4,6 +4,7 @@
 	using System.Text;
 	using Fluxera.Guards;
 	using Fluxera.Queries.Parsers;
+	using Fluxera.Utilities.Extensions;
 
 	/// <summary>
 	///     A class which contains the query string parameter values.
@@ -140,6 +141,23 @@
 			if(options.AlwaysIncludeCount)
 			{
 				parameters.Count = options.AlwaysIncludeCount.ToString();
+			}
+
+			int? top = parameters.Top?.Convert().ToInt();
+
+			if(options.DefaultTop.HasValue && !top.HasValue)
+			{
+				top = options.DefaultTop.Value;
+			}
+
+			if(options.MaxTop.HasValue && top > options.MaxTop.Value)
+			{
+				top = options.MaxTop.Value;
+			}
+
+			if(top.HasValue)
+			{
+				parameters.Top = top.Value.ToString();
 			}
 
 			return parameters;
