@@ -16,6 +16,7 @@
 			Expression ceilArg = arguments[0].Type == TypeUtilities.DoubleType
 				? arguments[0]
 				: Expression.Convert(arguments[0], TypeUtilities.DoubleType);
+
 			return Expression.Call(null, Methods.MathCeiling, ceilArg);
 		}
 	}

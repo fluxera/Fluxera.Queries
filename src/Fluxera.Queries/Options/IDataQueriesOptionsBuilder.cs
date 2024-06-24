@@ -16,7 +16,7 @@
 		/// <param name="name"></param>
 		/// <param name="entityTypeName"></param>
 		/// <param name="configure"></param>
-		IEntitySetOptionsBuilder EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
+		IEntitySetOptionsBuilder<T> EntitySet<T>(string name, string entityTypeName, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
 
 		/// <summary>
 		///		Configures an entity set.
@@ -24,7 +24,7 @@
 		/// <typeparam name="T"></typeparam>
 		/// <param name="name"></param>
 		/// <param name="configure"></param>
-		IEntitySetOptionsBuilder EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
+		IEntitySetOptionsBuilder<T> EntitySet<T>(string name, Action<IEntityTypeOptionsBuilder<T>> configure = null) where T : class;
 
 		/// <summary>
 		///		Configures a complex type.

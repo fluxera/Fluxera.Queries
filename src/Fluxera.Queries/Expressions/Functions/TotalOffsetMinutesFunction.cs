@@ -18,9 +18,7 @@
 				return this.InvalidParameterTypes("DateTimeOffset");
 			}
 
-			return Expression.MakeMemberAccess(
-				Expression.MakeMemberAccess(arguments[0], Methods.DateTimeOffsetOffset),
-				Methods.TimeSpanTotalMinutes);
+			return Expression.MakeMemberAccess(Expression.MakeMemberAccess(arguments[0], Methods.DateTimeOffsetOffset), Methods.TimeSpanTotalMinutes);
 		}
 	}
 }

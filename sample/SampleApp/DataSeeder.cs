@@ -4,11 +4,13 @@
 	using System.Linq;
 	using System.Threading.Tasks;
 	using Bogus;
+	using Bogus.DataSets;
 	using Fluxera.Repository;
 	using Fluxera.Utilities.Extensions;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.Extensions.DependencyInjection;
 	using SampleApp.Model;
+	using Address = SampleApp.Model.Address;
 
 	internal static class DataSeeder
 	{
@@ -65,6 +67,7 @@
 					   string firstName = x.Name.FirstName();
 					   string lastName = x.Name.LastName();
 					   string email = x.Internet.Email(firstName, lastName);
+					   string description = x.Lorem.Paragraphs();
 
 					   DateTime today = DateTime.Today;
 					   DateTime dateOfBirth = x.Person.DateOfBirth;
@@ -79,7 +82,8 @@
 						   Email = email,
 						   Age = new Age(age),
 						   State = state,
-						   Address = addressFaker.Generate(1).First()
+						   Address = addressFaker.Generate(1).First(),
+						   Description = description
 					   };
 				   });
 

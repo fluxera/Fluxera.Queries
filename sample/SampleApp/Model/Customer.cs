@@ -19,5 +19,7 @@
 		public Address Address { get; set; }
 
 		public double IgnoreMe { get; set; }
+
+		public string Description { get; set; }
 	}
 }

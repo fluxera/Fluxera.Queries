@@ -46,7 +46,9 @@ namespace SampleApp
 					// TODO: Required()
 					entityType.HasKey(x => x.ID)
 							  .Ignore(x => x.IgnoreMe);
-				});
+				})
+				.AlwaysIncludeCount()
+				.DefaultSearchPredicate((x, s) => x.Description.Contains(s));
 
 				options.ComplexType<Address>(complexType =>
 				{

@@ -34,8 +34,7 @@
 
 			if(arguments[0].Type == TypeUtilities.StringType)
 			{
-				return Expression.Call(null, Methods.StringConcat,
-					Expression.NewArrayInit(typeof(object), arguments));
+				return Expression.Call(null, Methods.StringConcat, Expression.NewArrayInit(typeof(object), arguments));
 			}
 
 			return this.InvalidParameterTypes("strings, enumerables");

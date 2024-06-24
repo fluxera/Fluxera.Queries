@@ -1,5 +1,7 @@
 ﻿namespace Fluxera.Queries
 {
+	using System.Linq.Expressions;
+	using System;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Fluxera.Queries.Options;

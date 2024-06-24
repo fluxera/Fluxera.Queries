@@ -1,11 +1,11 @@
-﻿namespace Fluxera.Queries.UnitTests.Parser
+﻿namespace Fluxera.Queries.UnitTests.Parsers
 {
-	using Fluxera.Queries.Model;
-	using NUnit.Framework;
 	using System;
 	using FluentAssertions;
+	using Fluxera.Queries.Model;
 	using Fluxera.Queries.Options;
 	using Microsoft.Extensions.DependencyInjection;
+	using NUnit.Framework;
 
 	[TestFixture]
 	public class QueryParserTests

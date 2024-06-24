@@ -12,6 +12,7 @@ namespace Fluxera.Queries.Expressions
 		public static readonly Type DateTimeOffsetType = typeof(DateTimeOffset);
 		public static readonly Type DateTimeType = typeof(DateTime);
 		public static readonly Type DateOnlyType = typeof(DateOnly);
+		public static readonly Type TimeSpanType = typeof(TimeSpan);
 
 		public static bool IsEnumOrNullableEnum(Type itemType, out Type enumType)
 		{
@@ -67,7 +68,7 @@ namespace Fluxera.Queries.Expressions
 				"DateTimeOffset" => DateTimeOffsetType,
 				"Decimal"        => typeof(decimal),
 				"Double"         => DoubleType,
-				"Duration"       => typeof(TimeSpan),
+				"Duration"       => TimeSpanType,
 				"Guid"           => typeof(Guid),
 				"Int16"          => typeof(short),
 				"Int32"          => typeof(int),

@@ -6,7 +6,7 @@ namespace Fluxera.Queries.Parsers
 	{
 		public static UnaryOperatorKind ToUnaryOperatorKind(this string operatorType)
 		{
-			return operatorType switch
+			return operatorType.ToLowerInvariant() switch
 			{
 				"not" => UnaryOperatorKind.Not,
 				_     => throw new QueryException(string.Format(Messages.UnknownOperator, operatorType))

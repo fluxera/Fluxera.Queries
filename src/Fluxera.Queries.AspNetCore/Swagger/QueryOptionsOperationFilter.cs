@@ -40,8 +40,8 @@
 			AddTopParameter(operation);
 			AddCountParameter(operation);
 			AddSelectParameter(operation);
+			AddSearchParameter(operation);
 			
-			// $search: A global text filter applied to multiple properties to select only a subset of the overall results.
 			// $skiptoken: Token used for skipping results.
 		}
 
@@ -57,32 +57,37 @@
 
 		private static void AddFilterParameter(OpenApiOperation operation)
 		{
-			AddParameter(operation, "$filter", typeof(string), "A filter to select only a subset of the overall results. (<a href='http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358948'>Documentation</a>)");
+			AddParameter(operation, "$filter", typeof(string), "The $filter system query option restricts the set of items returned. (<a href='http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358948'>Documentation</a>)");
 		}
 
 		private static void AddOrderByParameter(OpenApiOperation operation)
 		{
-			AddParameter(operation, "$orderby", typeof(string), "A comma separated list of properties to sort the result set. (<a href='http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358952'>Documentation</a>)");
+			AddParameter(operation, "$orderby", typeof(string), "The $orderby System Query option specifies the order in which items are returned from the service. (<a href='http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358952'>Documentation</a>)");
 		}
 
 		private static void AddSkipParameter(OpenApiOperation operation)
 		{
-			AddParameter(operation, "$skip", typeof(int), "The number of items to skip for paging. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358954'>Documentation</a>)");
+			AddParameter(operation, "$skip", typeof(int), "The $skip system query option specifies a non-negative integer n that excludes the first n items of the queried collection from the result. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358954'>Documentation</a>)");
 		}
 
 		private static void AddTopParameter(OpenApiOperation operation)
 		{
-			AddParameter(operation, "$top", typeof(int), "The number of elements to include from the result set for paging. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358953'>Documentation</a>)");
+			AddParameter(operation, "$top", typeof(int), "The $top system query option specifies a non-negative integer n that limits the number of items returned from a collection. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358953'>Documentation</a>)");
 		}
 
 		private static void AddCountParameter(OpenApiOperation operation)
 		{
-			AddParameter(operation, "$count", typeof(bool), "Whether to include the total number of items in the result set before paging. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358955'>Documentation</a>)");
+			AddParameter(operation, "$count", typeof(bool), "The $count system query option with a value of true specifies that the total count of items within a collection matching the request be returned along with the result. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358955'>Documentation</a>)");
 		}
 
 		private static void AddSelectParameter(OpenApiOperation operation)
 		{
-			AddParameter(operation, "$select", typeof(string), "A comma separated list of properties to select from the result. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358942'>Documentation</a>)");
+			AddParameter(operation, "$select", typeof(string), "The $select system query option requests that the service return only the properties explicitly requested by the client. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358942'>Documentation</a>)");
+		}
+
+		private static void AddSearchParameter(OpenApiOperation operation)
+		{
+			AddParameter(operation, "$search", typeof(string), "The $search system query option restricts the result to include only those items matching the specified search expression. (<a href='https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358956'>Documentation</a>)");
 		}
 
 		private static void AddParameter(OpenApiOperation operation, string paramName, Type paramType, string paramDescription)

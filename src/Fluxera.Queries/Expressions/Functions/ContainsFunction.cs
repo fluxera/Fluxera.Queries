@@ -34,9 +34,7 @@
 
 			if(itemType == elementArg.Type || (!itemIsEnum && !argIsEnum))
 			{
-				return Expression.Call(null, Methods.EnumerableContains.MakeGenericMethod(itemType),
-					sourceArg,
-					elementArg);
+				return Expression.Call(null, Methods.EnumerableContains.MakeGenericMethod(itemType), sourceArg, elementArg);
 			}
 
 			// enum case: we need to convert/promote expression to enum types
@@ -48,7 +46,6 @@
 			{
 				object[] sourceEnumerable = ((IEnumerable)sourceConstantExpression.Value).Cast<object>()
 																						 .ToArray();
-
 				Array enumArray = Array.CreateInstance(arrayType, sourceEnumerable.Length);
 
 				for(int index = 0; index < sourceEnumerable.Length; index++)
@@ -63,9 +60,7 @@
 			}
 			else if(elementArg is ConstantExpression elementConstantExpression)
 			{
-				elementArg =
-					Expression.Constant(ExpressionHelper.ToEnumValue(enumType,
-						elementConstantExpression.Value));
+				elementArg = Expression.Constant(ExpressionHelper.ToEnumValue(enumType, elementConstantExpression.Value));
 			}
 
 			return Expression.Call(null, Methods.EnumerableContains.MakeGenericMethod(itemType),

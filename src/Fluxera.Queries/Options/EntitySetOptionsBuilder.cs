@@ -1,6 +1,10 @@
 ﻿namespace Fluxera.Queries.Options
 {
-	internal sealed class EntitySetOptionsBuilder : IEntitySetOptionsBuilder
+	using System;
+	using System.Linq.Expressions;
+
+	internal sealed class EntitySetOptionsBuilder<T> : IEntitySetOptionsBuilder<T> 
+		where T : class
 	{
 		private readonly EntitySetOptions options;
 
@@ -10,7 +14,7 @@
 		}
 
 		/// <inheritdoc />
-		public IEntitySetOptionsBuilder AlwaysIncludeCount()
+		public IEntitySetOptionsBuilder<T> AlwaysIncludeCount()
 		{
 			this.options.AlwaysIncludeCount = true;
 
@@ -18,9 +22,17 @@
 		}
 
 		/// <inheritdoc />
-		public IEntitySetOptionsBuilder WithMetadata(string key, object value)
+		public IEntitySetOptionsBuilder<T> WithMetadata(string key, object value)
 		{
 			this.options.Metadata.Add(key, value);
+
+			return this;
+		}
+
+		/// <inheritdoc />
+		public IEntitySetOptionsBuilder<T> DefaultSearchPredicate(Expression<Func<T, string, bool>> searchPredicate)
+		{
+			this.options.SearchPredicate = searchPredicate;
 
 			return this;
 		}

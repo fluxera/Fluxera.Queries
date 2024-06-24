@@ -27,7 +27,8 @@
 			EntitySetOptions entitySetOptions = this.options.GetOptionsByType(entitySet.EdmType.ClrType) ?? new EntitySetOptions();
 
 			QueryStringParameters parameters = QueryStringParameters.Create(queryString, entitySetOptions);
-			return new QueryOptions(parameters, entitySet, this.typeProvider);
+
+			return new QueryOptions(parameters, entitySet, entitySetOptions, this.typeProvider);
 		}
 	}
 }

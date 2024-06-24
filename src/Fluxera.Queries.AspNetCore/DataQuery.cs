@@ -41,7 +41,8 @@ namespace Fluxera.Queries.AspNetCore
 				Skip = GetSkipParameterValue(context.Request.Query),
 				Top = GetTopParameterValue(context.Request.Query),
 				Count = GetCountParameterValue(context.Request.Query),
-				Select = GetSelectParameterValue(context.Request.Query)
+				Select = GetSelectParameterValue(context.Request.Query),
+				Search = GetSearchParameterValue(context.Request.Query)
 			};
 
 			IOptions<DataQueriesOptions> dataQueryOptions = context.RequestServices.GetRequiredService<IOptions<DataQueriesOptions>>();
@@ -92,10 +93,16 @@ namespace Fluxera.Queries.AspNetCore
 		public bool? Count { get; internal set; }
 
 		/// <summary>
-		///		Gets the '$count' query parameter value.
+		///		Gets the '$select' query parameter value.
 		/// </summary>
 		[FromQuery(Name = "$select")]
 		public string Select { get; internal set; }
+
+		/// <summary>
+		///		Gets the '$search' query parameter value.
+		/// </summary>
+		[FromQuery(Name = "$search")]
+		public string Search { get; internal set; }
 
 		/// <summary>
 		///		Converts the data query to parsed query options.
@@ -132,6 +139,7 @@ namespace Fluxera.Queries.AspNetCore
 			dataQuery.Top = GetTopParameterValue(context.Request.Query);
 			dataQuery.Count = GetCountParameterValue(context.Request.Query);
 			dataQuery.Select = GetSelectParameterValue(context.Request.Query);
+			dataQuery.Search = GetSearchParameterValue(context.Request.Query);
 
 			IOptions<DataQueriesOptions> dataQueryOptions = context.RequestServices.GetRequiredService<IOptions<DataQueriesOptions>>();
 			EntitySet entitySet = dataQueryOptions.Value.GetByType(entityType);
@@ -222,6 +230,18 @@ namespace Fluxera.Queries.AspNetCore
 
 			return null;
 		}
+		
+		internal static string GetSearchParameterValue(IQueryCollection collection)
+		{
+			Guard.Against.Null(collection);
+
+			if(collection.TryGetValue(ParameterNames.Search, out StringValues value))
+			{
+				return value.Single();
+			}
+
+			return null;
+		}
 
 		/// <inheritdoc />
 		public override string ToString()
@@ -267,6 +287,13 @@ namespace Fluxera.Queries.AspNetCore
 			{
 				builder.Append("$select=");
 				builder.Append(this.Select);
+				builder.Append('&');
+			}
+
+			if(this.Search is not null)
+			{
+				builder.Append("$search=");
+				builder.Append(this.Search);
 				builder.Append('&');
 			}
 
