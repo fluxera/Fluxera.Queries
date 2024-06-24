@@ -18,25 +18,19 @@
 		public string Name { get; set; }
 
 		/// <summary>
+		///		Gets the entity set.
+		/// </summary>
+		public EntitySet EntitySet { get; set; }
+
+		/// <summary>
 		///		Gets the ID type.
 		/// </summary>
 		internal Type KeyType { get; set; }
 
 		/// <summary>
-		///		Gets the entity set.
-		/// </summary>
-		internal EntitySet EntitySet { get; set; }
-
-		/// <summary>
 		///		Gets the complex type options of the entity.
 		/// </summary>
 		internal ComplexTypeOptions ComplexTypeOptions { get; } = new ComplexTypeOptions();
-
-		/// <summary>
-		///		Flag, indicating if the @odata.count value is always written in
-		///		the response, overriding the value provided in the query string.
-		/// </summary>
-		internal bool AlwaysIncludeCount { get; set; }
 
 		/// <summary>
 		///		Gets the registered metadata for the entity set.
@@ -47,6 +41,22 @@
 		///		Gets the search predicate expression.
 		/// </summary>
 		internal LambdaExpression SearchPredicate { get; set; }
+
+		/// <summary>
+		///		Flag, indicating if the @odata.count value is always written in
+		///		the response, overriding the value provided in the query string.
+		/// </summary>
+		internal bool AlwaysIncludeCount { get; set; }
+
+		/// <summary>
+		///		Gets the max top value.
+		/// </summary>
+		internal int? MaxTop { get; set; }
+
+		/// <summary>
+		///		Gets the default top value.
+		/// </summary>
+		internal int? DefaultTop { get; set; }
 
 		/// <summary>
 		///		Gets a metadata entry.

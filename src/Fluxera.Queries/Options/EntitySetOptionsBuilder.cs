@@ -22,6 +22,22 @@
 		}
 
 		/// <inheritdoc />
+		public IEntitySetOptionsBuilder<T> SetMaxTop(int maxTop)
+		{
+			this.options.MaxTop = maxTop;
+
+			return this;
+		}
+
+		/// <inheritdoc />
+		public IEntitySetOptionsBuilder<T> SetDefaultTop(int defaultTop)
+		{
+			this.options.DefaultTop = defaultTop;
+
+			return this;
+		}
+
+		/// <inheritdoc />
 		public IEntitySetOptionsBuilder<T> WithMetadata(string key, object value)
 		{
 			this.options.Metadata.Add(key, value);
@@ -30,7 +46,7 @@
 		}
 
 		/// <inheritdoc />
-		public IEntitySetOptionsBuilder<T> DefaultSearchPredicate(Expression<Func<T, string, bool>> searchPredicate)
+		public IEntitySetOptionsBuilder<T> EnableSearch(Expression<Func<T, string, bool>> searchPredicate)
 		{
 			this.options.SearchPredicate = searchPredicate;
 

@@ -48,7 +48,9 @@ namespace SampleApp
 							  .Ignore(x => x.IgnoreMe);
 				})
 				.AlwaysIncludeCount()
-				.DefaultSearchPredicate((x, s) => x.Description.Contains(s));
+				.SetMaxTop(10)
+				.SetDefaultTop(5)
+				.EnableSearch((x, s) => x.Description.Contains(s));
 
 				options.ComplexType<Address>(complexType =>
 				{

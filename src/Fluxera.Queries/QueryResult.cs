@@ -11,11 +11,11 @@
 	[PublicAPI]
 	public sealed class QueryResult
 	{
-		/// <summary>
-		///		Initializes a new instance of the <see cref="QueryResult"/>.
-		/// </summary>
-		/// <param name="items"></param>
-		/// <param name="totalCount"></param>
+		///  <summary>
+		/// 		Initializes a new instance of the <see cref="QueryResult"/>.
+		///  </summary>
+		///  <param name="items"></param>
+		///  <param name="totalCount"></param>
 		public QueryResult(IReadOnlyCollection<object> items, long? totalCount = null)
 		{
 			this.Items = Guard.Against.Null(items);
@@ -28,6 +28,13 @@
 		[JsonPropertyName("@odata.count")]
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public long? TotalCount { get; }
+
+		/// <summary>
+		///     Gets the next link to paged data (optional).
+		/// </summary>
+		[JsonPropertyName("@odata.nextLink")]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		public string NextLink { get; internal set; }
 
 		/// <summary>
 		///     Gets the filtered and paginated results of the query.
