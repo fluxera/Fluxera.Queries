@@ -40,10 +40,60 @@
 		IEntitySetOptionsBuilder<T> WithMetadata(string key, object value);
 
 		/// <summary>
+		///		Enables or disables the $filter query option.
+		/// </summary>
+		/// <param name="isEnabled"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> AllowFilter(bool isEnabled = true);
+
+		/// <summary>
+		///		Enables or disables the $orderby query option.
+		/// </summary>
+		/// <param name="isEnabled"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> AllowOrderBy(bool isEnabled = true);
+
+		/// <summary>
+		///		Enables or disables the $skip query option.
+		/// </summary>
+		/// <param name="isEnabled"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> AllowSkip(bool isEnabled = true);
+
+		/// <summary>
+		///		Enables or disables the $top query option.
+		/// </summary>
+		/// <param name="isEnabled"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> AllowTop(bool isEnabled = true);
+
+		/// <summary>
+		///		Enables or disables the $count query option.
+		/// </summary>
+		/// <param name="isEnabled"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> AllowCount(bool isEnabled = true);
+
+		/// <summary>
+		///		Enables or disables the $select query option.
+		/// </summary>
+		/// <param name="isEnabled"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> AllowSelect(bool isEnabled = true);
+
+		/// <summary>
 		///		Adds the default search predicate to use.
 		/// </summary>
 		/// <param name="searchPredicate"></param>
 		/// <returns></returns>
-		IEntitySetOptionsBuilder<T> EnableSearch(Expression<Func<T, string, bool>> searchPredicate);
+		IEntitySetOptionsBuilder<T> AllowSearch(Expression<Func<T, string, bool>> searchPredicate);
+
+		///  <summary>
+		/// 	Adds the default search predicate to use.
+		///  </summary>
+		///  <param name="isEnabled"></param>
+		///  <param name="searchPredicate"></param>
+		///  <returns></returns>
+		IEntitySetOptionsBuilder<T> AllowSearch(bool isEnabled = true, Expression<Func<T, string, bool>> searchPredicate = null);
 	}
 }
