@@ -8,7 +8,22 @@
 	///		Build the options for the entity set.
 	/// </summary>
 	[PublicAPI]
-	public interface IEntitySetOptionsBuilder<T>
+	public interface IEntitySetOptionsBuilder
+	{
+		/// <summary>
+		///		Adds a metadata entry for the entity set.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder WithMetadata(string key, object value);
+	}
+
+	/// <summary>
+	///		Build the options for the entity set.
+	/// </summary>
+	[PublicAPI]
+	public interface IEntitySetOptionsBuilder<T> : IEntitySetOptionsBuilder
 		where T : class
 	{
 		/// <summary>
@@ -37,7 +52,7 @@
 		/// <param name="key"></param>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		IEntitySetOptionsBuilder<T> WithMetadata(string key, object value);
+		IEntitySetOptionsBuilder<T> WithMetadataTyped(string key, object value);
 
 		/// <summary>
 		///		Enables or disables the $filter query option.
