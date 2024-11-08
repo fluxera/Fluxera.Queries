@@ -31,6 +31,11 @@
 		public string Skip { get; private set; }
 
 		/// <summary>
+		///     Gets the string $skiptoken parameter value from the incoming request.
+		/// </summary>
+		public string SkipToken { get; private set; }
+
+		/// <summary>
 		///     Gets the string $top parameter value from the incoming request.
 		/// </summary>
 		public string Top { get; private set; }
@@ -63,6 +68,7 @@
 			const string filterParameterPrefix = ParameterNames.Filter + "=";
 			const string orderByParameterPrefix = ParameterNames.OrderBy + "=";
 			const string skipParameterPrefix = ParameterNames.Skip + "=";
+			const string skipTokenParameterPrefix = ParameterNames.SkipToken + "=";
 			const string topParameterPrefix = ParameterNames.Top + "=";
 			const string countParameterPrefix = ParameterNames.Count + "=";
 			const string selectParameterPrefix = ParameterNames.Select + "=";
@@ -105,6 +111,13 @@
 						if(decodedQueryOption.Length != skipParameterPrefix.Length)
 						{
 							parameters.Skip = decodedQueryOption.Substring(skipParameterPrefix.Length);
+						}
+					}
+					else if(decodedQueryOption.StartsWith(skipTokenParameterPrefix, StringComparison.Ordinal))
+					{
+						if(decodedQueryOption.Length != skipTokenParameterPrefix.Length)
+						{
+							parameters.SkipToken = decodedQueryOption.Substring(skipTokenParameterPrefix.Length);
 						}
 					}
 					else if(decodedQueryOption.StartsWith(topParameterPrefix, StringComparison.Ordinal))
@@ -227,6 +240,14 @@
 				builder.Append('&');
 			}
 
+			if(this.SkipToken != null)
+			{
+				builder.Append(ParameterNames.SkipToken);
+				builder.Append('=');
+				builder.Append(this.SkipToken);
+				builder.Append('&');
+			}
+
 			if(this.Top != null)
 			{
 				builder.Append(ParameterNames.Top);
@@ -258,14 +279,6 @@
 				builder.Append(this.Search);
 				builder.Append('&');
 			}
-
-			//if(this.SkipToken != null)
-			//{
-			//	builder.Append(ParameterNames.SkipToken);
-			//	builder.Append('=');
-			//	builder.Append(this.SkipToken);
-			//	builder.Append('&');
-			//}
 
 			return builder.ToString(0, builder.Length > 0 ? builder.Length - 1 : builder.Length);
 		}

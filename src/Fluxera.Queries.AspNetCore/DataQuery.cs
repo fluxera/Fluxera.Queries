@@ -39,6 +39,7 @@ namespace Fluxera.Queries.AspNetCore
 				Filter = GetFilterParameterValue(context.Request.Query),
 				OrderBy = GetOrderByParameterValue(context.Request.Query),
 				Skip = GetSkipParameterValue(context.Request.Query),
+				SkipToken = GetSkipTokenParameterValue(context.Request.Query),
 				Top = GetTopParameterValue(context.Request.Query),
 				Count = GetCountParameterValue(context.Request.Query),
 				Select = GetSelectParameterValue(context.Request.Query),
@@ -79,6 +80,12 @@ namespace Fluxera.Queries.AspNetCore
 		/// </summary>
 		[FromQuery(Name = "$skip")]
 		public int? Skip { get; internal set; }
+
+		/// <summary>
+		///		Gets the '$skiptoken' query parameter value.
+		/// </summary>
+		[FromQuery(Name = "$skiptoken")]
+		public string SkipToken { get; internal set; }
 
 		/// <summary>
 		///		Gets the '$top' query parameter value.
@@ -136,6 +143,7 @@ namespace Fluxera.Queries.AspNetCore
 			dataQuery.Filter = GetFilterParameterValue(context.Request.Query);
 			dataQuery.OrderBy = GetOrderByParameterValue(context.Request.Query);
 			dataQuery.Skip = GetSkipParameterValue(context.Request.Query);
+			dataQuery.SkipToken = GetSkipTokenParameterValue(context.Request.Query);
 			dataQuery.Top = GetTopParameterValue(context.Request.Query);
 			dataQuery.Count = GetCountParameterValue(context.Request.Query);
 			dataQuery.Select = GetSelectParameterValue(context.Request.Query);
@@ -186,6 +194,18 @@ namespace Fluxera.Queries.AspNetCore
 				string skipParameterValue = value.Single();
 				int.TryParse(skipParameterValue, out int skipValue);
 				return skipValue;
+			}
+
+			return null;
+		}
+
+		internal static string GetSkipTokenParameterValue(IQueryCollection collection)
+		{
+			Guard.Against.Null(collection);
+
+			if(collection.TryGetValue(ParameterNames.SkipToken, out StringValues value))
+			{
+				return value.Single();
 			}
 
 			return null;
