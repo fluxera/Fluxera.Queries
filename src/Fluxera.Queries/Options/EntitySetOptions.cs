@@ -74,6 +74,11 @@
 		internal bool AllowSkip { get; set; } = true;
 
 		/// <summary>
+		///		Flag, indicating if $skiptoken is allowed.
+		/// </summary>
+		internal bool AllowSkipToken { get; set; }
+
+		/// <summary>
 		///		Flag, indicating if $top is allowed.
 		/// </summary>
 		internal bool AllowTop { get; set; } = true;

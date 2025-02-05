@@ -21,6 +21,11 @@
 		public const string Skip = "$skip";
 
 		/// <summary>
+		///		The $skiptoken parameter name.
+		/// </summary>
+		public const string SkipToken = "$skiptoken";
+
+		/// <summary>
 		///		The $top parameter name.
 		/// </summary>
 		public const string Top = "$top";
@@ -39,7 +44,5 @@
 		///		The $search parameter name.
 		/// </summary>
 		public const string Search = "$search";
-
-		//public const string SkipToken = "$skiptoken";
 	}
 }

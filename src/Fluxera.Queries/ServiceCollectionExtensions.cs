@@ -25,6 +25,7 @@
 			services.TryAddTransient<IQueryParser, QueryParser>();
 			services.TryAddSingleton<IEdmTypeProvider, EdmTypeProvider>();
 			services.TryAddTransient<IQueryExecutorFactory, DefaultQueryExecutorFactory>();
+			services.TryAddTransient<ISkipTokenHandler, DefaultSkipTokenHandler>();
 
 			services.Configure<DataQueriesOptions>(options =>
 			{

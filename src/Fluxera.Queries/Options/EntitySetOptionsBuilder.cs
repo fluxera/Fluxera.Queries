@@ -79,6 +79,14 @@
 		}
 
 		/// <inheritdoc />
+		public IEntitySetOptionsBuilder<T> AllowSkipToken(bool isEnabled = true)
+		{
+			this.options.AllowSkipToken = isEnabled;
+
+			return this;
+		}
+
+		/// <inheritdoc />
 		public IEntitySetOptionsBuilder<T> AllowTop(bool isEnabled = true)
 		{
 			this.options.AllowTop = isEnabled;
