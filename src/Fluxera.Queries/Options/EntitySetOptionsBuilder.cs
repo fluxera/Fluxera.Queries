@@ -39,9 +39,17 @@
 		}
 
 		/// <inheritdoc />
-		public IEntitySetOptionsBuilder<T> WithMetadata(string key, object value) 
+		public IEntitySetOptionsBuilder WithMetadata(string key, object value) 
 		{
 			this.options.Metadata[key] = value;
+
+			return this;
+		}
+
+		/// <inheritdoc />
+		public IEntitySetOptionsBuilder<T> WithMetadataTyped(string key, object value)
+		{
+			this.WithMetadata(key, value);
 
 			return this;
 		}

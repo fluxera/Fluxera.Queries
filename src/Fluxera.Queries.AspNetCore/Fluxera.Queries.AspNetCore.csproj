@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
 	</PropertyGroup>
 
@@ -27,21 +27,27 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Fluxera.Enumeration.SystemTextJson" Version="8.2.3" />
-		<PackageReference Include="Fluxera.StronglyTypedId.SystemTextJson" Version="8.3.6" />
-		<PackageReference Include="Fluxera.ValueObject.SystemTextJson" Version="8.2.3" />
-		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+		<PackageReference Include="Fluxera.Enumeration.SystemTextJson" Version="9.0.2" />
+		<PackageReference Include="Fluxera.StronglyTypedId.SystemTextJson" Version="9.0.2" />
+		<PackageReference Include="Fluxera.ValueObject.SystemTextJson" Version="9.0.2" />
+		<PackageReference Include="GitVersion.MsBuild" Version="6.1.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="JetBrains.Annotations" Version="2024.2.0" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="[7.0.20]" Condition="'$(TargetFramework)' == 'net7.0'" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" Condition="'$(TargetFramework)' == 'net8.0'" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+		<PackageReference Include="JetBrains.Annotations" Version="2024.3.0" PrivateAssets="All" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="[8.0.12]" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Fluxera.Queries\Fluxera.Queries.csproj" />
+		<ProjectReference Include="..\Fluxera.Queries\Fluxera.Queries.csproj" />
 	</ItemGroup>
 
 </Project>
