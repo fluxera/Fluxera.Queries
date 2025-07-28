@@ -48,6 +48,7 @@ namespace SampleApp
 							  .Ignore(x => x.IgnoreMe);
 				})
 				.AlwaysIncludeCount()
+				.AllowSkipToken()
 				.AllowSearch((x, s) => x.Description.Contains(s));
 
 				options.ComplexType<Address>(complexType =>

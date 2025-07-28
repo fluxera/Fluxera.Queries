@@ -76,6 +76,13 @@
 		IEntitySetOptionsBuilder<T> AllowSkip(bool isEnabled = true);
 
 		/// <summary>
+		///		Enables or disables the $skiptoken query option.
+		/// </summary>
+		/// <param name="isEnabled"></param>
+		/// <returns></returns>
+		IEntitySetOptionsBuilder<T> AllowSkipToken(bool isEnabled = true);
+
+		/// <summary>
 		///		Enables or disables the $top query option.
 		/// </summary>
 		/// <param name="isEnabled"></param>

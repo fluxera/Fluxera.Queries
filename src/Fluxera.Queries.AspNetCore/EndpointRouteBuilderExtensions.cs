@@ -4,7 +4,6 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
-	using System.Text;
 	using System.Text.Json;
 	using System.Text.Json.Serialization;
 	using System.Text.Json.Serialization.Metadata;
@@ -14,18 +13,14 @@
 	using Fluxera.Queries.Options;
 	using Fluxera.StronglyTypedId;
 	using Fluxera.StronglyTypedId.SystemTextJson;
-	using Fluxera.Utilities.Extensions;
 	using Fluxera.ValueObject.SystemTextJson;
 	using JetBrains.Annotations;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Http;
-	using Microsoft.AspNetCore.Http.Extensions;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Routing;
-	using Microsoft.AspNetCore.WebUtilities;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
-	using Microsoft.Extensions.Primitives;
 
 	/// <summary>
 	/// 	Extension methods for the <see cref="IEndpointRouteBuilder" /> type.
@@ -121,7 +116,8 @@
 				.WithMetadata(entitySetOptions)
 				.WithDescription("Retrieves multiple entities by the filter predicate.")
 				.WithOpenApi()
-				.Produces(200, entitySetOptions.ComplexTypeOptions.ClrType);
+				.Produces(200, entitySetOptions.ComplexTypeOptions.ClrType)
+				.ProducesProblem(400);
 
 			return routeHandlerBuilder;
 
@@ -134,7 +130,12 @@
 				IQueryExecutor queryExecutor = context.GetQueryExecutor(entitySetOptions);
 				QueryResult result = await queryExecutor.ExecuteFindManyAsync(dataQuery, cancellationToken);
 
-				//result.NextLink = context.Request.GetNextLinkUrl(entitySetOptions);
+				// TODO
+				if(entitySetOptions.AllowSkipToken)
+				{
+					ISkipTokenHandler skipTokenHandler = context.GetSkipTokenHandler();
+					result.NextLink = skipTokenHandler.GetNextLinkUrl(entitySetOptions);
+				}
 
 				return Results.Json(result, CreateJsonSerializerOptions(dataQueriesOptions), statusCode: 200);
 			}
@@ -154,6 +155,7 @@
 				.WithDescription("Retrieves a single entity by ID.")
 				.WithOpenApi()
 				.Produces(200, entitySetOptions.ComplexTypeOptions.ClrType)
+				.ProducesProblem(400)
 				.Produces(404);
 
 			return routeHandlerBuilder;
@@ -202,7 +204,8 @@
 				.WithMetadata(entitySetOptions)
 				.WithDescription("Retrieves the count of entities in the data store.")
 				.WithOpenApi()
-				.Produces<long>(contentType: "text/plain");
+				.Produces<long>(contentType: "text/plain")
+				.ProducesProblem(400);
 
 			return routeHandlerBuilder;
 
@@ -246,6 +249,12 @@
 			IQueryExecutor queryExecutor = queryExecutorFactory.Create(options.ComplexTypeOptions.ClrType, options.KeyType);
 
 			return queryExecutor;
+		}
+
+		private static ISkipTokenHandler GetSkipTokenHandler(this HttpContext context)
+		{
+			ISkipTokenHandler skipTokenHandler = context.RequestServices.GetRequiredService<ISkipTokenHandler>();
+			return skipTokenHandler;
 		}
 
 		//private static string GetNextLinkUrl(this HttpRequest request, EntitySetOptions options)

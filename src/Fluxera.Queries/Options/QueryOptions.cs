@@ -14,6 +14,7 @@
 		private FilterQueryOption filter;
 		private OrderByQueryOption orderBy;
 		private SkipQueryOption skip;
+		private SkipTokenQueryOption skipToken;
 		private TopQueryOption top;
 		private CountQueryOption count;
 		private SelectQueryOption select;
@@ -93,6 +94,22 @@
 				}
 
 				return this.skip;
+			}
+		}
+
+		/// <summary>
+		///     Gets the $skiptoken query option.
+		/// </summary>
+		public SkipTokenQueryOption SkipToken
+		{
+			get
+			{
+				if(this.skipToken == null && this.parameters.SkipToken != null)
+				{
+					this.skipToken = new SkipTokenQueryOption(this.parameters.SkipToken);
+				}
+
+				return this.skipToken;
 			}
 		}
 
@@ -181,6 +198,11 @@
 				builder.Append($"{this.Skip}; ");
 			}
 
+			if(this.SkipToken is not null)
+			{
+				builder.Append($"{this.SkipToken}; ");
+			}
+
 			if(this.Top is not null)
 			{
 				builder.Append($"{this.Top}; ");
@@ -200,11 +222,6 @@
 			{
 				builder.Append($"{this.Search}; ");
 			}
-
-			//if(this.SkipToken is not null)
-			//{
-			//	builder.Append($"{this.SkipToken}; ");
-			//}
 
 			return builder.ToString().TrimEnd();
 		}
