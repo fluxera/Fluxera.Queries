@@ -16,7 +16,7 @@
 	/// <inheritdoc />
 	[UsedImplicitly]
 	internal sealed class RepositoryQueryExecutor<T, TKey> : QueryExecutorBase<T, TKey>
-		where T : AggregateRoot<T, TKey>
+		where T : Entity<T, TKey>
 		where TKey : IComparable<TKey>, IEquatable<TKey>
 	{
 		private readonly IReadOnlyRepository<T, TKey> repository;
